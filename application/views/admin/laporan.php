@@ -18,9 +18,8 @@
                         <th style="width: 50px;">No</th>
                         <th>No. Berita Acara</th>
                         <th>Periode</th>
-                        <th>Pegawai Terbaik (Rank #1)</th>
-                        <th>Kategori</th>
-                        <th>Skor TOPSIS</th>
+                        <th>Kategori Pegawai</th>
+                        <th>Skor Preferensi (Rank #1)</th>
                         <th>Tanggal Terbit</th>
                         <th>Status</th>
                         <th style="width: 170px;" class="text-center">Aksi</th>
@@ -28,8 +27,7 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($laporan_list)): ?>
-                        <?php $no = 1;
-                        foreach ($laporan_list as $row): ?>
+                        <?php $no = 1; foreach ($laporan_list as $row): ?>
                             <tr>
                                 <td class="text-center fw-semibold"><?= $no++; ?></td>
                                 <td>
@@ -37,12 +35,6 @@
                                     <small class="text-muted fs-11">Ketua: <?= html_escape($row['ketua_panitia']); ?></small>
                                 </td>
                                 <td><?= html_escape($row['nama_periode']); ?></td>
-                                <td>
-                                    <strong class="d-block text-dark fs-13">
-                                        <i class="ti ti-trophy text-warning me-1"></i><?= html_escape($row['pemenang_nama']); ?>
-                                    </strong>
-                                    <small class="text-muted fs-11">NIP. <?= html_escape($row['pemenang_nip']); ?></small>
-                                </td>
                                 <td>
                                     <?php if ($row['kategori'] === 'Hakim'): ?>
                                         <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fs-11">Hakim</span>
@@ -55,7 +47,7 @@
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <span class="fw-bold text-primary fs-13"><?= number_format($row['skor_topsis'], 4); ?></span>
+                                    <span class="fw-bold text-primary fs-13">V = <?= number_format($row['skor_topsis'], 4); ?></span>
                                 </td>
                                 <td><?= date('d M Y', strtotime($row['tanggal_terbit'])); ?></td>
                                 <td>
@@ -69,13 +61,14 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex align-items-center justify-content-center gap-1">
-                                        <button type="button" class="btn btn-sm btn-subtle-info btn-detail-laporan p-1 px-2" title="Pratinjau Berita Acara"
+                                        <button type="button" class="btn btn-sm btn-subtle-info btn-detail-laporan p-1 px-2" title="Pratinjau Berita Acara & 3 Kandidat Terbaik"
                                             data-bs-toggle="modal" data-bs-target="#modalDetailLaporan" data-id="<?= $row['id_laporan']; ?>"
                                             data-noba="<?= html_escape($row['no_ba']); ?>" data-periode="<?= html_escape($row['nama_periode']); ?>"
                                             data-pemenang="<?= html_escape($row['pemenang_nama']); ?>" data-nip="<?= html_escape($row['pemenang_nip']); ?>"
                                             data-kategori="<?= html_escape($row['kategori']); ?>" data-skor="<?= number_format($row['skor_topsis'], 4); ?>"
                                             data-tanggal="<?= date('d F Y', strtotime($row['tanggal_terbit'])); ?>"
-                                            data-ketua="<?= html_escape($row['ketua_panitia']); ?>">
+                                            data-ketua="<?= html_escape($row['ketua_panitia']); ?>"
+                                            data-top3='<?= json_encode($row['top_3']); ?>'>
                                             <i class="ti ti-eye fs-15"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm bg-primary-subtle text-primary btn-export-word p-1 px-2"
@@ -106,6 +99,8 @@
 </section>
 
 <!-- Modals -->
+<?php $this->load->view('admin/partials/laporan/modal-preview-select'); ?>
+<?php $this->load->view('admin/partials/laporan/modal-showroom'); ?>
 <?php $this->load->view('admin/partials/laporan/modal-add'); ?>
 <?php $this->load->view('admin/partials/laporan/modal-edit'); ?>
 <?php $this->load->view('admin/partials/laporan/modal-detail'); ?>

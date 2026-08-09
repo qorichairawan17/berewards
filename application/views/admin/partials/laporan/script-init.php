@@ -37,25 +37,55 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#edit_ketua_panitia').val(ketua);
     });
 
-    // 3. Detail / Pratinjau Button Handler
+    // 3. Detail / Pratinjau Button Handler with 3 Best Candidates Table
     $(document).on('click', '.btn-detail-laporan', function() {
         var noba = $(this).data('noba');
         var periode = $(this).data('periode');
-        var pemenang = $(this).data('pemenang');
-        var nip = $(this).data('nip');
         var kategori = $(this).data('kategori');
-        var skor = $(this).data('skor');
         var tanggal = $(this).data('tanggal');
         var ketua = $(this).data('ketua');
+        var top3Data = $(this).data('top3');
 
         $('#preview_no_ba').text('Nomor: ' + noba);
         $('#preview_periode').text(periode);
-        $('#preview_pemenang_nama').text(pemenang);
-        $('#preview_pemenang_nip').text('NIP. ' + nip);
         $('#preview_kategori').text(kategori);
-        $('#preview_skor').text(parseFloat(skor).toFixed(4));
         $('#preview_tanggal_terbit').text(tanggal);
         $('#preview_ketua').text(ketua);
+
+        var tbodyHtml = '';
+        if (typeof top3Data === 'string') {
+            try { top3Data = JSON.parse(top3Data); } catch (e) { top3Data = []; }
+        }
+
+        if (Array.isArray(top3Data) && top3Data.length > 0) {
+            top3Data.forEach(function(item) {
+                var rankBadge = '';
+                var ketBadge = '';
+
+                if (item.rank == 1) {
+                    rankBadge = '<span class="badge bg-warning text-dark border border-warning px-2 py-1"><i class="ti ti-trophy text-warning me-1"></i>Rank #1</span>';
+                    ketBadge = '<span class="badge bg-success rounded-pill px-2 py-1 fs-10"><i class="ti ti-check me-1"></i>Penerima Reward</span>';
+                } else if (item.rank == 2) {
+                    rankBadge = '<span class="badge bg-secondary-subtle text-dark border border-secondary px-2 py-1">Rank #2</span>';
+                    ketBadge = '<span class="badge bg-info-subtle text-info rounded-pill px-2 py-1 fs-10">Runner Up 1</span>';
+                } else {
+                    rankBadge = '<span class="badge bg-light text-dark border px-2 py-1">Rank #3</span>';
+                    ketBadge = '<span class="badge bg-light text-muted rounded-pill px-2 py-1 fs-10">Runner Up 2</span>';
+                }
+
+                tbodyHtml += '<tr>' +
+                    '<td class="text-center">' + rankBadge + '</td>' +
+                    '<td><strong class="d-block text-dark">' + item.nama + '</strong><small class="text-muted fs-11">NIP. ' + item.nip + '</small></td>' +
+                    '<td><span class="badge bg-light text-dark border px-2 py-1">' + item.kategori + '</span></td>' +
+                    '<td class="text-center"><strong class="text-primary fs-13">V = ' + parseFloat(item.skor).toFixed(4) + '</strong></td>' +
+                    '<td class="text-center">' + ketBadge + '</td>' +
+                    '</tr>';
+            });
+        } else {
+            tbodyHtml = '<tr><td colspan="5" class="text-center text-muted">Data kandidat terbaik tidak ditemukan.</td></tr>';
+        }
+
+        $('#preview_top3_tbody').html(tbodyHtml);
     });
 
     // 4. Delete Button Handler
@@ -64,17 +94,13 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#delete_no_ba').text(noba);
     });
 
-    // 5. Simulated Actions
-    $(document).on('click', '.btn-export-word, #btnDownloadWordSimulasi', function() {
-        alert('Mengunduh Dokumen Berita Acara (.docx)... File siap dicetak dan ditandatangani.');
-    });
-
+    // 5. Submit Form Demo Feedback
     $('#formTambahLaporan').on('submit', function(e) {
         e.preventDefault();
         var modalEl = document.getElementById('modalTambahLaporan');
         var modal = bootstrap.Modal.getInstance(modalEl);
         if (modal) modal.hide();
-        alert('Sukses! Dokumen Berita Acara Penetapan TOPSIS berhasil diterbitkan.');
+        alert('Sukses! Berita Acara penetapan reward baru berhasil diterbitkan.');
         this.reset();
     });
 
@@ -83,14 +109,26 @@ document.addEventListener('DOMContentLoaded', function() {
         var modalEl = document.getElementById('modalEditLaporan');
         var modal = bootstrap.Modal.getInstance(modalEl);
         if (modal) modal.hide();
-        alert('Sukses! Data Berita Acara berhasil diperbarui.');
+        alert('Sukses! Perubahan Berita Acara berhasil disimpan.');
     });
 
     $('#btnKonfirmasiHapusLaporan').on('click', function() {
         var modalEl = document.getElementById('modalHapusLaporan');
         var modal = bootstrap.Modal.getInstance(modalEl);
         if (modal) modal.hide();
-        alert('Sukses! Dokumen Berita Acara telah dipindahkan ke Arsip.');
+        alert('Sukses! Berita Acara telah diarsipkan.');
+    });
+
+    // 6. Word Export Simulation Handler
+    $(document).on('click', '.btn-export-word, #btnDownloadWordSimulasi', function() {
+        alert('Memulai unduhan Berita Acara Resmi (.docx). Dokumen Word telah berhasil disimulasikan dan diunduh!');
+    });
+
+    // 7. Select Period Form Handler -> Redirect to Separate Preview Page
+    $('#formPilihPeriodeShowroom').on('submit', function(e) {
+        e.preventDefault();
+        var id = $('#select_showroom_periode').val();
+        window.location.href = '<?= site_url("laporan/preview/"); ?>' + id;
     });
 });
 </script>
