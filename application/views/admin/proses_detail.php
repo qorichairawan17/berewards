@@ -4,6 +4,7 @@
 
 <!-- Modals -->
 <?php $this->load->view('admin/partials/penilaian/modal-add'); ?>
+<?php $this->load->view('admin/partials/penilaian/modal-input-nilai'); ?>
 <?php $this->load->view('admin/partials/penilaian/modal-edit'); ?>
 <?php $this->load->view('admin/partials/penilaian/modal-detail'); ?>
 <?php $this->load->view('admin/partials/penilaian/modal-delete'); ?>
@@ -35,6 +36,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $('#btnRecalculateTopsis').on('click', function() {
         alert('Sukses! Kalkulasi ulang TOPSIS untuk <?= html_escape($periode_info['nama_periode']); ?> berhasil diperbarui.');
+    });
+
+    $('#formInputNilaiPegawai').on('submit', function(e) {
+        e.preventDefault();
+        var modalEl = document.getElementById('modalInputNilaiPegawai');
+        var modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+        alert('Sukses! Nilai kriteria alternative pegawai berhasil disimpan dan ditambahkan ke sesi penilaian ini.');
+        this.reset();
     });
 });
 </script>

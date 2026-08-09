@@ -72,6 +72,7 @@
 
 <!-- Modals -->
 <?php $this->load->view('admin/partials/penilaian/modal-add'); ?>
+<?php $this->load->view('admin/partials/penilaian/modal-input-nilai'); ?>
 <?php $this->load->view('admin/partials/penilaian/modal-edit'); ?>
 <?php $this->load->view('admin/partials/penilaian/modal-detail'); ?>
 <?php $this->load->view('admin/partials/penilaian/modal-delete'); ?>
