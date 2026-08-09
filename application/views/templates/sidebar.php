@@ -82,6 +82,12 @@
                         <span> Manajemen Pengguna </span>
                     </a>
                 </li>
+                <li>
+                    <a href="<?= site_url('audit'); ?>" class="tp-link<?= (isset($active_menu) && $active_menu === 'audit') ? ' active' : ''; ?>">
+                        <i data-feather="activity"></i>
+                        <span> Audit Trail </span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
