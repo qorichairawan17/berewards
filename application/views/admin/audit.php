@@ -37,7 +37,8 @@
                                     <small class="text-muted fs-11">@<?= html_escape($row['username']); ?> • <?= html_escape($row['role']); ?></small>
                                 </td>
                                 <td>
-                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fs-11"><?= html_escape($row['modul']); ?></span>
+                                    <span
+                                        class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fs-11"><?= html_escape($row['modul']); ?></span>
                                 </td>
                                 <td>
                                     <span class="fs-13 text-dark"><?= html_escape($row['aktivitas']); ?></span>
@@ -53,19 +54,13 @@
                                     <?php endif; ?>
                                 </td>
                                 <td class="text-center">
-                                    <button type="button" class="btn btn-sm btn-subtle-info btn-detail-audit p-1 px-2"
-                                            title="Rincian Audit"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalDetailAudit"
-                                            data-id="<?= $row['id_audit']; ?>"
-                                            data-timestamp="<?= date('d M Y H:i:s', strtotime($row['timestamp'])); ?>"
-                                            data-username="<?= html_escape($row['username']); ?>"
-                                            data-nama="<?= html_escape($row['nama_user']); ?>"
-                                            data-role="<?= html_escape($row['role']); ?>"
-                                            data-modul="<?= html_escape($row['modul']); ?>"
-                                            data-aktivitas="<?= html_escape($row['aktivitas']); ?>"
-                                            data-ip="<?= html_escape($row['ip_address']); ?>"
-                                            data-status="<?= html_escape($row['status']); ?>">
+                                    <button type="button" class="btn btn-sm btn-subtle-info btn-detail-audit p-1 px-2" title="Rincian Audit"
+                                        data-bs-toggle="modal" data-bs-target="#modalDetailAudit" data-id="<?= $row['id_audit']; ?>"
+                                        data-timestamp="<?= date('d M Y H:i:s', strtotime($row['timestamp'])); ?>"
+                                        data-username="<?= html_escape($row['username']); ?>" data-nama="<?= html_escape($row['nama_user']); ?>"
+                                        data-role="<?= html_escape($row['role']); ?>" data-modul="<?= html_escape($row['modul']); ?>"
+                                        data-aktivitas="<?= html_escape($row['aktivitas']); ?>" data-ip="<?= html_escape($row['ip_address']); ?>"
+                                        data-status="<?= html_escape($row['status']); ?>">
                                         <i class="ti ti-eye fs-15"></i> Detail
                                     </button>
                                 </td>
@@ -79,7 +74,6 @@
 </section>
 
 <!-- Modals -->
-<?php $this->load->view('admin/partials/audit/modal-add'); ?>
 <?php $this->load->view('admin/partials/audit/modal-detail'); ?>
 
 <!-- Page Script -->

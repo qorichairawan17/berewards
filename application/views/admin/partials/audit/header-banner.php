@@ -7,9 +7,4 @@
         <h3 class="fw-bold mb-1 text-dark">Audit Trail Aktivitas</h3>
         <p class="text-muted fs-13 mb-0">Rekam histori log aktivitas, alamat IP, dan jejak audit transaksi pengguna dalam sistem SPK BeRewards.</p>
     </div>
-    <div>
-        <button type="button" class="btn btn-brand shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambahAudit">
-            <i class="ti ti-plus me-1"></i> Catat Audit Log Manual
-        </button>
-    </div>
 </div>

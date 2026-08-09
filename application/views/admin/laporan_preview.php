@@ -1,6 +1,6 @@
 <!-- Header Banner with Glassmorphism Theme -->
 <div class="card border-0 shadow-lg rounded-3 mb-4 text-white overflow-hidden"
-    style="background: linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #4F46E5 100%);">
+    style="background: linear-gradient(135deg, #0A2540 0%, #0052CC 50%, #108DFF 100%);">
     <div class="card-body p-4 position-relative">
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
             <div>
@@ -66,7 +66,7 @@
                 ?>
                 <div class="col-md-4">
                     <div class="card page-card-item h-100 rounded-3 p-4 <?= $cardClass; ?>" data-index="<?= $idx; ?>"
-                        style="<?= $isActive ? 'border: 2px solid #4F46E5 !important;' : ''; ?>">
+                        style="<?= $isActive ? 'border: 2px solid #108DFF !important;' : ''; ?>">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <span class="badge bg-dark text-white px-2 py-1 fs-11">PERINGKAT #<?= $cand['rank']; ?></span>
                             <?= $trophyIcon; ?>
@@ -90,7 +90,7 @@
         </div>
 
         <!-- Dynamic Lower Detailed Performance Panel -->
-        <div class="card border-0 shadow-sm rounded-3 overflow-hidden" style="border-left: 4px solid #4F46E5 !important;">
+        <div class="card border-0 shadow-sm rounded-3 overflow-hidden" style="border-left: 4px solid #108DFF !important;">
             <div class="card-body p-4 bg-white">
                 <div class="row align-items-center g-4">
                     <div class="col-md-3 text-center border-end">
@@ -178,8 +178,8 @@
     }
 
     .page-card-item.active-page-card {
-        border: 2px solid #4F46E5 !important;
-        box-shadow: 0 15px 30px rgba(79, 70, 229, 0.22) !important;
+        border: 2px solid #108DFF !important;
+        box-shadow: 0 15px 30px rgba(16, 141, 255, 0.25) !important;
     }
 
     .page-card-item.active-page-card .rank-trophy-badge {
@@ -213,7 +213,7 @@
             // Update active class on card list
             $('.page-card-item').each(function (i) {
                 if (i === idx) {
-                    $(this).addClass('active-page-card bg-white border-primary shadow-lg').removeClass('bg-light border-0 opacity-75').css('border', '2px solid #4F46E5');
+                    $(this).addClass('active-page-card bg-white border-primary shadow-lg').removeClass('bg-light border-0 opacity-75').css('border', '2px solid #108DFF');
                 } else {
                     $(this).removeClass('active-page-card bg-white border-primary shadow-lg').addClass('bg-light border-0 opacity-75').css('border', 'none');
                 }

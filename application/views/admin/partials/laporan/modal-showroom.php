@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content border-0 shadow-lg style-showroom-content overflow-hidden">
             <!-- Glassmorphism Futuristic Modal Header -->
-            <div class="modal-header border-0 bg-dark text-white p-4 position-relative" style="background: linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #4F46E5 100%);">
+            <div class="modal-header border-0 bg-dark text-white p-4 position-relative" style="background: linear-gradient(135deg, #0A2540 0%, #0052CC 50%, #108DFF 100%);">
                 <div>
                     <div class="d-flex align-items-center gap-2 mb-1">
                         <span class="badge bg-warning text-dark font-bold px-2 py-1 fs-11 tracking-wider text-uppercase">
@@ -42,7 +42,7 @@
                 </div>
 
                 <!-- Dynamic Detailed Candidate Metrics Panel -->
-                <div class="card border-0 shadow-sm rounded-3 overflow-hidden" style="border-left: 4px solid #4F46E5 !important;">
+                <div class="card border-0 shadow-sm rounded-3 overflow-hidden" style="border-left: 4px solid #108DFF !important;">
                     <div class="card-body p-4 bg-white">
                         <div class="row align-items-center g-4">
                             <div class="col-md-3 text-center border-end">
@@ -122,8 +122,8 @@
     transform: translateY(-8px) scale(1.02);
 }
 .showroom-card-item.active-card {
-    border: 2px solid #4F46E5 !important;
-    box-shadow: 0 15px 30px rgba(79, 70, 229, 0.22) !important;
+    border: 2px solid #108DFF !important;
+    box-shadow: 0 15px 30px rgba(16, 141, 255, 0.25) !important;
 }
 .showroom-card-item.active-card .rank-trophy-badge {
     animation: pulse-glow 2s infinite alternate;

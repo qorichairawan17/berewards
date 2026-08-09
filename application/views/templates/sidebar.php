@@ -4,28 +4,28 @@
             <div class="logo-box">
                 <a href="<?= site_url('dashboard'); ?>" class="logo logo-light">
                     <span class="logo-sm">
-                        <span class="brand-mark"><i class="ti ti-scale"></i></span>
+                        <img src="<?= base_url('assets/icons/logo.png'); ?>" alt="BeRewards" height="32" class="rounded">
                     </span>
-                    <span class="logo-lg mt-3">
-                        <span class="d-flex align-items-center gap-2">
-                            <span class="brand-mark"><i class="ti ti-scale"></i></span>
+                    <span class="logo-lg">
+                        <div class="d-flex align-items-center gap-2 py-2">
+                            <img src="<?= base_url('assets/icons/logo.png'); ?>" alt="BeRewards Logo" height="38" class="rounded">
                             <span class="text-start">
-                                <strong class="d-block text-dark fs-15 lh-1">BeRewards</strong>
+                                <strong class="d-block text-dark fs-16 lh-1 fw-bold">BeRewards</strong>
                             </span>
-                        </span>
+                        </div>
                     </span>
                 </a>
                 <a href="<?= site_url('dashboard'); ?>" class="logo logo-dark">
                     <span class="logo-sm">
-                        <span class="brand-mark"><i class="ti ti-scale"></i></span>
+                        <img src="<?= base_url('assets/icons/logo.png'); ?>" alt="BeRewards" height="32" class="rounded">
                     </span>
-                    <span class="logo-lg mt-3">
-                        <span class="d-flex align-items-center gap-2">
-                            <span class="brand-mark"><i class="ti ti-scale"></i></span>
+                    <span class="logo-lg">
+                        <div class="d-flex align-items-center gap-2 py-2">
+                            <img src="<?= base_url('assets/icons/logo.png'); ?>" alt="BeRewards Logo" height="38" class="rounded">
                             <span class="text-start">
-                                <strong class="d-block text-dark fs-15 lh-1">BeRewards</strong>
+                                <strong class="d-block text-dark fs-16 lh-1 fw-bold">BeRewards</strong>
                             </span>
-                        </span>
+                        </div>
                     </span>
                 </a>
             </div>
@@ -78,7 +78,7 @@
                 <li class="menu-title">Pengaturan</li>
                 <li>
                     <a href="<?= site_url('user'); ?>" class="tp-link<?= (isset($active_menu) && $active_menu === 'user') ? ' active' : ''; ?>">
-                        <i data-feather="settings"></i>
+                        <i data-feather="user"></i>
                         <span> Manajemen Pengguna </span>
                     </a>
                 </li>

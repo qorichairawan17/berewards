@@ -12,8 +12,8 @@
 Every new or modified interface must preserve the visual system established by `application/views/auth/signin.php` and `assets/css/spk-reward.css`.
 
 - Keep the experience light; never introduce a dark theme or dark page surfaces.
-- Use indigo `#4F46E5` as the primary color and cyan `#06B6D4` only as a supporting accent.
-- Reserve the indigo-to-cyan gradient for focused accents such as primary actions, brand marks, active indicators, and small highlights.
+- Use blue `#108DFF` as the primary color and cyan `#06B6D4` only as a supporting accent.
+- Reserve the blue-to-cyan gradient for focused accents such as primary actions, brand marks, active indicators, and small highlights.
 - Use `#F7F9FC` page backgrounds, white surfaces, soft `#E2E8F0` borders, generous spacing, rounded corners, and restrained shadows.
 - Use clean, modern typography with strong hierarchy, compact labels, and muted supporting copy.
 - Use the existing Tabler icon set consistently; do not introduce a second icon library.

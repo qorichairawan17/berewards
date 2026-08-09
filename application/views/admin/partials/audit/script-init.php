@@ -23,24 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 2. Edit Button Handler
-    $(document).on('click', '.btn-edit-audit', function() {
-        var id = $(this).data('id');
-        var username = $(this).data('username');
-        var timestamp = $(this).data('timestamp');
-        var modul = $(this).data('modul');
-        var aktivitas = $(this).data('aktivitas');
-        var status = $(this).data('status');
-
-        $('#edit_id_audit').val(id);
-        $('#edit_username').val(username);
-        $('#edit_timestamp').val(timestamp);
-        $('#edit_modul').val(modul);
-        $('#edit_aktivitas').val(aktivitas);
-        $('#edit_status').val(status);
-    });
-
-    // 3. Detail Button Handler
+    // 2. Detail Button Handler
     $(document).on('click', '.btn-detail-audit', function() {
         var timestamp = $(this).data('timestamp');
         var nama = $(this).data('nama');
@@ -62,37 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             $('#detail_status_badge').html('<span class="badge bg-danger rounded-pill px-2 py-1 fs-10"><i class="ti ti-x me-1"></i>Gagal</span>');
         }
-    });
-
-    // 4. Delete Button Handler
-    $(document).on('click', '.btn-delete-audit', function() {
-        var aktivitas = $(this).data('aktivitas');
-        $('#delete_aktivitas_text').text(aktivitas);
-    });
-
-    // 5. Submit Form Demo Feedback
-    $('#formTambahAudit').on('submit', function(e) {
-        e.preventDefault();
-        var modalEl = document.getElementById('modalTambahAudit');
-        var modal = bootstrap.Modal.getInstance(modalEl);
-        if (modal) modal.hide();
-        alert('Sukses! Entri log audit manual berhasil dicatat ke dalam database.');
-        this.reset();
-    });
-
-    $('#formEditAudit').on('submit', function(e) {
-        e.preventDefault();
-        var modalEl = document.getElementById('modalEditAudit');
-        var modal = bootstrap.Modal.getInstance(modalEl);
-        if (modal) modal.hide();
-        alert('Sukses! Catatan log audit berhasil diperbarui.');
-    });
-
-    $('#btnKonfirmasiHapusAudit').on('click', function() {
-        var modalEl = document.getElementById('modalHapusAudit');
-        var modal = bootstrap.Modal.getInstance(modalEl);
-        if (modal) modal.hide();
-        alert('Sukses! Entri log audit telah diarsipkan.');
     });
 });
 </script>

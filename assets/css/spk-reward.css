@@ -1,118 +1,101 @@
+/* BeRewards Main Theme Tokens & Components */
 :root {
-    --spk-bg: #f7f9fc;
-    --spk-surface: #ffffff;
-    --spk-primary: #4f46e5;
-    --spk-primary-dark: #4338ca;
-    --spk-accent: #06b6d4;
-    --spk-text: #0f172a;
-    --spk-muted: #64748b;
-    --spk-border: #e2e8f0;
-    --spk-radius: 16px;
-    --spk-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+    --spk-primary: #108DFF;
+    --spk-primary-hover: #0077E6;
+    --spk-accent: #06B6D4;
+    --spk-dark: #1E293B;
+    --spk-muted: #64748B;
+    --spk-light: #F8FAFC;
+    --spk-border: #E2E8F0;
+    --spk-card-bg: #FFFFFF;
 }
 
 body.spk-app {
-    background-color: var(--spk-bg);
-    color: var(--spk-text);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #F7F9FC;
+    color: var(--spk-dark);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Brand mark styling */
+/* Global Card Styling */
+.card.panel-card,
+.card.kpi-card {
+    background: var(--spk-card-bg);
+    border-radius: 12px;
+    transition: all 0.2s ease-in-out;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(16, 141, 255, 0.15) !important;
+}
+
+/* KPI Icons */
+.kpi-icon {
+    align-items: center;
+    border-radius: 10px;
+    display: flex;
+    font-size: 22px;
+    height: 48px;
+    justify-content: center;
+    width: 48px;
+}
+.kpi-icon.indigo { background: #E6F3FF; color: #108DFF; }
+.kpi-icon.cyan { background: #ECFEFF; color: #0891B2; }
+.kpi-icon.amber { background: #FEF3C7; color: #D97706; }
+.kpi-icon.green { background: #DCFCE7; color: #16A34A; }
+
+/* Custom Brand Buttons */
+.btn-brand {
+    background-color: var(--spk-primary);
+    border-color: var(--spk-primary);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.btn-brand:hover,
+.btn-brand:focus {
+    background-color: var(--spk-primary-hover);
+    border-color: var(--spk-primary-hover);
+    color: #ffffff;
+}
+
+.btn-subtle-info {
+    background-color: #ECFEFF;
+    color: #0891B2;
+}
+
+.btn-subtle-info:hover {
+    background-color: #CFFAFE;
+    color: #0E7490;
+}
+
+/* Sidebar Brand Header */
 .brand-mark {
     align-items: center;
     background: linear-gradient(135deg, var(--spk-primary), var(--spk-accent));
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    border-radius: 8px;
     color: #ffffff;
     display: inline-flex;
     font-size: 18px;
-    height: 34px;
+    height: 32px;
     justify-content: center;
-    width: 34px;
-}
-
-/* Primary Brand Button */
-.btn-brand {
-    align-items: center;
-    background: linear-gradient(135deg, var(--spk-primary), var(--spk-accent));
-    border: 0;
-    border-radius: 10px;
-    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.2);
-    color: #ffffff !important;
-    display: inline-flex;
-    font-size: 13px;
-    font-weight: 650;
-    padding: 10px 18px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.btn-brand:hover {
-    box-shadow: 0 8px 22px rgba(79, 70, 229, 0.3);
-    color: #ffffff !important;
-    transform: translateY(-1px);
-}
-
-/* KPI Card styling */
-.kpi-card {
-    background: var(--spk-surface);
-    border-radius: var(--spk-radius);
-    box-shadow: var(--spk-shadow);
-    position: relative;
-    overflow: hidden;
-}
-
-.kpi-card::before {
-    background: linear-gradient(90deg, var(--spk-primary), var(--spk-accent));
-    content: "";
-    height: 3px;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-}
-
-.kpi-icon {
-    align-items: center;
-    border-radius: 12px;
-    display: flex;
-    font-size: 20px;
-    height: 42px;
-    justify-content: center;
-    width: 42px;
-}
-
-.kpi-icon.indigo { background: #eef2ff; color: #4f46e5; }
-.kpi-icon.cyan { background: #ecfeff; color: #0891b2; }
-.kpi-icon.amber { background: #fffbeb; color: #d97706; }
-.kpi-icon.green { background: #f0fdf4; color: #16a34a; }
-
-/* Panel Cards */
-.panel-card {
-    background: var(--spk-surface);
-    border-radius: var(--spk-radius);
-    box-shadow: var(--spk-shadow);
-}
-
-/* Ranking Row Highlight */
-.rank-row.first {
-    background: linear-gradient(90deg, #fffbeb, #ffffff);
-    border: 1px solid #fde68a !important;
+    width: 32px;
 }
 
 /* Auth Page Layout */
 .spk-auth-page { background: #ffffff; }
 .signin-layout { min-height: 100vh; }
 .signin-intro {
-    background: linear-gradient(155deg, #f7f7ff 0%, #ecfeff 100%);
+    background: linear-gradient(155deg, #f0f8ff 0%, #ecfeff 100%);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     overflow: hidden;
-    padding: 45px 11%;
+    padding: 45px 10%;
     position: relative;
 }
 .signin-intro::after {
-    background: radial-gradient(circle, rgba(79, 70, 229, 0.11) 1px, transparent 1px);
+    background: radial-gradient(circle, rgba(16, 141, 255, 0.12) 1px, transparent 1px);
     background-size: 22px 22px;
     content: "";
     height: 270px;
@@ -122,28 +105,34 @@ body.spk-app {
     top: -55px;
     width: 270px;
 }
-.signin-brand { align-items: center; display: flex; gap: 12px; z-index: 1; }
+.signin-brand { align-items: center; display: flex; gap: 14px; z-index: 1; }
+.signin-brand img { height: 44px; width: auto; object-fit: contain; }
 .signin-copy { margin: auto 0 20px; max-width: 570px; position: relative; z-index: 1; }
-.signin-copy h1 { font-size: clamp(36px, 4vw, 59px); font-weight: 760; letter-spacing: -0.06em; line-height: 1.1; margin: 13px 0 18px; }
+.signin-copy h1 { font-size: clamp(32px, 3.8vw, 54px); font-weight: 800; letter-spacing: -0.05em; line-height: 1.15; margin: 16px 0 18px; color: var(--spk-dark); }
 .signin-copy h1 em { color: var(--spk-primary); font-style: normal; }
-.signin-copy p { color: #52637b; font-size: 15px; line-height: 1.75; max-width: 510px; }
-.signin-orbit { height: 220px; margin-left: auto; margin-right: 12%; position: relative; width: 220px; z-index: 1; }
-.signin-orbit::before, .signin-orbit::after { border: 1px solid rgba(79, 70, 229, 0.16); border-radius: 50%; content: ""; inset: 16px; position: absolute; }
+.signin-copy p { color: #475569; font-size: 15px; line-height: 1.7; max-width: 510px; }
+.signin-orbit { height: 200px; margin-left: auto; margin-right: 10%; position: relative; width: 200px; z-index: 1; }
+.signin-orbit::before, .signin-orbit::after { border: 1px solid rgba(16, 141, 255, 0.18); border-radius: 50%; content: ""; inset: 16px; position: absolute; }
 .signin-orbit::after { inset: 48px; }
 .orbit-center, .orbit-node { align-items: center; border-radius: 50%; display: flex; justify-content: center; position: absolute; }
-.orbit-center { background: linear-gradient(135deg, var(--spk-primary), var(--spk-accent)); box-shadow: 0 18px 35px rgba(79, 70, 229, 0.26); color: #ffffff; font-size: 34px; height: 74px; left: 73px; top: 73px; width: 74px; }
-.orbit-node { background: #ffffff; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1); color: var(--spk-primary); font-size: 19px; height: 43px; width: 43px; }
+.orbit-center { background: linear-gradient(135deg, var(--spk-primary), var(--spk-accent)); box-shadow: 0 18px 35px rgba(16, 141, 255, 0.28); color: #ffffff; font-size: 32px; height: 70px; left: 65px; top: 65px; width: 70px; }
+.orbit-node { background: #ffffff; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1); color: var(--spk-primary); font-size: 18px; height: 40px; width: 40px; }
 .node-one { right: 7px; top: 15px; }
 .node-two { bottom: 8px; left: 20px; }
 .node-three { left: 2px; top: 62px; }
-.signin-footer { color: #94a3b8; font-size: 10px; margin: 20px 0 0; position: relative; z-index: 1; }
-.signin-panel { padding: 40px; }
-.signin-card { box-shadow: none; max-width: 400px; width: 100%; }
-.signin-card-heading { margin-bottom: 29px; }
-.mini-icon { align-items: center; background: #eef2ff; border-radius: 11px; color: var(--spk-primary); display: flex; font-size: 20px; height: 42px; justify-content: center; margin-bottom: 18px; width: 42px; }
-.signin-card h2 { font-size: 26px; font-weight: 760; letter-spacing: -0.045em; margin: 0 0 7px; }
-.signin-card-heading p { color: var(--spk-muted); font-size: 12px; line-height: 1.65; margin: 0; }
+.signin-footer { color: #94a3b8; font-size: 13px; margin: 20px 0 0; position: relative; z-index: 1; }
+.signin-panel { background: #ffffff; padding: 40px; }
+.signin-card { box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08) !important; border: 1px solid #F1F5F9 !important; border-radius: 16px !important; max-width: 420px; width: 100%; padding: 36px; }
+.signin-card-heading { margin-bottom: 24px; }
+.mini-icon { align-items: center; background: #E6F3FF; border-radius: 12px; color: var(--spk-primary); display: flex; font-size: 22px; height: 46px; justify-content: center; margin-bottom: 16px; width: 46px; }
+.signin-card h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.03em; margin: 0 0 6px; color: var(--spk-dark); }
+.signin-card-heading p { color: var(--spk-muted); font-size: 13px; line-height: 1.6; margin: 0; }
 .input-with-icon { position: relative; }
-.input-with-icon > i { color: #94a3b8; font-size: 18px; left: 13px; position: absolute; top: 11px; }
-.input-with-icon .form-control { border: 1px solid var(--spk-border); border-radius: 10px; box-shadow: none; font-size: 12px; height: 43px; padding-left: 42px; }
-.input-with-icon .form-control:focus { border-color: #a5b4fc; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+.input-with-icon > i { color: #94a3b8; font-size: 18px; left: 14px; position: absolute; top: 12px; z-index: 2; }
+.input-with-icon .form-control { border: 1px solid var(--spk-border); border-radius: 10px; box-shadow: none; font-size: 13px; height: 44px; padding-left: 44px; }
+.input-with-icon .form-control:focus { border-color: #60a5fa; box-shadow: 0 0 0 3.5px rgba(16, 141, 255, 0.15); }
+.remember-choice { color: #475569; font-size: 12px; cursor: pointer; }
+.remember-choice input { margin-right: 6px; }
+.muted-link { color: var(--spk-primary); font-size: 12px; font-weight: 600; text-decoration: none; }
+.muted-link:hover { color: var(--spk-primary-hover); text-decoration: underline; }
+.signin-security { align-items: center; color: #64748b; display: flex; font-size: 11px; gap: 6px; justify-content: center; margin-top: 20px; }
