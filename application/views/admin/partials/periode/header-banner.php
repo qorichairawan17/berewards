@@ -5,7 +5,7 @@
             <i class="ti ti-calendar-event"></i> Master Data TOPSIS
         </div>
         <h3 class="fw-bold mb-1 text-dark">Periode Penilaian</h3>
-        <p class="text-muted fs-13 mb-0">Kelola jadwal, status buka/tutup, dan rentang waktu periode penilaian reward pegawai.</p>
+        <p class="text-muted fs-13 mb-0">Kelola jadwal, status buka/tutup, dan rentang waktu periode penilaian reward hakim, pegawai.</p>
     </div>
     <div>
         <button type="button" class="btn btn-brand shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambahPeriode">

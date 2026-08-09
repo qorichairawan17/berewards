@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 lengthMenu: "Tampilkan _MENU_ data",
                 info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
                 infoEmpty: "Tidak ada data",
-                zeroRecords: "Data tidak ditemukan",
+                zeroRecords: "Data pegawai tidak ditemukan",
                 paginate: {
                     first: "Awal",
                     last: "Akhir",
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var golongan = $(this).data('golongan');
         var jabatan = $(this).data('jabatan');
         var kategori = $(this).data('kategori');
+        var foto = $(this).data('foto');
 
         $('#edit_id').val(id);
         $('#edit_nip').val(nip);
@@ -39,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#edit_golongan').val(golongan);
         $('#edit_jabatan').val(jabatan);
         $('#edit_kategori').val(kategori);
+        $('#edit_preview_foto').attr('src', foto);
     });
 
     // 3. Detail Button Handler
@@ -49,12 +51,14 @@ document.addEventListener('DOMContentLoaded', function() {
         var golongan = $(this).data('golongan');
         var jabatan = $(this).data('jabatan');
         var kategori = $(this).data('kategori');
+        var foto = $(this).data('foto');
 
         $('#detail_nama').text(nama);
         $('#detail_nip').text('NIP. ' + nip);
-        $('#detail_kategori').text(kategori);
+        $('#detail_kategori_badge').text(kategori);
         $('#detail_pangkat_gol').text(pangkat + ' (' + golongan + ')');
         $('#detail_jabatan').text(jabatan);
+        $('#detail_foto_img').attr('src', foto);
     });
 
     // 4. Delete Button Handler
@@ -69,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var modalEl = document.getElementById('modalTambahPegawai');
         var modal = bootstrap.Modal.getInstance(modalEl);
         if (modal) modal.hide();
-        alert('Sukses! Data pegawai baru berhasil ditambahkan.');
+        alert('Sukses! Data dan foto pegawai baru berhasil ditambahkan.');
         this.reset();
     });
 
@@ -78,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var modalEl = document.getElementById('modalEditPegawai');
         var modal = bootstrap.Modal.getInstance(modalEl);
         if (modal) modal.hide();
-        alert('Sukses! Data pegawai berhasil diperbarui.');
+        alert('Sukses! Data dan foto pegawai berhasil diperbarui.');
     });
 
     $('#btnKonfirmasiHapus').on('click', function() {

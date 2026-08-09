@@ -5,7 +5,7 @@ class Pegawai extends CI_Controller
 {
     public function index()
     {
-        // 10 Data Sample Pegawai Pengadilan Negeri Lubuk Pakam
+        // 10 Data Sample Pegawai Pengadilan Negeri Lubuk Pakam dengan Foto Profil
         $pegawai_list = array(
             array(
                 'id_pegawai' => 1,
@@ -15,6 +15,7 @@ class Pegawai extends CI_Controller
                 'golongan' => 'IV/c',
                 'jabatan' => 'Hakim Utama',
                 'kategori' => 'Hakim',
+                'foto' => 'assets/images/users/user-10.jpg',
                 'aktif' => 1
             ),
             array(
@@ -25,6 +26,7 @@ class Pegawai extends CI_Controller
                 'golongan' => 'IV/b',
                 'jabatan' => 'Hakim Pratama',
                 'kategori' => 'Hakim',
+                'foto' => 'assets/images/users/user-2.jpg',
                 'aktif' => 1
             ),
             array(
@@ -35,6 +37,7 @@ class Pegawai extends CI_Controller
                 'golongan' => 'IV/a',
                 'jabatan' => 'Hakim Pratama Muda',
                 'kategori' => 'Hakim',
+                'foto' => 'assets/images/users/user-3.jpg',
                 'aktif' => 1
             ),
             array(
@@ -45,6 +48,7 @@ class Pegawai extends CI_Controller
                 'golongan' => 'IV/a',
                 'jabatan' => 'Panitera Pengganti Muda',
                 'kategori' => 'Panitera Pengganti',
+                'foto' => 'assets/images/users/user-4.jpg',
                 'aktif' => 1
             ),
             array(
@@ -55,6 +59,7 @@ class Pegawai extends CI_Controller
                 'golongan' => 'III/d',
                 'jabatan' => 'Panitera Pengganti',
                 'kategori' => 'Panitera Pengganti',
+                'foto' => 'assets/images/users/user-5.jpg',
                 'aktif' => 1
             ),
             array(
@@ -65,6 +70,7 @@ class Pegawai extends CI_Controller
                 'golongan' => 'III/c',
                 'jabatan' => 'Panitera Pengganti Pertama',
                 'kategori' => 'Panitera Pengganti',
+                'foto' => 'assets/images/users/user-6.jpg',
                 'aktif' => 1
             ),
             array(
@@ -75,6 +81,7 @@ class Pegawai extends CI_Controller
                 'golongan' => 'III/b',
                 'jabatan' => 'Jurusita Utama',
                 'kategori' => 'Jurusita',
+                'foto' => 'assets/images/users/user-7.jpg',
                 'aktif' => 1
             ),
             array(
@@ -85,6 +92,7 @@ class Pegawai extends CI_Controller
                 'golongan' => 'III/a',
                 'jabatan' => 'Jurusita Pengganti',
                 'kategori' => 'Jurusita',
+                'foto' => 'assets/images/users/user-8.jpg',
                 'aktif' => 1
             ),
             array(
@@ -95,6 +103,7 @@ class Pegawai extends CI_Controller
                 'golongan' => 'III/b',
                 'jabatan' => 'Staf Kepaniteraan Pidana',
                 'kategori' => 'Staf',
+                'foto' => 'assets/images/users/user-9.jpg',
                 'aktif' => 1
             ),
             array(
@@ -105,6 +114,7 @@ class Pegawai extends CI_Controller
                 'golongan' => 'III/a',
                 'jabatan' => 'Staf Kesekretariatan & Kepegawaian',
                 'kategori' => 'Staf',
+                'foto' => 'assets/images/users/user-11.jpg',
                 'aktif' => 1
             )
         );

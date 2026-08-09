@@ -8,7 +8,7 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
-            <form id="formEditPegawai">
+            <form id="formEditPegawai" enctype="multipart/form-data">
                 <input type="hidden" id="edit_id" name="id_pegawai">
                 <div class="modal-body p-4">
                     <div class="row g-3">
@@ -17,7 +17,7 @@
                             <input type="text" class="form-control" id="edit_nip" name="nip" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold text-dark fs-12">Nama Lengkap <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold text-dark fs-12">Nama Lengkap & Gelar <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="edit_nama" name="nama" required>
                         </div>
                         <div class="col-md-6">
@@ -40,6 +40,14 @@
                                 <option value="Jurusita">Jurusita</option>
                                 <option value="Staf">Staf</option>
                             </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold text-dark fs-12">Ganti Foto Profil (JPG/PNG)</label>
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="" id="edit_preview_foto" alt="Preview Foto" class="rounded-circle border shadow-sm" style="width: 50px; height: 50px; object-fit: cover;">
+                                <input type="file" class="form-control" name="foto" accept="image/*">
+                            </div>
+                            <small class="text-muted fs-11">Kosongkan jika tidak ingin mengubah foto profil yang ada.</small>
                         </div>
                     </div>
                 </div>

@@ -17,7 +17,7 @@
                     <tr>
                         <th style="width: 50px;">No</th>
                         <th>NIP</th>
-                        <th>Nama Pegawai</th>
+                        <th>Foto & Nama Pegawai</th>
                         <th>Pangkat / Gol.</th>
                         <th>Jabatan</th>
                         <th>Kategori</th>
@@ -32,7 +32,12 @@
                                 <td class="text-center fw-semibold"><?= $no++; ?></td>
                                 <td class="fw-medium text-dark"><?= html_escape($row['nip']); ?></td>
                                 <td>
-                                    <strong class="d-block text-dark fs-13"><?= html_escape($row['nama']); ?></strong>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="<?= base_url($row['foto']); ?>" alt="<?= html_escape($row['nama']); ?>" class="rounded-circle border shadow-sm flex-shrink-0" style="width: 38px; height: 38px; object-fit: cover;">
+                                        <div>
+                                            <strong class="d-block text-dark fs-13"><?= html_escape($row['nama']); ?></strong>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
                                     <span class="fs-13 text-dark"><?= html_escape($row['pangkat']); ?></span>
@@ -65,7 +70,8 @@
                                                 data-pangkat="<?= html_escape($row['pangkat']); ?>"
                                                 data-golongan="<?= html_escape($row['golongan']); ?>"
                                                 data-jabatan="<?= html_escape($row['jabatan']); ?>"
-                                                data-kategori="<?= html_escape($row['kategori']); ?>">
+                                                data-kategori="<?= html_escape($row['kategori']); ?>"
+                                                data-foto="<?= base_url($row['foto']); ?>">
                                             <i class="ti ti-eye fs-15"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm bg-primary-subtle text-primary btn-edit-pegawai p-1 px-2"
@@ -78,7 +84,8 @@
                                                 data-pangkat="<?= html_escape($row['pangkat']); ?>"
                                                 data-golongan="<?= html_escape($row['golongan']); ?>"
                                                 data-jabatan="<?= html_escape($row['jabatan']); ?>"
-                                                data-kategori="<?= html_escape($row['kategori']); ?>">
+                                                data-kategori="<?= html_escape($row['kategori']); ?>"
+                                                data-foto="<?= base_url($row['foto']); ?>">
                                             <i class="ti ti-edit fs-15"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm bg-danger-subtle text-danger btn-delete-pegawai p-1 px-2"
