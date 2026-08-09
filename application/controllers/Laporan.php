@@ -124,6 +124,44 @@ class Laporan extends CI_Controller
         ));
     }
 
+    /**
+     * Export Berita Acara ke format Word (.docx).
+     *
+     * URL: laporan/export/{id}
+     * Memanggil Laporan_service::export_berita_acara() yang mengirim
+     * file langsung ke browser sebagai unduhan.
+     *
+     * @param int $id  ID laporan yang akan diekspor.
+     */
+    public function export($id = 0)
+    {
+        $id = (int) $id;
+
+        if ($id <= 0) {
+            show_error('ID laporan tidak valid.', 400, 'Export Error');
+        }
+
+        // Cari data laporan berdasarkan ID
+        $laporan_list    = $this->get_laporan_data();
+        $laporan_data    = null;
+
+        foreach ($laporan_list as $row) {
+            if ($row['id_laporan'] === $id) {
+                $laporan_data = $row;
+                break;
+            }
+        }
+
+        if (!$laporan_data) {
+            show_error('Data laporan dengan ID ' . $id . ' tidak ditemukan.', 404, 'Export Error');
+        }
+
+        // Delegasikan pembuatan dokumen ke service layer
+        $this->load->service('Laporan_service');
+        $this->laporan_service->export_berita_acara($laporan_data);
+        // export_berita_acara() memanggil exit, tidak ada kode yang dijalankan setelahnya
+    }
+
     public function preview($id = 1)
     {
         $laporan_list = $this->get_laporan_data();

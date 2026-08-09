@@ -119,10 +119,30 @@ document.addEventListener('DOMContentLoaded', function() {
         alert('Sukses! Berita Acara telah diarsipkan.');
     });
 
-    // 6. Word Export Simulation Handler
-    $(document).on('click', '.btn-export-word, #btnDownloadWordSimulasi', function() {
-        alert('Memulai unduhan Berita Acara Resmi (.docx). Dokumen Word telah berhasil disimulasikan dan diunduh!');
+    // 6. Export Word — navigasi ke laporan/export/{id} untuk mengunduh .docx
+    $(document).on('click', '.btn-export-word', function() {
+        var id = $(this).data('id');
+        if (!id) {
+            alert('ID laporan tidak ditemukan. Coba muat ulang halaman.');
+            return;
+        }
+        var url = '<?= site_url("laporan/export/"); ?>' + id;
+        // Buka di tab saat ini — browser akan langsung trigger unduhan karena
+        // response header Content-Disposition: attachment
+        window.location.href = url;
     });
+
+    // Export Word dari modal detail pratinjau
+    $(document).on('click', '#btnDownloadWordSimulasi', function() {
+        var id = $(this).data('id');
+        if (!id) {
+            alert('ID laporan tidak tersedia. Tutup dan buka ulang pratinjau.');
+            return;
+        }
+        var url = '<?= site_url("laporan/export/"); ?>' + id;
+        window.location.href = url;
+    });
+
 
     // 7. Select Period Form Handler -> Redirect to Separate Preview Page
     $('#formPilihPeriodeShowroom').on('submit', function(e) {

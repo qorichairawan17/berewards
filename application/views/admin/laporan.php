@@ -72,7 +72,8 @@
                                             <i class="ti ti-eye fs-15"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm bg-primary-subtle text-primary btn-export-word p-1 px-2"
-                                            title="Ekspor Word (.docx)">
+                                            title="Ekspor Word (.docx)"
+                                            data-id="<?= $row['id_laporan']; ?>">
                                             <i class="ti ti-file-text fs-15"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm bg-info-subtle text-info btn-edit-laporan p-1 px-2" title="Edit Berita Acara"
