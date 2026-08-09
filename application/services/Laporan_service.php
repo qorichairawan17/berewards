@@ -38,7 +38,15 @@ class Laporan_service
 
     /**
      * Load PHPWord dari application/third_party/PHPWord/ tanpa Composer.
-     * Mendaftarkan PSR-0 autoloader khusus untuk namespace PhpOffice\PhpWord.
+     *
+     * PHPWord memakai PSR-4:
+     *   Namespace prefix : PhpOffice\PhpWord\
+     *   Base directory   : src/PhpWord/
+     *
+     * Contoh pemetaan:
+     *   PhpOffice\PhpWord\PhpWord          → src/PhpWord/PhpWord.php
+     *   PhpOffice\PhpWord\IOFactory        → src/PhpWord/IOFactory.php
+     *   PhpOffice\PhpWord\Style\Font       → src/PhpWord/Style/Font.php
      */
     private function _load_phpword()
     {
@@ -58,22 +66,28 @@ class Laporan_service
             );
         }
 
-        // Daftarkan PSR-0 autoloader untuk PhpOffice\PhpWord
-        spl_autoload_register(function ($class) use ($phpword_src) {
-            // Hanya tangani namespace PhpOffice\PhpWord
-            if (strpos($class, 'PhpOffice\\PhpWord') !== 0) {
+        // PSR-4 autoloader: PhpOffice\PhpWord\ → src/PhpWord/
+        $prefix   = 'PhpOffice\\PhpWord\\';
+        $base_dir = $phpword_src . 'PhpWord' . DIRECTORY_SEPARATOR;
+        $len      = strlen($prefix);
+
+        spl_autoload_register(function ($class) use ($prefix, $base_dir, $len) {
+            // Hanya tangani kelas dengan prefix yang sesuai
+            if (strncmp($prefix, $class, $len) !== 0) {
                 return;
             }
-            $relative = str_replace('\\', DIRECTORY_SEPARATOR, $class);
-            $file     = $phpword_src . $relative . '.php';
+            // Sisa setelah prefix → path relatif file
+            $relative_class = substr($class, $len);
+            $file = $base_dir . str_replace('\\', DIRECTORY_SEPARATOR, $relative_class) . '.php';
             if (file_exists($file)) {
                 require_once $file;
             }
         });
 
-        // Load Settings agar konstanta internal PHPWord tersedia
-        require_once $phpword_src . 'PhpWord/Settings.php';
+        // Load Settings agar konstanta internal PHPWord tersedia sejak awal
+        require_once $base_dir . 'Settings.php';
     }
+
 
     // -----------------------------------------------------------------------
     // Public — Export Berita Acara
