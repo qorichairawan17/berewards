@@ -1,15 +1,15 @@
 <!-- Page Script -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. Initialize DataTables
-    if ($.fn.DataTable) {
-        $('#tablePenilaian').DataTable({
+    // 1. Initialize DataTables for Period List
+    if ($.fn.DataTable && $('#tablePeriodePenilaian').length) {
+        $('#tablePeriodePenilaian').DataTable({
             language: {
                 search: "Cari:",
                 lengthMenu: "Tampilkan _MENU_ data",
                 info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
                 infoEmpty: "Tidak ada data",
-                zeroRecords: "Data penilaian tidak ditemukan",
+                zeroRecords: "Sesi penilaian tidak ditemukan",
                 paginate: {
                     first: "Awal",
                     last: "Akhir",
@@ -18,8 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             },
             pageLength: 10,
-            responsive: true,
-            order: [[0, 'asc']]
+            responsive: true
         });
     }
 
@@ -64,16 +63,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 5. Submit Form & Action Handlers
-    $('#btnHitungTopsisSimulasi').on('click', function() {
-        alert('Kalkulasi TOPSIS Berhasil! Matriks normalisasi dan skor preferensi V_i seluruh kandidat telah diperbarui.');
-    });
-
     $('#formTambahPenilaian').on('submit', function(e) {
         e.preventDefault();
         var modalEl = document.getElementById('modalTambahPenilaian');
         var modal = bootstrap.Modal.getInstance(modalEl);
         if (modal) modal.hide();
-        alert('Sukses! Nilai kriteria berhasil disimpan dan matriks TOPSIS dikalkulasi ulang.');
+        alert('Sukses! Sesi penilaian periode baru telah dibuat dengan status DRAFT. Silakan klik Detail untuk menginput nilai alternative pegawai.');
         this.reset();
     });
 
@@ -82,14 +77,20 @@ document.addEventListener('DOMContentLoaded', function() {
         var modalEl = document.getElementById('modalEditPenilaian');
         var modal = bootstrap.Modal.getInstance(modalEl);
         if (modal) modal.hide();
-        alert('Sukses! Perubahan skor berhasil diperbarui.');
+        alert('Sukses! Perubahan skor kriteria alternative berhasil diperbarui.');
     });
 
     $('#btnKonfirmasiHapusPenilaian').on('click', function() {
         var modalEl = document.getElementById('modalHapusPenilaian');
         var modal = bootstrap.Modal.getInstance(modalEl);
         if (modal) modal.hide();
-        alert('Sukses! Data penilaian telah dihapus.');
+        alert('Sukses! Sesi penilaian telah dihapus / di-reset.');
+    });
+
+    // 6. Proses Perhitungan TOPSIS (Ubah Status ke Final)
+    $(document).on('click', '#btnProsesHitungTopsis', function() {
+        $('#header_status_badge').html('<span class="badge bg-success rounded-pill px-3 py-1 fs-11"><i class="ti ti-check me-1"></i>Status: Final</span>');
+        alert('Sukses! Perhitungan TOPSIS telah diproses secara komprehensif. Matriks normalisasi, jarak ideal D+ / D-, dan skor preferensi Vi seluruh alternative pegawai telah dikalkulasi. Status sesi penilaian kini resmi menjadi FINAL!');
     });
 });
 </script>
