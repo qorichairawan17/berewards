@@ -1,71 +1,231 @@
-<div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column gap-3 spk-dashboard-header">
-    <div class="flex-grow-1">
-        <span class="section-kicker"><i class="ti ti-sparkles"></i> Ringkasan hari ini</span>
-        <h2 class="mb-1">Selamat datang kembali, Superadmin.</h2>
-        <p class="mb-0 text-muted fs-13">Pantau kesiapan data dan proses penilaian reward dalam satu tampilan.</p>
+<!-- Dashboard Welcome Banner -->
+<div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column justify-content-between gap-3 mb-3">
+    <div>
+        <div class="section-kicker d-flex align-items-center gap-1 text-primary fw-bold text-uppercase fs-11 tracking-wider mb-1">
+            <i class="ti ti-sparkles"></i> Ringkasan Sistem TOPSIS
+        </div>
+        <h3 class="fw-bold mb-1 text-dark">Selamat datang kembali, Superadmin</h3>
+        <p class="text-muted fs-13 mb-0">Pantau data pegawai, kriteria, dan status penilaian reward di Pengadilan Negeri Lubuk Pakam.</p>
     </div>
-    <a href="#" class="btn btn-brand"><i class="ti ti-plus"></i> Mulai Proses Penilaian</a>
+    <div>
+        <a href="<?= site_url('proses'); ?>" class="btn btn-brand shadow-sm">
+            <i class="ti ti-plus me-1"></i> Mulai Penilaian TOPSIS
+        </a>
+    </div>
 </div>
 
+<!-- KPI Summary Cards -->
 <section class="row g-3 mb-4" aria-label="Ringkasan statistik">
     <div class="col-md-6 col-xl-3">
-        <article class="card kpi-card h-100 border-0">
-            <div class="kpi-icon indigo"><i class="ti ti-users"></i></div>
-            <div><p>Total Pegawai Aktif</p><strong>128</strong><span class="kpi-note up"><i class="ti ti-trending-up"></i> Data terbarui</span></div>
-        </article>
-    </div>
-    <div class="col-md-6 col-xl-3">
-        <article class="card kpi-card h-100 border-0">
-            <div class="kpi-icon cyan"><i class="ti ti-calendar-event"></i></div>
-            <div><p>Periode Berjalan</p><strong>Triwulan II</strong><span class="kpi-note">April — Juni 2026</span></div>
-        </article>
-    </div>
-    <div class="col-md-6 col-xl-3">
-        <article class="card kpi-card h-100 border-0">
-            <div class="kpi-icon amber"><i class="ti ti-hourglass"></i></div>
-            <div><p>Proses Belum Selesai</p><strong>04</strong><span class="kpi-note warning">Memerlukan tindak lanjut</span></div>
-        </article>
-    </div>
-    <div class="col-md-6 col-xl-3">
-        <article class="card kpi-card h-100 border-0">
-            <div class="kpi-icon green"><i class="ti ti-rosette-discount-check"></i></div>
-            <div><p>Reward Ditetapkan</p><strong>36</strong><span class="kpi-note">Periode sebelumnya</span></div>
-        </article>
-    </div>
-</section>
-
-<section class="row g-4 mb-4">
-    <div class="col-xl-7">
-        <article class="card panel-card ranking-card h-100 border-0">
-            <div class="panel-heading"><div><span class="section-kicker">Proses Terakhir</span><h3>Ringkasan ranking TOPSIS</h3></div><a href="#" class="text-action">Lihat hasil <i class="ti ti-arrow-up-right"></i></a></div>
-            <div class="ranking-visual">
-                <div class="rank-list">
-                    <div class="rank-row first"><span class="rank-badge">1</span><div class="rank-person"><strong>Rina Agustina, S.H.</strong><small>Hakim</small></div><div class="rank-score"><strong>0.892</strong><span>Nilai preferensi</span></div></div>
-                    <div class="rank-row"><span class="rank-badge">2</span><div class="rank-person"><strong>Ahmad Faisal, S.H.</strong><small>Hakim</small></div><div class="rank-score"><strong>0.847</strong><span>Nilai preferensi</span></div></div>
-                    <div class="rank-row"><span class="rank-badge">3</span><div class="rank-person"><strong>Dian Pratiwi, S.H.</strong><small>Hakim</small></div><div class="rank-score"><strong>0.811</strong><span>Nilai preferensi</span></div></div>
+        <div class="card kpi-card h-100 border-0 shadow-sm">
+            <div class="card-body p-3 d-flex align-items-start gap-3">
+                <div class="kpi-icon indigo flex-shrink-0">
+                    <i class="ti ti-users"></i>
                 </div>
-                <div class="chart-placeholder" aria-label="Visualisasi nilai ranking"><div class="chart-bars"><span style="height: 92%"></span><span style="height: 84%"></span><span style="height: 77%"></span><span style="height: 66%"></span><span style="height: 55%"></span></div><p>Preferensi kandidat terbaik</p></div>
+                <div class="flex-grow-1">
+                    <p class="text-muted fs-12 mb-1">Total Pegawai Aktif</p>
+                    <h3 class="fw-bold mb-1 text-dark">128</h3>
+                    <span class="kpi-note up fs-11 text-success"><i class="ti ti-trending-up"></i> Data terbarui</span>
+                </div>
             </div>
-        </article>
+        </div>
     </div>
-    <div class="col-xl-5">
-        <article class="card panel-card workflow-card h-100 border-0">
-            <div class="panel-heading"><div><span class="section-kicker">Kesiapan Sistem</span><h3>Alur penilaian</h3></div><i class="ti ti-route workflow-icon"></i></div>
-            <ol class="workflow-list">
-                <li class="done"><span><i class="ti ti-check"></i></span><div><strong>Data master</strong><small>Pegawai dan kriteria siap digunakan</small></div></li>
-                <li class="done"><span><i class="ti ti-check"></i></span><div><strong>Periode penilaian</strong><small>Triwulan II 2026 telah dibuka</small></div></li>
-                <li class="current"><span>3</span><div><strong>Input penilaian</strong><small>4 proses masih perlu dilengkapi</small></div></li>
-                <li><span>4</span><div><strong>Penetapan reward</strong><small>Menunggu hasil perhitungan</small></div></li>
-            </ol>
-        </article>
+    <div class="col-md-6 col-xl-3">
+        <div class="card kpi-card h-100 border-0 shadow-sm">
+            <div class="card-body p-3 d-flex align-items-start gap-3">
+                <div class="kpi-icon cyan flex-shrink-0">
+                    <i class="ti ti-calendar-event"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <p class="text-muted fs-12 mb-1">Periode Berjalan</p>
+                    <h3 class="fw-bold mb-1 text-dark">Triwulan II</h3>
+                    <span class="kpi-note fs-11 text-muted">April — Juni 2026</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="card kpi-card h-100 border-0 shadow-sm">
+            <div class="card-body p-3 d-flex align-items-start gap-3">
+                <div class="kpi-icon amber flex-shrink-0">
+                    <i class="ti ti-hourglass"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <p class="text-muted fs-12 mb-1">Proses Belum Selesai</p>
+                    <h3 class="fw-bold mb-1 text-dark">04</h3>
+                    <span class="kpi-note warning fs-11 text-warning"><i class="ti ti-alert-circle me-1"></i>Perlu tindak lanjut</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="card kpi-card h-100 border-0 shadow-sm">
+            <div class="card-body p-3 d-flex align-items-start gap-3">
+                <div class="kpi-icon green flex-shrink-0">
+                    <i class="ti ti-rosette-discount-check"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <p class="text-muted fs-12 mb-1">Reward Ditetapkan</p>
+                    <h3 class="fw-bold mb-1 text-dark">36</h3>
+                    <span class="kpi-note fs-11 text-muted">Periode sebelumnya</span>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-<section class="card panel-card activity-card border-0">
-    <div class="panel-heading"><div><span class="section-kicker">Aktivitas</span><h3>Pembaruan terbaru</h3></div><a href="#" class="text-action">Semua aktivitas <i class="ti ti-arrow-up-right"></i></a></div>
-    <div class="activity-list">
-        <div class="activity-item"><span class="activity-icon indigo"><i class="ti ti-user-plus"></i></span><div><strong>Data pegawai diperbarui</strong><p>12 referensi pegawai berhasil disinkronkan.</p></div><time>10 menit lalu</time></div>
-        <div class="activity-item"><span class="activity-icon cyan"><i class="ti ti-calculator"></i></span><div><strong>Proses TOPSIS baru dibuat</strong><p>Penilaian kategori Panitera Pengganti telah dimulai.</p></div><time>1 jam lalu</time></div>
-        <div class="activity-item"><span class="activity-icon green"><i class="ti ti-file-check"></i></span><div><strong>Laporan reward diterbitkan</strong><p>Berita acara Triwulan I 2026 telah final.</p></div><time>Kemarin</time></div>
+<!-- Main Grid Section -->
+<section class="row g-4 mb-4">
+    <!-- Ranking Visual Panel -->
+    <div class="col-xl-7">
+        <div class="card panel-card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <span class="text-primary fw-bold fs-11 text-uppercase tracking-wider">Hasil TOPSIS Terakhir</span>
+                        <h4 class="fw-bold text-dark mb-0">Ranking Preferensi Kandidat</h4>
+                    </div>
+                    <a href="<?= site_url('laporan'); ?>" class="text-action text-primary fw-semibold fs-12">
+                        Lihat Laporan <i class="ti ti-arrow-up-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="ranking-visual">
+                    <div class="rank-list">
+                        <div class="rank-row first p-2 rounded-3 mb-2 d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="rank-badge bg-warning text-white fw-bold rounded-circle d-inline-flex align-items-center justify-content-center" style="width:28px; height:28px; font-size:12px;">1</span>
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark fs-13">Rina Agustina, S.H.</h6>
+                                    <small class="text-muted fs-11">Hakim Utama</small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <span class="fw-bold text-primary fs-13">0.892</span>
+                                <small class="d-block text-muted fs-10">Nilai V<sub>i</sub></small>
+                            </div>
+                        </div>
+                        <div class="rank-row p-2 rounded-3 mb-2 d-flex align-items-center justify-content-between border">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="rank-badge bg-light text-dark fw-bold rounded-circle d-inline-flex align-items-center justify-content-center" style="width:28px; height:28px; font-size:12px;">2</span>
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark fs-13">Ahmad Faisal, S.H.</h6>
+                                    <small class="text-muted fs-11">Hakim Pratama</small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <span class="fw-bold text-primary fs-13">0.847</span>
+                                <small class="d-block text-muted fs-10">Nilai V<sub>i</sub></small>
+                            </div>
+                        </div>
+                        <div class="rank-row p-2 rounded-3 mb-2 d-flex align-items-center justify-content-between border">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="rank-badge bg-light text-dark fw-bold rounded-circle d-inline-flex align-items-center justify-content-center" style="width:28px; height:28px; font-size:12px;">3</span>
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark fs-13">Dian Pratiwi, S.H.</h6>
+                                    <small class="text-muted fs-11">Panitera Pengganti</small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <span class="fw-bold text-primary fs-13">0.811</span>
+                                <small class="d-block text-muted fs-10">Nilai V<sub>i</sub></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workflow Progress Panel -->
+    <div class="col-xl-5">
+        <div class="card panel-card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <span class="text-primary fw-bold fs-11 text-uppercase tracking-wider">Kesiapan Tahapan</span>
+                        <h4 class="fw-bold text-dark mb-0">Alur Penilaian Reward</h4>
+                    </div>
+                    <i class="ti ti-route workflow-icon fs-20 text-primary bg-primary-subtle p-2 rounded-3"></i>
+                </div>
+                <ol class="workflow-list list-unstyled mb-0">
+                    <li class="done d-flex align-items-center gap-3 mb-3">
+                        <span class="bg-success-subtle text-success rounded-circle d-inline-flex align-items-center justify-content-center" style="width:28px; height:28px;"><i class="ti ti-check fs-14"></i></span>
+                        <div>
+                            <strong class="d-block text-dark fs-13">Data Master</strong>
+                            <small class="text-muted fs-11">Pegawai dan kriteria telah dikonfigurasi</small>
+                        </div>
+                    </li>
+                    <li class="done d-flex align-items-center gap-3 mb-3">
+                        <span class="bg-success-subtle text-success rounded-circle d-inline-flex align-items-center justify-content-center" style="width:28px; height:28px;"><i class="ti ti-check fs-14"></i></span>
+                        <div>
+                            <strong class="d-block text-dark fs-13">Periode Penilaian</strong>
+                            <small class="text-muted fs-11">Triwulan II 2026 telah dibuka</small>
+                        </div>
+                    </li>
+                    <li class="current d-flex align-items-center gap-3 mb-3">
+                        <span class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center fw-bold fs-12" style="width:28px; height:28px;">3</span>
+                        <div>
+                            <strong class="d-block text-dark fs-13">Input Penilaian</strong>
+                            <small class="text-muted fs-11">4 proses penilaian sedang berlangsung</small>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center gap-3">
+                        <span class="bg-light text-muted rounded-circle d-inline-flex align-items-center justify-content-center fw-bold fs-12" style="width:28px; height:28px;">4</span>
+                        <div>
+                            <strong class="d-block text-dark fs-13">Penetapan Reward & Export</strong>
+                            <small class="text-muted fs-11">Menunggu penyelesaian kalkulasi TOPSIS</small>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </div>
     </div>
 </section>
+
+<!-- Activity Log Section -->
+<section class="card panel-card border-0 shadow-sm mb-2">
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <span class="text-primary fw-bold fs-11 text-uppercase tracking-wider">Aktivitas Sistem</span>
+                <h4 class="fw-bold text-dark mb-0">Pembaruan Terbaru</h4>
+            </div>
+            <a href="#" class="text-action text-primary fw-semibold fs-12">
+                Lihat Semua <i class="ti ti-arrow-up-right ms-1"></i>
+            </a>
+        </div>
+        <div class="activity-list">
+            <div class="activity-item d-flex align-items-center justify-content-between py-2 border-bottom">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="activity-icon bg-primary-subtle text-primary p-2 rounded-3 d-inline-flex"><i class="ti ti-user-plus fs-18"></i></span>
+                    <div>
+                        <strong class="text-dark fs-13 d-block">Data Pegawai Diperbarui</strong>
+                        <p class="text-muted fs-12 mb-0">12 referensi pegawai baru berhasil disinkronkan ke master data.</p>
+                    </div>
+                </div>
+                <time class="text-muted fs-11">10 menit lalu</time>
+            </div>
+            <div class="activity-item d-flex align-items-center justify-content-between py-2 border-bottom">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="activity-icon bg-cyan-subtle text-info p-2 rounded-3 d-inline-flex" style="background:#ecfeff;"><i class="ti ti-calculator fs-18" style="color:#0891b2;"></i></span>
+                    <div>
+                        <strong class="text-dark fs-13 d-block">Proses Penilaian TOPSIS Dibuat</strong>
+                        <p class="text-muted fs-12 mb-0">Penilaian kategori Panitera Pengganti telah dimulai untuk Triwulan II 2026.</p>
+                    </div>
+                </div>
+                <time class="text-muted fs-11">1 jam lalu</time>
+            </div>
+            <div class="activity-item d-flex align-items-center justify-content-between py-2">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="activity-icon bg-success-subtle text-success p-2 rounded-3 d-inline-flex"><i class="ti ti-file-check fs-18"></i></span>
+                    <div>
+                        <strong class="text-dark fs-13 d-block">Laporan Berita Acara Diterbitkan</strong>
+                        <p class="text-muted fs-12 mb-0">Dokumen Berita Acara penetapan reward Triwulan I 2026 telah ditandatangani.</p>
+                    </div>
+                </div>
+                <time class="text-muted fs-11">Kemarin</time>
+            </div>
+        </div>
+    </div>
+</section>
+
