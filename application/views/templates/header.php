@@ -14,6 +14,13 @@
     <!-- BeRewards Custom styling -->
     <link href="<?= base_url('assets/css/spk-reward.css'); ?>" rel="stylesheet" type="text/css" />
 
+    <!-- Extra Page CSS -->
+    <?php if (!empty($extra_css)): ?>
+        <?php foreach ($extra_css as $css): ?>
+            <link href="<?= base_url($css); ?>" rel="stylesheet" type="text/css" />
+        <?php endforeach; ?>
+    <?php endif; ?>
+
     <script src="<?= base_url('assets/js/head.js'); ?>"></script>
 </head>
 <body class="spk-app<?= !empty($is_auth_page) ? ' spk-auth-page' : ''; ?>" data-menu-color="light" data-sidebar="default">

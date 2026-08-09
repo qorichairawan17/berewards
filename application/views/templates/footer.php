@@ -21,6 +21,13 @@
     <script src="<?= base_url('assets/libs/jquery.counterup/jquery.counterup.min.js'); ?>"></script>
     <script src="<?= base_url('assets/libs/feather-icons/feather.min.js'); ?>"></script>
 
+    <!-- Extra Page JS -->
+    <?php if (!empty($extra_js)): ?>
+        <?php foreach ($extra_js as $js): ?>
+            <script src="<?= base_url($js); ?>"></script>
+        <?php endforeach; ?>
+    <?php endif; ?>
+
     <!-- App js-->
     <script src="<?= base_url('assets/js/app.js'); ?>"></script>
 </body>
