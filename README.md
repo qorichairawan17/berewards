@@ -1,12 +1,12 @@
 # BeRewards — SPK Penentuan Reward Pengadilan Negeri Lubuk Pakam
 
-> **Sistem Pendukung Keputusan Penentuan Reward Terbaik Bagi Hakim, Panitera Pengganti, Jurusita, dan Staf Pengadilan Negeri Lubuk Pakam Kelas I-A Menggunakan Metode TOPSIS**
+> **Sistem Pendukung Keputusan Penentuan Reward Terbaik Bagi Hakim, Panitera Pengganti, Jurusita, dan Staf Pengadilan Negeri Lubuk Pakam Menggunakan Metode TOPSIS**
 
 ---
 
 ## 📌 Tentang Proyek
 
-**BeRewards** adalah aplikasi web Sistem Pendukung Keputusan (SPK) yang dirancang untuk **menentukan penerima reward pegawai terbaik** di lingkungan Pengadilan Negeri Lubuk Pakam Kelas I-A secara **objektif, terukur, dan transparan** menggunakan metode **TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution)**.
+**BeRewards** adalah aplikasi web Sistem Pendukung Keputusan (SPK) yang dirancang untuk **menentukan penerima reward pegawai terbaik** di lingkungan Pengadilan Negeri Lubuk Pakam secara **objektif, terukur, dan transparan** menggunakan metode **TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution)**.
 
 Aplikasi ini mendukung proses penilaian kinerja untuk empat kategori pegawai:
 
@@ -19,31 +19,31 @@ Aplikasi ini mendukung proses penilaian kinerja untuk empat kategori pegawai:
 
 ## ✨ Fitur Utama
 
-| Modul | Deskripsi |
-|---|---|
-| 🏠 **Dashboard** | Ringkasan KPI, spotlight penerima reward terbaik, navigasi cepat antar modul |
-| 👥 **Data Pegawai** | Kelola master data referensi pegawai berikut foto profil |
-| 📊 **Kriteria Penilaian** | Atur bobot dan jenis kriteria (benefit/cost, kualitatif/kuantitatif) |
-| 📅 **Periode Penilaian** | Siklus penilaian triwulan, semester, dan tahunan |
-| 🧮 **Penilaian & TOPSIS** | Buat penilaian per periode, input nilai alternatif, dan proses kalkulasi TOPSIS menjadi FINAL |
-| 📄 **Laporan & Berita Acara** | Penerbitan Berita Acara resmi penetapan reward, pratinjau, dan ekspor Word |
-| 🎯 **Showroom Kandidat 3D** | Halaman pratinjau interaktif 3D kandidat reward terbaik dengan animasi kartu carousel |
-| 🔐 **Manajemen Pengguna** | Pengelolaan hak akses Superadmin dan Administrator |
-| 🛡️ **Audit Trail** | Histori log aktivitas pengguna, alamat IP, dan jejak keamanan sistem |
+| Modul                         | Deskripsi                                                                                     |
+| ----------------------------- | --------------------------------------------------------------------------------------------- |
+| 🏠 **Dashboard**              | Ringkasan KPI, spotlight penerima reward terbaik, navigasi cepat antar modul                  |
+| 👥 **Data Pegawai**           | Kelola master data referensi pegawai berikut foto profil                                      |
+| 📊 **Kriteria Penilaian**     | Atur bobot dan jenis kriteria (benefit/cost, kualitatif/kuantitatif)                          |
+| 📅 **Periode Penilaian**      | Siklus penilaian triwulan, semester, dan tahunan                                              |
+| 🧮 **Penilaian & TOPSIS**     | Buat penilaian per periode, input nilai alternatif, dan proses kalkulasi TOPSIS menjadi FINAL |
+| 📄 **Laporan & Berita Acara** | Penerbitan Berita Acara resmi penetapan reward, pratinjau, dan ekspor Word                    |
+| 🎯 **Showroom Kandidat 3D**   | Halaman pratinjau interaktif 3D kandidat reward terbaik dengan animasi kartu carousel         |
+| 🔐 **Manajemen Pengguna**     | Pengelolaan hak akses Superadmin dan Administrator                                            |
+| 🛡️ **Audit Trail**            | Histori log aktivitas pengguna, alamat IP, dan jejak keamanan sistem                          |
 
 ---
 
 ## 🛠️ Teknologi yang Digunakan
 
-| Komponen | Detail |
-|---|---|
-| **Backend Framework** | [CodeIgniter 3](https://codeigniter.com/) (PHP MVC) |
-| **Bahasa Pemrograman** | PHP 7+ |
-| **Database** | MySQL / MariaDB |
-| **Frontend UI** | Bootstrap 5, Vanilla CSS, Tabler Icons |
-| **Metode DSS** | TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution) |
-| **Visualisasi** | Animated 3D Card Stack Carousel, DataTables |
-| **Export** | Microsoft Word (.docx) Berita Acara |
+| Komponen               | Detail                                                                     |
+| ---------------------- | -------------------------------------------------------------------------- |
+| **Backend Framework**  | [CodeIgniter 3](https://codeigniter.com/) (PHP MVC)                        |
+| **Bahasa Pemrograman** | PHP 7+                                                                     |
+| **Database**           | MySQL / MariaDB                                                            |
+| **Frontend UI**        | Bootstrap 5, Vanilla CSS, Tabler Icons                                     |
+| **Metode DSS**         | TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution) |
+| **Visualisasi**        | Animated 3D Card Stack Carousel, DataTables                                |
+| **Export**             | Microsoft Word (.docx) Berita Acara                                        |
 
 ---
 
@@ -123,18 +123,18 @@ berewards/
 
 ## 🗺️ Routing Utama
 
-| URL | Halaman |
-|---|---|
-| `/` atau `/signin` | Halaman Login |
-| `/dashboard` | Dashboard Utama |
-| `/pegawai` | Manajemen Data Pegawai |
-| `/kriteria` | Kriteria Penilaian |
-| `/periode` | Periode Penilaian |
-| `/proses` | Penilaian & TOPSIS Engine |
-| `/laporan` | Laporan & Berita Acara |
-| `/laporan/preview/{id}` | Showroom Kandidat 3D |
-| `/user` | Manajemen Pengguna |
-| `/audit` | Audit Trail Aktivitas |
+| URL                     | Halaman                   |
+| ----------------------- | ------------------------- |
+| `/` atau `/signin`      | Halaman Login             |
+| `/dashboard`            | Dashboard Utama           |
+| `/pegawai`              | Manajemen Data Pegawai    |
+| `/kriteria`             | Kriteria Penilaian        |
+| `/periode`              | Periode Penilaian         |
+| `/proses`               | Penilaian & TOPSIS Engine |
+| `/laporan`              | Laporan & Berita Acara    |
+| `/laporan/preview/{id}` | Showroom Kandidat 3D      |
+| `/user`                 | Manajemen Pengguna        |
+| `/audit`                | Audit Trail Aktivitas     |
 
 ---
 
@@ -151,23 +151,24 @@ Panduan UI dan visual lengkap tersedia di [`.agents/be-rewards-brand-guide.md`](
 
 ## 📁 File Penting
 
-| File | Keterangan |
-|---|---|
-| [`application/controllers/Dashboard.php`](application/controllers/Dashboard.php) | Controller dashboard utama |
-| [`application/controllers/Laporan.php`](application/controllers/Laporan.php) | Controller laporan & showroom preview |
-| [`application/controllers/Audit.php`](application/controllers/Audit.php) | Controller audit trail |
-| [`application/views/auth/signin.php`](application/views/auth/signin.php) | Halaman autentikasi |
-| [`application/views/admin/dashboard.php`](application/views/admin/dashboard.php) | Konten dashboard utama |
-| [`application/views/admin/laporan_preview.php`](application/views/admin/laporan_preview.php) | Showroom kandidat 3D interaktif |
-| [`assets/css/spk-reward.css`](assets/css/spk-reward.css) | Stylesheet tema kustom |
-| [`assets/icons/logo.png`](assets/icons/logo.png) | Logo resmi BeRewards |
+| File                                                                                         | Keterangan                            |
+| -------------------------------------------------------------------------------------------- | ------------------------------------- |
+| [`application/controllers/Dashboard.php`](application/controllers/Dashboard.php)             | Controller dashboard utama            |
+| [`application/controllers/Laporan.php`](application/controllers/Laporan.php)                 | Controller laporan & showroom preview |
+| [`application/controllers/Audit.php`](application/controllers/Audit.php)                     | Controller audit trail                |
+| [`application/views/auth/signin.php`](application/views/auth/signin.php)                     | Halaman autentikasi                   |
+| [`application/views/admin/dashboard.php`](application/views/admin/dashboard.php)             | Konten dashboard utama                |
+| [`application/views/admin/laporan_preview.php`](application/views/admin/laporan_preview.php) | Showroom kandidat 3D interaktif       |
+| [`assets/css/spk-reward.css`](assets/css/spk-reward.css)                                     | Stylesheet tema kustom                |
+| [`assets/icons/logo.png`](assets/icons/logo.png)                                             | Logo resmi BeRewards                  |
 
 ---
 
 ## 👨‍💻 Pengembang
 
 **Qori Chairawan**
-- 🏛️ Pengadilan Negeri Lubuk Pakam Kelas I-A
+
+- 🏛️ Pengadilan Negeri Lubuk Pakam
 - 📧 Proyek: SPK Penentuan Reward Pegawai — BeRewards
 
 ---
@@ -176,4 +177,4 @@ Panduan UI dan visual lengkap tersedia di [`.agents/be-rewards-brand-guide.md`](
 
 Proyek ini bersifat **Free / Open Source** dan bebas digunakan, dimodifikasi, serta didistribusikan tanpa batasan lisensi komersial.
 
-> © 2026 BeRewards — Qori Chairawan. Dikembangkan untuk Pengadilan Negeri Lubuk Pakam Kelas I-A.
+> © 2026 BeRewards — Qori Chairawan. Dikembangkan untuk Pengadilan Negeri Lubuk Pakam.

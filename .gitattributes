@@ -1,0 +1,16 @@
+# GitHub Linguist — language detection overrides
+# Tandai folder aset pihak ketiga sebagai vendor agar tidak dihitung sebagai bahasa utama
+
+# Aset & library JavaScript pihak ketiga
+assets/libs/**          linguist-vendored
+assets/js/**            linguist-vendored
+assets/css/**           linguist-vendored
+assets/fonts/**         linguist-vendored
+assets/templates/**     linguist-vendored
+
+# Folder system CodeIgniter (framework, bukan kode milik proyek)
+system/**               linguist-vendored
+
+# Pastikan file PHP aplikasi dideteksi sebagai PHP
+application/**          linguist-detectable
+*.php                   linguist-detectable
