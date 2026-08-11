@@ -77,6 +77,12 @@
 
                 <li class="menu-title">Pengaturan</li>
                 <li>
+                    <a href="<?= site_url('setting'); ?>" class="tp-link<?= (isset($active_menu) && $active_menu === 'setting') ? ' active' : ''; ?>">
+                        <i data-feather="settings"></i>
+                        <span> Pengaturan Aplikasi </span>
+                    </a>
+                </li>
+                <li>
                     <a href="<?= site_url('user'); ?>" class="tp-link<?= (isset($active_menu) && $active_menu === 'user') ? ' active' : ''; ?>">
                         <i data-feather="user"></i>
                         <span> Manajemen Pengguna </span>

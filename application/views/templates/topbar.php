@@ -18,44 +18,6 @@
                         <i data-feather="maximize" class="align-middle fullscreen noti-icon"></i>
                     </button>
                 </li>
-
-                <li class="dropdown notification-list topbar-dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <i data-feather="bell" class="noti-icon"></i>
-                        <span class="badge bg-danger rounded-circle noti-icon-badge">3</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end dropdown-lg">
-                        <div class="dropdown-item noti-title">
-                            <h5 class="m-0">
-                                <span class="float-end"><a href="javascript:void(0);" class="text-dark"><small>Tandai
-                                            dibaca</small></a></span>Notifikasi
-                            </h5>
-                        </div>
-                        <div class="noti-scroll" data-simplebar style="max-height: 230px;">
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary active">
-                                <div class="notify-icon bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center"
-                                    style="width:36px; height:36px;">
-                                    <i class="ti ti-calculator fs-18"></i>
-                                </div>
-                                <div class="notify-content ms-2">
-                                    <p class="notify-details mb-0 text-dark">Proses TOPSIS Baru</p>
-                                    <small class="text-muted">Kategori Panitera Pengganti • 1 jam lalu</small>
-                                </div>
-                            </a>
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
-                                <div class="notify-icon bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center"
-                                    style="width:36px; height:36px;">
-                                    <i class="ti ti-file-check fs-18"></i>
-                                </div>
-                                <div class="notify-content ms-2">
-                                    <p class="notify-details mb-0 text-dark">Berita Acara Final</p>
-                                    <small class="text-muted">Triwulan I 2026 telah disetujui • Kemarin</small>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </li>
-
                 <li class="dropdown notification-list topbar-dropdown">
                     <a class="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                         aria-expanded="false">
