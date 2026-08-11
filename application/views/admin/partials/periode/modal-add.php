@@ -30,11 +30,17 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold text-dark fs-12">Tanggal Mulai <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="tanggal_mulai" required>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="ti ti-calendar text-muted"></i></span>
+                                <input type="text" class="form-control border-start-0 datepicker-input" id="add_tanggal_mulai" name="tanggal_mulai" placeholder="Pilih Tanggal Mulai" required>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold text-dark fs-12">Tanggal Selesai <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="tanggal_selesai" required>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="ti ti-calendar text-muted"></i></span>
+                                <input type="text" class="form-control border-start-0 datepicker-input" id="add_tanggal_selesai" name="tanggal_selesai" placeholder="Pilih Tanggal Selesai" required>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold text-dark fs-12">Status Akses <span class="text-danger">*</span></label>

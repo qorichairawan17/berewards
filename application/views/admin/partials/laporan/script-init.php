@@ -22,7 +22,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 2. Edit Button Handler
+    // 2. Initialize Flatpickr Datepicker (Reference from forms-pickers.html)
+    if (typeof flatpickr !== 'undefined') {
+        flatpickr(".datepicker-input", {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "j F Y",
+            allowInput: true
+        });
+    }
+
+    // 3. Edit Button Handler
     $(document).on('click', '.btn-edit-laporan', function() {
         var id = $(this).data('id');
         var noba = $(this).data('noba');
@@ -33,8 +43,13 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#edit_id_laporan').val(id);
         $('#edit_no_ba').val(noba);
         $('#edit_status').val(status);
-        $('#edit_tanggal_terbit').val(tanggal);
         $('#edit_ketua_panitia').val(ketua);
+
+        if (document.getElementById('edit_tanggal_terbit')._flatpickr) {
+            document.getElementById('edit_tanggal_terbit')._flatpickr.setDate(tanggal, true);
+        } else {
+            $('#edit_tanggal_terbit').val(tanggal);
+        }
     });
 
     // 3. Detail / Pratinjau Button Handler with 3 Best Candidates Table

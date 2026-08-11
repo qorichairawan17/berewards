@@ -23,12 +23,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Template HTML Baris Anggota Tim Penilai Baru
+    // 2. Initialize Flatpickr Datepicker (Reference from forms-pickers.html)
+    if (typeof flatpickr !== 'undefined') {
+        flatpickr(".datepicker-input", {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "j F Y",
+            allowInput: true
+        });
+    }
+
+    var memberRowCounter = 10;
+    // Template HTML Baris Anggota Tim Penilai Baru dengan Multicheck Kategori
     function createMemberRowHtml(prefix) {
-        prefix = prefix || 'anggota';
-        return '<div class="member-row p-3 bg-light rounded-3 border d-flex flex-wrap align-items-center gap-2 mb-2">' +
+        prefix = prefix || 'add';
+        memberRowCounter++;
+        var rowId = prefix + '_row_' + memberRowCounter;
+
+        return '<div class="member-row p-3 bg-light rounded-3 border d-flex flex-wrap align-items-center gap-3 mb-2">' +
             '<div class="flex-grow-1" style="min-width: 250px;">' +
-                '<label class="form-label fw-semibold text-dark fs-11 mb-1">Nama & NIP Pegawai Anggota</label>' +
+                '<label class="form-label fw-semibold text-dark fs-11 mb-1">Nama & NIP Pegawai Anggota <span class="text-danger">*</span></label>' +
                 '<select class="form-select form-select-sm" name="' + prefix + '_pegawai[]" required>' +
                     '<option value="">-- Pilih Pegawai Anggota Tim --</option>' +
                     '<option value="2">Hj. Fitriani, S.H., M.H. (Wakil Ketua PN)</option>' +
@@ -40,17 +54,30 @@ document.addEventListener('DOMContentLoaded', function() {
                     '<option value="6">Siti Aminah, A.Md. (Panitera Pengganti)</option>' +
                 '</select>' +
             '</div>' +
-            '<div class="flex-grow-1" style="min-width: 220px;">' +
-                '<label class="form-label fw-semibold text-dark fs-11 mb-1">Kategori / Peran Penilaian</label>' +
-                '<select class="form-select form-select-sm" name="' + prefix + '_peran[]" required>' +
-                    '<option value="Penilai Kategori Hakim">Penilai Kategori Hakim</option>' +
-                    '<option value="Penilai Kategori Panitera Pengganti">Penilai Kategori Panitera Pengganti</option>' +
-                    '<option value="Penilai Kategori Jurusita">Penilai Kategori Jurusita</option>' +
-                    '<option value="Penilai Kategori Staf">Penilai Kategori Staf</option>' +
-                    '<option value="Penilai Seluruh Kategori">Penilai Seluruh Kategori</option>' +
-                '</select>' +
+            '<div class="flex-grow-1" style="min-width: 320px;">' +
+                '<label class="form-label fw-semibold text-dark fs-11 mb-1">' +
+                    '<i class="ti ti-check-check text-primary me-1"></i> Kategori Pegawai yang Dinilai (Bisa Pilih > 1)' +
+                '</label>' +
+                '<div class="d-flex flex-wrap align-items-center gap-2 p-2 bg-white rounded border">' +
+                    '<div class="form-check form-check-inline me-2 mb-0">' +
+                        '<input class="form-check-input" type="checkbox" id="' + rowId + '_hakim" name="' + prefix + '_kategori_' + memberRowCounter + '[]" value="Hakim" checked>' +
+                        '<label class="form-check-label fs-11 fw-semibold text-dark pointer" for="' + rowId + '_hakim">Hakim</label>' +
+                    '</div>' +
+                    '<div class="form-check form-check-inline me-2 mb-0">' +
+                        '<input class="form-check-input" type="checkbox" id="' + rowId + '_pp" name="' + prefix + '_kategori_' + memberRowCounter + '[]" value="Panitera Pengganti">' +
+                        '<label class="form-check-label fs-11 fw-semibold text-dark pointer" for="' + rowId + '_pp">Panitera Pengganti</label>' +
+                    '</div>' +
+                    '<div class="form-check form-check-inline me-2 mb-0">' +
+                        '<input class="form-check-input" type="checkbox" id="' + rowId + '_jurusita" name="' + prefix + '_kategori_' + memberRowCounter + '[]" value="Jurusita">' +
+                        '<label class="form-check-label fs-11 fw-semibold text-dark pointer" for="' + rowId + '_jurusita">Jurusita</label>' +
+                    '</div>' +
+                    '<div class="form-check form-check-inline me-0 mb-0">' +
+                        '<input class="form-check-input" type="checkbox" id="' + rowId + '_staf" name="' + prefix + '_kategori_' + memberRowCounter + '[]" value="Staf">' +
+                        '<label class="form-check-label fs-11 fw-semibold text-dark pointer" for="' + rowId + '_staf">Staf</label>' +
+                    '</div>' +
+                '</div>' +
             '</div>' +
-            '<div class="align-self-end">' +
+            '<div class="align-self-end ms-auto">' +
                 '<button type="button" class="btn btn-sm btn-outline-danger btn-remove-member-row" title="Hapus Baris Anggota">' +
                     '<i class="ti ti-trash"></i>' +
                 '</button>' +

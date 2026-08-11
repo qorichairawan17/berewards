@@ -33,7 +33,10 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold text-dark fs-12">Tanggal Penerbitan <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="tanggal_terbit" value="2026-06-30" required>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="ti ti-calendar text-muted"></i></span>
+                                <input type="text" class="form-control border-start-0 datepicker-input" id="add_tanggal_terbit" name="tanggal_terbit" placeholder="Pilih Tanggal Terbit" value="2026-06-30" required>
+                            </div>
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold text-dark fs-12">Nama Ketua Tim Penilai <span class="text-danger">*</span></label>

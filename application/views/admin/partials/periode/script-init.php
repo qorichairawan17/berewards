@@ -22,7 +22,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 2. Edit Button Handler
+    // 2. Initialize Flatpickr Datepicker (Reference from forms-pickers.html)
+    if (typeof flatpickr !== 'undefined') {
+        flatpickr(".datepicker-input", {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "j F Y",
+            allowInput: true
+        });
+    }
+
+    // 3. Edit Button Handler
     $(document).on('click', '.btn-edit-periode', function() {
         var id = $(this).data('id');
         var nama = $(this).data('nama');
@@ -37,10 +47,20 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#edit_nama_periode').val(nama);
         $('#edit_jenis_periode').val(jenis);
         $('#edit_tahun').val(tahun);
-        $('#edit_tanggal_mulai').val(mulai);
-        $('#edit_tanggal_selesai').val(selesai);
         $('#edit_status').val(status);
         $('#edit_keterangan').val(keterangan);
+
+        if (document.getElementById('edit_tanggal_mulai')._flatpickr) {
+            document.getElementById('edit_tanggal_mulai')._flatpickr.setDate(mulai, true);
+        } else {
+            $('#edit_tanggal_mulai').val(mulai);
+        }
+
+        if (document.getElementById('edit_tanggal_selesai')._flatpickr) {
+            document.getElementById('edit_tanggal_selesai')._flatpickr.setDate(selesai, true);
+        } else {
+            $('#edit_tanggal_selesai').val(selesai);
+        }
     });
 
     // 3. Detail Button Handler

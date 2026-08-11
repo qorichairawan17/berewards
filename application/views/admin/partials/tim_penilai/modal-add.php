@@ -33,7 +33,10 @@
 
                         <div class="col-md-6">
                             <label class="form-label fw-semibold text-dark fs-12 mb-1">Tanggal Terbit SK <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" value="<?= date('Y-m-d'); ?>" required>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="ti ti-calendar text-muted"></i></span>
+                                <input type="text" class="form-control border-start-0 datepicker-input" id="add_tanggal_sk" placeholder="Pilih Tanggal Terbit SK" value="<?= date('Y-m-d'); ?>" required>
+                            </div>
                         </div>
 
                         <div class="col-md-6">
@@ -74,11 +77,11 @@
                             </select>
                         </div>
 
-                        <!-- Section 3: Input Fleksibel Anggota Tim Penilai (Multi-Member Dynamic Input) -->
+                        <!-- Section 3: Input Fleksibel Anggota Tim Penilai (Multi-Member Dynamic Input with Multicheck Categories) -->
                         <div class="col-12 border-bottom pb-2 mt-4 mb-2 d-flex justify-content-between align-items-center">
                             <div>
                                 <span class="text-primary fw-bold fs-11 text-uppercase tracking-wider">Personel Tim Penilai Fleksibel</span>
-                                <h6 class="fw-bold text-dark mb-0 fs-14">Daftar Anggota Tim Penilai (Dapat Diisi Lebih Dari 1 Anggota)</h6>
+                                <h6 class="fw-bold text-dark mb-0 fs-14">Daftar Anggota Tim Penilai (Multicheck Kategori Penilaian)</h6>
                             </div>
                             <button type="button" class="btn btn-sm btn-outline-primary fw-semibold" id="btnAddAddMemberRow">
                                 <i class="ti ti-plus me-1"></i> Tambah Baris Anggota
@@ -88,9 +91,9 @@
                         <div class="col-12">
                             <div id="addMemberListContainer" class="d-flex flex-column gap-2">
                                 <!-- Baris Anggota 1 -->
-                                <div class="member-row p-3 bg-light rounded-3 border d-flex flex-wrap align-items-center gap-2">
+                                <div class="member-row p-3 bg-light rounded-3 border d-flex flex-wrap align-items-center gap-3">
                                     <div class="flex-grow-1" style="min-width: 250px;">
-                                        <label class="form-label fw-semibold text-dark fs-11 mb-1">Nama & NIP Pegawai Anggota</label>
+                                        <label class="form-label fw-semibold text-dark fs-11 mb-1">Nama & NIP Pegawai Anggota <span class="text-danger">*</span></label>
                                         <select class="form-select form-select-sm" name="anggota_pegawai[]" required>
                                             <option value="">-- Pilih Pegawai Anggota Tim --</option>
                                             <option value="2" selected>Hj. Fitriani, S.H., M.H. (Wakil Ketua PN)</option>
@@ -100,17 +103,30 @@
                                             <option value="8">Nurfadillah, S.E. (Staf)</option>
                                         </select>
                                     </div>
-                                    <div class="flex-grow-1" style="min-width: 220px;">
-                                        <label class="form-label fw-semibold text-dark fs-11 mb-1">Kategori / Peran Penilaian</label>
-                                        <select class="form-select form-select-sm" name="anggota_peran[]" required>
-                                            <option value="Penilai Kategori Hakim" selected>Penilai Kategori Hakim</option>
-                                            <option value="Penilai Kategori Panitera Pengganti">Penilai Kategori Panitera Pengganti</option>
-                                            <option value="Penilai Kategori Jurusita">Penilai Kategori Jurusita</option>
-                                            <option value="Penilai Kategori Staf">Penilai Kategori Staf</option>
-                                            <option value="Penilai Seluruh Kategori">Penilai Seluruh Kategori</option>
-                                        </select>
+                                    <div class="flex-grow-1" style="min-width: 320px;">
+                                        <label class="form-label fw-semibold text-dark fs-11 mb-1">
+                                            <i class="ti ti-check-check text-primary me-1"></i> Kategori Pegawai yang Dinilai (Bisa Pilih > 1)
+                                        </label>
+                                        <div class="d-flex flex-wrap align-items-center gap-2 p-2 bg-white rounded border">
+                                            <div class="form-check form-check-inline me-2 mb-0">
+                                                <input class="form-check-input" type="checkbox" id="add_cat_hakim_1" name="add_kategori_1[]" value="Hakim" checked>
+                                                <label class="form-check-label fs-11 fw-semibold text-dark pointer" for="add_cat_hakim_1">Hakim</label>
+                                            </div>
+                                            <div class="form-check form-check-inline me-2 mb-0">
+                                                <input class="form-check-input" type="checkbox" id="add_cat_pp_1" name="add_kategori_1[]" value="Panitera Pengganti" checked>
+                                                <label class="form-check-label fs-11 fw-semibold text-dark pointer" for="add_cat_pp_1">Panitera Pengganti</label>
+                                            </div>
+                                            <div class="form-check form-check-inline me-2 mb-0">
+                                                <input class="form-check-input" type="checkbox" id="add_cat_jurusita_1" name="add_kategori_1[]" value="Jurusita">
+                                                <label class="form-check-label fs-11 fw-semibold text-dark pointer" for="add_cat_jurusita_1">Jurusita</label>
+                                            </div>
+                                            <div class="form-check form-check-inline me-0 mb-0">
+                                                <input class="form-check-input" type="checkbox" id="add_cat_staf_1" name="add_kategori_1[]" value="Staf">
+                                                <label class="form-check-label fs-11 fw-semibold text-dark pointer" for="add_cat_staf_1">Staf</label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="align-self-end">
+                                    <div class="align-self-end ms-auto">
                                         <button type="button" class="btn btn-sm btn-outline-danger btn-remove-member-row" title="Hapus Baris Anggota">
                                             <i class="ti ti-trash"></i>
                                         </button>
@@ -118,9 +134,9 @@
                                 </div>
 
                                 <!-- Baris Anggota 2 -->
-                                <div class="member-row p-3 bg-light rounded-3 border d-flex flex-wrap align-items-center gap-2">
+                                <div class="member-row p-3 bg-light rounded-3 border d-flex flex-wrap align-items-center gap-3">
                                     <div class="flex-grow-1" style="min-width: 250px;">
-                                        <label class="form-label fw-semibold text-dark fs-11 mb-1">Nama & NIP Pegawai Anggota</label>
+                                        <label class="form-label fw-semibold text-dark fs-11 mb-1">Nama & NIP Pegawai Anggota <span class="text-danger">*</span></label>
                                         <select class="form-select form-select-sm" name="anggota_pegawai[]">
                                             <option value="">-- Pilih Pegawai Anggota Tim --</option>
                                             <option value="2">Hj. Fitriani, S.H., M.H. (Wakil Ketua PN)</option>
@@ -130,17 +146,30 @@
                                             <option value="8">Nurfadillah, S.E. (Staf)</option>
                                         </select>
                                     </div>
-                                    <div class="flex-grow-1" style="min-width: 220px;">
-                                        <label class="form-label fw-semibold text-dark fs-11 mb-1">Kategori / Peran Penilaian</label>
-                                        <select class="form-select form-select-sm" name="anggota_peran[]">
-                                            <option value="Penilai Kategori Hakim">Penilai Kategori Hakim</option>
-                                            <option value="Penilai Kategori Panitera Pengganti" selected>Penilai Kategori Panitera Pengganti</option>
-                                            <option value="Penilai Kategori Jurusita">Penilai Kategori Jurusita</option>
-                                            <option value="Penilai Kategori Staf">Penilai Kategori Staf</option>
-                                            <option value="Penilai Seluruh Kategori">Penilai Seluruh Kategori</option>
-                                        </select>
+                                    <div class="flex-grow-1" style="min-width: 320px;">
+                                        <label class="form-label fw-semibold text-dark fs-11 mb-1">
+                                            <i class="ti ti-check-check text-primary me-1"></i> Kategori Pegawai yang Dinilai (Bisa Pilih > 1)
+                                        </label>
+                                        <div class="d-flex flex-wrap align-items-center gap-2 p-2 bg-white rounded border">
+                                            <div class="form-check form-check-inline me-2 mb-0">
+                                                <input class="form-check-input" type="checkbox" id="add_cat_hakim_2" name="add_kategori_2[]" value="Hakim">
+                                                <label class="form-check-label fs-11 fw-semibold text-dark pointer" for="add_cat_hakim_2">Hakim</label>
+                                            </div>
+                                            <div class="form-check form-check-inline me-2 mb-0">
+                                                <input class="form-check-input" type="checkbox" id="add_cat_pp_2" name="add_kategori_2[]" value="Panitera Pengganti" checked>
+                                                <label class="form-check-label fs-11 fw-semibold text-dark pointer" for="add_cat_pp_2">Panitera Pengganti</label>
+                                            </div>
+                                            <div class="form-check form-check-inline me-2 mb-0">
+                                                <input class="form-check-input" type="checkbox" id="add_cat_jurusita_2" name="add_kategori_2[]" value="Jurusita" checked>
+                                                <label class="form-check-label fs-11 fw-semibold text-dark pointer" for="add_cat_jurusita_2">Jurusita</label>
+                                            </div>
+                                            <div class="form-check form-check-inline me-0 mb-0">
+                                                <input class="form-check-input" type="checkbox" id="add_cat_staf_2" name="add_kategori_2[]" value="Staf" checked>
+                                                <label class="form-check-label fs-11 fw-semibold text-dark pointer" for="add_cat_staf_2">Staf</label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="align-self-end">
+                                    <div class="align-self-end ms-auto">
                                         <button type="button" class="btn btn-sm btn-outline-danger btn-remove-member-row" title="Hapus Baris Anggota">
                                             <i class="ti ti-trash"></i>
                                         </button>

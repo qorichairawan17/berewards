@@ -126,13 +126,15 @@ class Periode extends CI_Controller
             'content_view' => 'admin/periode',
             'extra_css' => array(
                 'assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css',
-                'assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css'
+                'assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css',
+                'assets/libs/flatpickr/flatpickr.min.css'
             ),
             'extra_js' => array(
                 'assets/libs/datatables.net/js/jquery.dataTables.min.js',
                 'assets/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js',
                 'assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js',
-                'assets/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js'
+                'assets/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js',
+                'assets/libs/flatpickr/flatpickr.min.js'
             ),
             'view_data' => array(
                 'periode_list' => $periode_list
