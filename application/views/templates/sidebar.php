@@ -89,6 +89,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="<?= site_url('migration'); ?>" class="tp-link<?= (isset($active_menu) && $active_menu === 'migration') ? ' active' : ''; ?>">
+                        <i data-feather="database"></i>
+                        <span> Migrasi Database </span>
+                    </a>
+                </li>
+                <li>
                     <a href="<?= site_url('user'); ?>" class="tp-link<?= (isset($active_menu) && $active_menu === 'user') ? ' active' : ''; ?>">
                         <i data-feather="user"></i>
                         <span> Manajemen Pengguna </span>
