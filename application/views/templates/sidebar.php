@@ -48,6 +48,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="<?= site_url('timpenilai'); ?>" class="tp-link<?= (isset($active_menu) && $active_menu === 'timpenilai') ? ' active' : ''; ?>">
+                        <i data-feather="user-check"></i>
+                        <span> Tim Penilai </span>
+                    </a>
+                </li>
+                <li>
                     <a href="<?= site_url('kriteria'); ?>"
                         class="tp-link<?= (isset($active_menu) && $active_menu === 'kriteria') ? ' active' : ''; ?>">
                         <i data-feather="list"></i>
