@@ -27,12 +27,14 @@
                     <div class="dropdown-menu dropdown-menu-end dropdown-lg">
                         <div class="dropdown-item noti-title">
                             <h5 class="m-0">
-                                <span class="float-end"><a href="javascript:void(0);" class="text-dark"><small>Tandai dibaca</small></a></span>Notifikasi
+                                <span class="float-end"><a href="javascript:void(0);" class="text-dark"><small>Tandai
+                                            dibaca</small></a></span>Notifikasi
                             </h5>
                         </div>
                         <div class="noti-scroll" data-simplebar style="max-height: 230px;">
                             <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary active">
-                                <div class="notify-icon bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center" style="width:36px; height:36px;">
+                                <div class="notify-icon bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center"
+                                    style="width:36px; height:36px;">
                                     <i class="ti ti-calculator fs-18"></i>
                                 </div>
                                 <div class="notify-content ms-2">
@@ -41,7 +43,8 @@
                                 </div>
                             </a>
                             <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
-                                <div class="notify-icon bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center" style="width:36px; height:36px;">
+                                <div class="notify-icon bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center"
+                                    style="width:36px; height:36px;">
                                     <i class="ti ti-file-check fs-18"></i>
                                 </div>
                                 <div class="notify-content ms-2">
@@ -54,8 +57,10 @@
                 </li>
 
                 <li class="dropdown notification-list topbar-dropdown">
-                    <a class="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                        <div class="user-avatar-sm d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary fw-bold fs-12 align-middle me-1" style="width:32px; height:32px;">SA</div>
+                    <a class="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
+                        aria-expanded="false">
+                        <div class="user-avatar-sm d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary fw-bold fs-12 align-middle me-1"
+                            style="width:32px; height:32px;">SA</div>
                         <span class="pro-user-name ms-1">
                             Superadmin <i class="mdi mdi-chevron-down"></i>
                         </span>
@@ -64,13 +69,9 @@
                         <div class="dropdown-header noti-title">
                             <h6 class="text-overflow m-0">PN Lubuk Pakam</h6>
                         </div>
-                        <a href="#" class="dropdown-item notify-item">
+                        <a href="<?= site_url('profile'); ?>" class="dropdown-item notify-item">
                             <i class="mdi mdi-account-circle-outline fs-16 align-middle me-1"></i>
                             <span>Profil Saya</span>
-                        </a>
-                        <a href="#" class="dropdown-item notify-item">
-                            <i class="mdi mdi-cog-outline fs-16 align-middle me-1"></i>
-                            <span>Pengaturan</span>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="<?= site_url('signin'); ?>" class="dropdown-item notify-item text-danger">
