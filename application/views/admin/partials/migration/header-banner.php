@@ -18,7 +18,7 @@
                 </p>
             </div>
             <div class="d-flex align-items-center gap-2">
-                <button type="button" class="btn btn-warning font-bold shadow-sm px-3 py-2 btn-run-migration-all">
+                <button type="button" class="btn btn-warning font-bold shadow-sm px-3 py-2 btn-run-migration-all" data-latest-version="<?= isset($latest_version) ? $latest_version : 7; ?>">
                     <i class="ti ti-player-play me-1"></i> Jalankan Semua Migrasi
                 </button>
                 <button type="button" class="btn btn-outline-light font-semibold px-3 py-2 btn-rollback-migration-all">
