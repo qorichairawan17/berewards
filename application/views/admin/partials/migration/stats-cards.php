@@ -31,14 +31,14 @@
     <div class="col-md-6 col-xl-3">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body p-3.5 d-flex align-items-center gap-3">
-                <div class="rounded-3 <?= $employee_table_exists ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'; ?> p-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                    <i class="ti <?= $employee_table_exists ? 'ti-table-check' : 'ti-table-off'; ?> fs-22"></i>
+                <div class="rounded-3 <?= $referensi_pegawai_table_exists ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'; ?> p-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="ti <?= $referensi_pegawai_table_exists ? 'ti-table-check' : 'ti-table-off'; ?> fs-22"></i>
                 </div>
                 <div>
-                    <span class="text-muted fs-11 d-block mb-0">Tabel employee_data</span>
+                    <span class="text-muted fs-11 d-block mb-0">Tabel referensi_pegawai</span>
                     <h4 class="fw-bold mb-0 text-dark">
-                        <?php if ($employee_table_exists): ?>
-                            <span class="badge bg-success rounded-pill px-2 py-1 fs-11">Terbentuk (<?= $employee_count; ?> Record)</span>
+                        <?php if ($referensi_pegawai_table_exists): ?>
+                            <span class="badge bg-success rounded-pill px-2 py-1 fs-11">Terbentuk (<?= $referensi_pegawai_count; ?> Record)</span>
                         <?php else: ?>
                             <span class="badge bg-danger rounded-pill px-2 py-1 fs-11">Belum Terbentuk</span>
                         <?php endif; ?>

@@ -63,6 +63,20 @@ class Migration extends CI_Controller
                 'class_name'   => 'Migration_Create_assessment_tables',
                 'target_table' => 'topsis_proses',
                 'description'  => 'Membuat tabel topsis_proses, topsis_proses_kriteria, topsis_proses_alternatif, penilaian, dan hasil_topsis dengan relasi Foreign Key lengkap.'
+            ),
+            array(
+                'version'      => 8,
+                'file_name'    => '008_create_laporan_ba_table.php',
+                'class_name'   => 'Migration_Create_laporan_ba_table',
+                'target_table' => 'laporan_ba',
+                'description'  => 'Membuat tabel laporan_ba untuk pengesahan Berita Acara penetapan penerima reward TOPSIS dengan Foreign Keys ke topsis_proses, periode, tim_penilai_sk, referensi_pegawai, dan pengguna.'
+            ),
+            array(
+                'version'      => 9,
+                'file_name'    => '009_create_audit_trail_table.php',
+                'class_name'   => 'Migration_Create_audit_trail_table',
+                'target_table' => 'audit_trail',
+                'description'  => 'Membuat tabel audit_trail untuk pencatatan log aktivitas pengguna dan rekam jejak audit sistem dengan Foreign Key ke pengguna.'
             )
         );
 
@@ -81,6 +95,10 @@ class Migration extends CI_Controller
         $periode_count = 0;
         $topsis_proses_table_exists = FALSE;
         $topsis_proses_count = 0;
+        $laporan_ba_table_exists = FALSE;
+        $laporan_ba_count = 0;
+        $audit_trail_table_exists = FALSE;
+        $audit_trail_count = 0;
         $db_driver = 'MySQLi';
         $db_name = 'berewards';
 
@@ -129,6 +147,16 @@ class Migration extends CI_Controller
                 $topsis_proses_table_exists = TRUE;
                 $topsis_proses_count = $this->db->count_all('topsis_proses');
             }
+
+            if ($this->db->table_exists('laporan_ba')) {
+                $laporan_ba_table_exists = TRUE;
+                $laporan_ba_count = $this->db->count_all('laporan_ba');
+            }
+
+            if ($this->db->table_exists('audit_trail')) {
+                $audit_trail_table_exists = TRUE;
+                $audit_trail_count = $this->db->count_all('audit_trail');
+            }
         }
 
         $this->load->view('admin/migration_standalone', array(
@@ -148,6 +176,10 @@ class Migration extends CI_Controller
             'periode_count'                  => $periode_count,
             'topsis_proses_table_exists'     => $topsis_proses_table_exists,
             'topsis_proses_count'            => $topsis_proses_count,
+            'laporan_ba_table_exists'        => $laporan_ba_table_exists,
+            'laporan_ba_count'               => $laporan_ba_count,
+            'audit_trail_table_exists'       => $audit_trail_table_exists,
+            'audit_trail_count'              => $audit_trail_count,
             'db_connected'                   => $db_connected,
             'db_driver'                      => $db_driver,
             'db_name'                        => $db_name
@@ -241,6 +273,10 @@ class Migration extends CI_Controller
         $periode_count = 0;
         $topsis_proses_table_exists = FALSE;
         $topsis_proses_count = 0;
+        $laporan_ba_table_exists = FALSE;
+        $laporan_ba_count = 0;
+        $audit_trail_table_exists = FALSE;
+        $audit_trail_count = 0;
         $db_name = 'berewards';
 
         if (isset($this->db) && isset($this->db->conn_id) && $this->db->conn_id !== FALSE) {
@@ -285,6 +321,16 @@ class Migration extends CI_Controller
                 $topsis_proses_table_exists = TRUE;
                 $topsis_proses_count = $this->db->count_all('topsis_proses');
             }
+
+            if ($this->db->table_exists('laporan_ba')) {
+                $laporan_ba_table_exists = TRUE;
+                $laporan_ba_count = $this->db->count_all('laporan_ba');
+            }
+
+            if ($this->db->table_exists('audit_trail')) {
+                $audit_trail_table_exists = TRUE;
+                $audit_trail_count = $this->db->count_all('audit_trail');
+            }
         }
 
         echo json_encode(array(
@@ -303,6 +349,10 @@ class Migration extends CI_Controller
             'periode_count'                  => $periode_count,
             'topsis_proses_table_exists'     => $topsis_proses_table_exists,
             'topsis_proses_count'            => $topsis_proses_count,
+            'laporan_ba_table_exists'        => $laporan_ba_table_exists,
+            'laporan_ba_count'               => $laporan_ba_count,
+            'audit_trail_table_exists'       => $audit_trail_table_exists,
+            'audit_trail_count'              => $audit_trail_count,
             'db_name'                        => $db_name
         ));
     }
