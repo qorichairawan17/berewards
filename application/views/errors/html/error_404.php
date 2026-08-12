@@ -10,166 +10,348 @@ $base_url = rtrim($base_url, '/') . '/';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 — Halaman Tidak Ditemukan | BeRewards SPK TOPSIS</title>
+    <title>404 — Halaman Tidak Ditemukan | SPK BeRewards</title>
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- App Favicon Icons -->
     <link rel="shortcut icon" href="<?= $base_url; ?>assets/icons/favicon.ico" type="image/x-icon" />
     <link rel="icon" href="<?= $base_url; ?>assets/icons/favicon-32x32.png" sizes="32x32" type="image/png" />
     <link rel="icon" href="<?= $base_url; ?>assets/icons/favicon-16x16.png" sizes="16x16" type="image/png" />
     <link rel="apple-touch-icon" href="<?= $base_url; ?>assets/icons/apple-icon-180x180.png" />
-    <link rel="manifest" href="<?= $base_url; ?>assets/icons/manifest.json" />
 
     <!-- Theme & Icons CSS -->
     <link href="<?= $base_url; ?>assets/css/app.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= $base_url; ?>assets/css/icons.min.css" rel="stylesheet" type="text/css" />
-    <link href="<?= $base_url; ?>assets/css/spk-reward.css" rel="stylesheet" type="text/css" />
 
     <style>
+        :root {
+            --primary: #108DFF;
+            --primary-gradient: linear-gradient(135deg, #108DFF 0%, #0066CC 100%);
+            --accent-glow: rgba(16, 141, 255, 0.12);
+            --bg-canvas: #F6F9FC;
+            --card-bg: rgba(255, 255, 255, 0.94);
+            --text-dark: #0F172A;
+            --text-body: #475569;
+            --text-muted: #94A3B8;
+            --border-light: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: #F8FAFC;
-            color: #1E293B;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-canvas);
+            background-image: 
+                radial-gradient(at 15% 15%, rgba(16, 141, 255, 0.07) 0px, transparent 50%),
+                radial-gradient(at 85% 85%, rgba(99, 102, 241, 0.06) 0px, transparent 50%);
+            color: var(--text-dark);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0;
-            padding: 24px;
+            padding: 32px 16px;
         }
 
-        .clean-error-card {
+        .error-wrapper {
+            width: 100%;
+            max-width: 980px;
+        }
+
+        .error-header-brand {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
             background: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            border-radius: 1.25rem;
-            box-shadow: 0 10px 30px rgba(16, 141, 255, 0.08);
+            border: 1px solid var(--border-light);
+            border-radius: 9999px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #DC2626;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 9999px;
+            letter-spacing: 0.5px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: #DC2626;
+            box-shadow: 0 0 8px #DC2626;
+            animation: blinkDot 1.5s infinite alternate;
+        }
+
+        @keyframes blinkDot {
+            0% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        .fresh-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 24px;
+            box-shadow: 
+                0 20px 40px -15px rgba(16, 141, 255, 0.07),
+                0 1px 3px rgba(0, 0, 0, 0.02);
+            padding: 40px;
+            position: relative;
             overflow: hidden;
         }
 
-        .error-code-badge {
-            font-size: 4.5rem;
+        .hero-number {
+            font-size: 6.5rem;
             font-weight: 800;
-            line-height: 1;
-            color: #108DFF;
-            letter-spacing: -2px;
+            line-height: 0.9;
+            letter-spacing: -4px;
+            background: linear-gradient(135deg, #0F172A 0%, #108DFF 50%, #6366F1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
         }
 
-        .icon-circle-avatar {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: #E0F2FE;
-            color: #108DFF;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+        .hero-title {
+            font-size: 1.625rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
         }
 
-        .info-box-light {
-            background: #F8FAFC;
-            border: 1px solid #E2E8F0;
-            border-radius: 0.75rem;
+        .hero-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-body);
+            line-height: 1.6;
+            margin-bottom: 28px;
         }
 
-        .btn-brand-primary {
-            background-color: #108DFF;
-            color: #ffffff;
-            font-weight: 600;
+        .action-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .btn-fresh-primary {
+            background: var(--primary-gradient);
+            color: #FFFFFF !important;
+            font-weight: 700;
+            font-size: 0.875rem;
+            padding: 12px 24px;
+            border-radius: 12px;
             border: none;
-            padding: 0.65rem 1.35rem;
-            border-radius: 0.5rem;
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(16, 141, 255, 0.3);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
+            gap: 8px;
         }
 
-        .btn-brand-primary:hover {
-            background-color: #0077E6;
-            color: #ffffff;
+        .btn-fresh-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(16, 141, 255, 0.25);
+            box-shadow: 0 8px 22px rgba(16, 141, 255, 0.4);
+            color: #FFFFFF;
         }
 
-        .btn-brand-secondary {
-            background-color: #F1F5F9;
-            color: #334155;
+        .btn-fresh-secondary {
+            background: #FFFFFF;
+            color: var(--text-dark) !important;
             font-weight: 600;
-            border: 1px solid #CBD5E1;
-            padding: 0.65rem 1.35rem;
-            border-radius: 0.5rem;
-            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
+            gap: 8px;
         }
 
-        .btn-brand-secondary:hover {
-            background-color: #E2E8F0;
-            color: #0F172A;
+        .btn-fresh-secondary:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
             transform: translateY(-2px);
+            color: var(--text-dark);
+        }
+
+        .info-card {
+            background: #F8FAFC;
+            border: 1px solid var(--border-light);
+            border-radius: 18px;
+            padding: 24px;
+            height: 100%;
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .info-card-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--primary);
+        }
+
+        .terminal-box {
+            font-family: 'JetBrains Mono', monospace;
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 0.8125rem;
+            color: #334155;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            word-break: break-all;
+        }
+
+        .check-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .check-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.8125rem;
+            color: var(--text-body);
+            margin-bottom: 10px;
+        }
+
+        .check-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .check-list i {
+            color: var(--primary);
+            font-size: 1rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            margin-top: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .fresh-card {
+                padding: 24px;
+            }
+            .hero-number {
+                font-size: 4.5rem;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container" style="max-width: 820px;">
-        <div class="clean-error-card p-4 p-md-5 mb-4">
-            <!-- Satker Tag & Header -->
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4 pb-3 border-bottom">
-                <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2.5 py-1 fs-11 fw-bold text-uppercase">
-                        <i class="ti ti-building-court me-1"></i> Pengadilan Negeri Lubuk Pakam Kelas I-A
-                    </span>
-                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fs-11 fw-semibold">
-                        SPK Reward TOPSIS
-                    </span>
-                </div>
-                <span class="badge bg-light text-muted border px-2.5 py-1 fs-11 font-monospace fw-semibold">
-                    HTTP 404
-                </span>
+    <div class="error-wrapper">
+        <!-- Top Navigation Brand Bar -->
+        <div class="error-header-brand">
+            <div class="brand-badge">
+                <img src="<?= $base_url; ?>assets/icons/logo.png" alt="BeRewards Logo" width="22" height="22" class="rounded">
+                <span>Pengadilan Negeri Lubuk Pakam Kelas I-A</span>
             </div>
+            <div class="status-pill">
+                <span class="status-dot"></span>
+                <span>HTTP 404 NOT FOUND</span>
+            </div>
+        </div>
 
+        <!-- Main Card -->
+        <div class="fresh-card">
             <div class="row align-items-center g-4">
-                <div class="col-md-7">
-                    <div class="icon-circle-avatar mb-3">
-                        <i class="ti ti-compass display-5"></i>
-                    </div>
-                    <div class="error-code-badge mb-1">404</div>
-                    <h3 class="fw-bold text-dark mb-2 fs-22">Halaman Tidak Ditemukan</h3>
-                    <p class="text-secondary fs-14 leading-relaxed mb-4">
-                        Maaf, alamat URL yang Anda akses tidak tersedia atau telah dipindahkan. Silakan periksa kembali tautan yang dituju atau
-                        gunakan tombol navigasi di bawah ini.
+                <!-- Left Hero Content -->
+                <div class="col-lg-6">
+                    <div class="hero-number">404</div>
+                    <h1 class="hero-title">Halaman Tidak Ditemukan</h1>
+                    <p class="hero-subtitle">
+                        Alamat URL yang Anda tuju tidak terdaftar, telah dipindahkan, atau rute target tidak aktif pada aplikasi SPK BeRewards.
                     </p>
 
-                    <div class="d-flex flex-wrap gap-2">
-                        <a href="<?= $base_url; ?>index.php/dashboard" class="btn-brand-primary">
-                            <i class="ti ti-layout-dashboard me-2 fs-18"></i> Kembali ke Dashboard
+                    <div class="action-group">
+                        <a href="<?= $base_url; ?>index.php/dashboard" class="btn-fresh-primary">
+                            <i class="ti ti-layout-dashboard fs-18"></i>
+                            <span>Beranda Utama</span>
                         </a>
-                        <a href="javascript:history.back()" class="btn-brand-secondary">
-                            <i class="ti ti-arrow-left me-2 fs-18"></i> Halaman Sebelumnya
+                        <a href="javascript:history.back()" class="btn-fresh-secondary">
+                            <i class="ti ti-arrow-left fs-18"></i>
+                            <span>Kembali</span>
+                        </a>
+                        <a href="javascript:location.reload()" class="btn-fresh-secondary">
+                            <i class="ti ti-refresh fs-18"></i>
+                            <span>Refresh</span>
                         </a>
                     </div>
                 </div>
 
-                <div class="col-md-5">
-                    <div class="info-box-light p-2">
-                        <h6 class="fw-bold text-primary mb-2 fs-13 text-uppercase tracking-wider">
-                            <i class="ti ti-info-circle me-1"></i> Informasi Sistem
-                        </h6>
-                        <div class="p-2 rounded bg-white mb-3 font-monospace fs-12 border text-dark text-break">
-                            <?php echo !empty($message) ? strip_tags($message) : 'The requested URL was not found on this server.'; ?>
+                <!-- Right Information Card -->
+                <div class="col-lg-6">
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <span class="info-card-title"><i class="ti ti-terminal me-1"></i> Rincian Diagnostik System</span>
+                            <span class="badge bg-light text-muted border fs-10 font-monospace">Route Debug</span>
                         </div>
 
-                        <h6 class="fw-semibold text-dark mb-2 fs-12">Petunjuk Navigasi:</h6>
-                        <ul class="ps-3 mb-0 fs-12 text-muted leading-relaxed">
-                            <li class="mb-1">Pastikan penulisan kata pada URL sudah benar.</li>
-                            <li class="mb-1">Gunakan tautan menu resmi pada aplikasi.</li>
-                            <li>Hubungi Administrator jika terdapat kendala.</li>
+                        <div class="terminal-box">
+                            <i class="ti ti-alert-circle text-primary me-1"></i> 
+                            <?php echo !empty($message) ? strip_tags($message) : 'The requested URL target was not found on this application router.'; ?>
+                        </div>
+
+                        <span class="d-block text-dark fw-bold fs-12 mb-2">Langkah Penanganan Disarankan:</span>
+                        <ul class="check-list">
+                            <li>
+                                <i class="ti ti-circle-check-filled"></i>
+                                <span>Periksa kembali penulisan nama URL atau rute pada alamat browser.</span>
+                            </li>
+                            <li>
+                                <i class="ti ti-circle-check-filled"></i>
+                                <span>Gunakan tautan navigasi resmi yang tersedia pada bilah menu samping.</span>
+                            </li>
+                            <li>
+                                <i class="ti ti-circle-check-filled"></i>
+                                <span>Hubungi Administrator Subbag Kepegawaian jika kendala berlanjut.</span>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -177,8 +359,8 @@ $base_url = rtrim($base_url, '/') . '/';
         </div>
 
         <!-- Footer -->
-        <div class="text-center text-muted fs-12">
-            &copy; <?= date('Y'); ?> <strong>Pengadilan Negeri Lubuk Pakam Kelas I-A</strong> — SPK Reward TOPSIS Engine
+        <div class="footer-text">
+            © <?= date('Y'); ?> <strong>Pengadilan Negeri Lubuk Pakam Kelas I-A</strong> • BeRewards System Engine
         </div>
     </div>
 </body>
