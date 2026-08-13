@@ -9,6 +9,8 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4 text-center">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                <input type="hidden" id="delete_id_sk" name="id_sk">
                 <div class="avatar-lg rounded-circle bg-danger bg-opacity-10 text-danger mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:64px; height:64px;">
                     <i class="ti ti-trash fs-30"></i>
                 </div>

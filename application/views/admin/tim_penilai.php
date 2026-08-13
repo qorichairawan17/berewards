@@ -1,3 +1,19 @@
+<!-- Toast Container (Top Right Placement Referencing auth/signin.php) -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
+    <div id="toastNotification" class="toast align-items-center border-0 text-white shadow-lg rounded-3" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body d-flex align-items-center gap-2.5 p-3">
+                <i id="toastIcon" class="fs-22 me-1"></i>
+                <div>
+                    <strong id="toastTitle" class="d-block fs-13 fw-bold mb-0.5"></strong>
+                    <span id="toastText" class="fs-12 text-white-80"></span>
+                </div>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
 <?php $this->load->view('admin/partials/tim_penilai/header-banner'); ?>
 <?php $this->load->view('admin/partials/tim_penilai/stats-cards'); ?>
 
@@ -9,9 +25,11 @@
                 <span class="text-primary fw-bold fs-11 text-uppercase tracking-wider">Tabel Referensi</span>
                 <h4 class="fw-bold text-dark mb-0">Daftar Surat Keputusan (SK) Tim Penilai</h4>
             </div>
-            <a href="<?= site_url('timpenilai/detail/1'); ?>" class="btn btn-sm btn-subtle-info fw-semibold px-3">
-                <i class="ti ti-eye me-1"></i> Lihat Contoh Rincian Tim Aktif (2026)
-            </a>
+            <?php if (!empty($sk_list)): ?>
+                <a href="<?= site_url('timpenilai/detail/' . $sk_list[0]['id_sk']); ?>" class="btn btn-sm btn-subtle-info fw-semibold px-3">
+                    <i class="ti ti-eye me-1"></i> Lihat Rincian Tim Aktif (<?= html_escape($sk_list[0]['tahun']); ?>)
+                </a>
+            <?php endif; ?>
         </div>
 
         <div class="table-responsive">
@@ -64,7 +82,9 @@
                                                 data-tahun="<?= html_escape($row['tahun']); ?>"
                                                 data-tanggal="<?= html_escape($row['tanggal_sk']); ?>"
                                                 data-perihal="<?= html_escape($row['perihal']); ?>"
-                                                data-status="<?= html_escape($row['status']); ?>">
+                                                data-status="<?= html_escape($row['status']); ?>"
+                                                data-ketua="<?= !empty($row['ketua']['id_pegawai']) ? $row['ketua']['id_pegawai'] : ''; ?>"
+                                                data-sekretaris="<?= !empty($row['sekretaris']['id_pegawai']) ? $row['sekretaris']['id_pegawai'] : ''; ?>">
                                             <i class="ti ti-edit fs-15"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm bg-danger-subtle text-danger btn-delete-tim p-1 px-2"
