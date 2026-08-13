@@ -9,6 +9,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <form id="formTambahPegawai" enctype="multipart/form-data">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <div class="modal-body p-4">
                     <div class="row g-3">
                         <div class="col-md-6">

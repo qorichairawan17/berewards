@@ -467,7 +467,11 @@ $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = FALSE;
 $config['csrf_exclude_uris'] = array(
     'user/authenticate',
-    'user/login'
+    'user/login',
+    'pegawai/simpan',
+    'pegawai/hapus',
+    'pegawai/detail',
+    'pegawai/data'
 );
 
 /*

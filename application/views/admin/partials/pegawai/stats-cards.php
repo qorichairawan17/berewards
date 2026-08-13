@@ -8,7 +8,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Total Pegawai</p>
-                    <h4 class="fw-bold mb-0 text-dark">10 <span class="fs-12 text-muted fw-normal">Orang</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark" id="stat_total"><?= isset($stats['total']) ? (int)$stats['total'] : 0; ?> <span class="fs-12 text-muted fw-normal">Orang</span></h4>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Hakim</p>
-                    <h4 class="fw-bold mb-0 text-dark">3 <span class="fs-12 text-muted fw-normal">Pegawai</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark" id="stat_hakim"><?= isset($stats['hakim']) ? (int)$stats['hakim'] : 0; ?> <span class="fs-12 text-muted fw-normal">Pegawai</span></h4>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Panitera Pengganti</p>
-                    <h4 class="fw-bold mb-0 text-dark">3 <span class="fs-12 text-muted fw-normal">Pegawai</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark" id="stat_panitera"><?= isset($stats['panitera']) ? (int)$stats['panitera'] : 0; ?> <span class="fs-12 text-muted fw-normal">Pegawai</span></h4>
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Jurusita & Staf</p>
-                    <h4 class="fw-bold mb-0 text-dark">4 <span class="fs-12 text-muted fw-normal">Pegawai</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark" id="stat_jurusita_staf"><?= isset($stats['jurusita_staf']) ? (int)$stats['jurusita_staf'] : 0; ?> <span class="fs-12 text-muted fw-normal">Pegawai</span></h4>
                 </div>
             </div>
         </div>

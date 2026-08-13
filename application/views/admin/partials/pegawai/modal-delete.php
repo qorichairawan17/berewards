@@ -9,12 +9,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body p-4 text-center">
+                <input type="hidden" id="delete_id" name="id_pegawai">
                 <div class="text-danger mb-3">
                     <i class="ti ti-trash fs-40"></i>
                 </div>
                 <h6 class="fw-bold text-dark mb-2">Apakah Anda yakin ingin menghapus pegawai ini?</h6>
                 <p class="text-muted fs-13 mb-0" id="delete_nama_pegawai">-</p>
-                <small class="text-muted fs-11 d-block mt-2">Tindakan ini akan menonaktifkan data dari referensi TOPSIS.</small>
+                <small class="text-muted fs-11 d-block mt-2">Tindakan ini akan menonaktifkan data dari referensi TOPSIS jika pegawai memiliki riwayat penilaian.</small>
             </div>
             <div class="modal-footer border-top bg-light">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>

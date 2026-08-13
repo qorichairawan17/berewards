@@ -50,6 +50,12 @@ class Migration_Create_referensi_pegawai_table extends CI_Migration {
                 'constraint' => 1,
                 'default'    => 1
             ),
+            'foto' => array(
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+                'null'       => TRUE,
+                'default'    => NULL
+            ),
             'created_at' => array(
                 'type' => 'DATETIME',
                 'null' => TRUE
