@@ -8,7 +8,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Total Periode</p>
-                    <h4 class="fw-bold mb-0 text-dark">10 <span class="fs-12 text-muted fw-normal">Siklus</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark"><?= isset($stats['total_periode']) ? (int)$stats['total_periode'] : count($periode_list); ?> <span class="fs-12 text-muted fw-normal">Siklus</span></h4>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Periode Berjalan</p>
-                    <h4 class="fw-bold mb-0 text-dark">3 <span class="fs-12 text-muted fw-normal">Buka</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark"><?= isset($stats['total_buka']) ? (int)$stats['total_buka'] : 0; ?> <span class="fs-12 text-muted fw-normal">Buka</span></h4>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Periode Ditutup</p>
-                    <h4 class="fw-bold mb-0 text-dark">7 <span class="fs-12 text-muted fw-normal">Selesai</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark"><?= isset($stats['total_tutup']) ? (int)$stats['total_tutup'] : 0; ?> <span class="fs-12 text-muted fw-normal">Selesai</span></h4>
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Tahun Berjalan</p>
-                    <h4 class="fw-bold mb-0 text-dark">2026 <span class="fs-12 text-muted fw-normal">T.A.</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark"><?= isset($stats['tahun_berjalan']) ? (int)$stats['tahun_berjalan'] : date('Y'); ?> <span class="fs-12 text-muted fw-normal">T.A.</span></h4>
                 </div>
             </div>
         </div>

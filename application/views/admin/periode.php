@@ -1,14 +1,28 @@
+<!-- Toast Container (Top Right Placement Referencing auth/signin.php) -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
+    <div id="toastNotification" class="toast align-items-center border-0 text-white shadow-lg rounded-3" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body d-flex align-items-center gap-2.5 p-3">
+                <i id="toastIcon" class="fs-22 me-1"></i>
+                <div>
+                    <strong id="toastTitle" class="d-block fs-13 fw-bold mb-0.5"></strong>
+                    <span id="toastText" class="fs-12 text-white-80"></span>
+                </div>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
 <?php $this->load->view('admin/partials/periode/header-banner'); ?>
 <?php $this->load->view('admin/partials/periode/stats-cards'); ?>
 
 <!-- DataTables Main Panel -->
 <section class="card panel-card border-0 shadow-sm mb-4">
     <div class="card-body p-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-                <span class="text-primary fw-bold fs-11 text-uppercase tracking-wider">Tabel Referensi</span>
-                <h4 class="fw-bold text-dark mb-0">Master Periode Penilaian Reward</h4>
-            </div>
+        <div class="mb-3">
+            <span class="text-primary fw-bold fs-11 text-uppercase tracking-wider">Tabel Referensi</span>
+            <h4 class="fw-bold text-dark mb-0">Master Periode Penilaian Reward</h4>
         </div>
 
         <div class="table-responsive">
@@ -57,8 +71,8 @@
                                                 data-nama="<?= html_escape($row['nama_periode']); ?>"
                                                 data-jenis="<?= html_escape($row['jenis_periode']); ?>"
                                                 data-tahun="<?= html_escape($row['tahun']); ?>"
-                                                data-mulai="<?= date('d M Y', strtotime($row['tanggal_mulai'])); ?>"
-                                                data-selesai="<?= date('d M Y', strtotime($row['tanggal_selesai'])); ?>"
+                                                data-mulai="<?= html_escape($row['tanggal_mulai']); ?>"
+                                                data-selesai="<?= html_escape($row['tanggal_selesai']); ?>"
                                                 data-status="<?= html_escape($row['status']); ?>"
                                                 data-keterangan="<?= html_escape($row['keterangan']); ?>">
                                             <i class="ti ti-eye fs-15"></i>
@@ -78,7 +92,7 @@
                                             <i class="ti ti-edit fs-15"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm bg-danger-subtle text-danger btn-delete-periode p-1 px-2"
-                                                title="Hapus Periode"
+                                                title="Hapus / Tutup Periode"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modalHapusPeriode"
                                                 data-id="<?= $row['id_periode']; ?>"

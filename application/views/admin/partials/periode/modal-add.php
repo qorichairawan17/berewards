@@ -9,6 +9,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <form id="formTambahPeriode">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <div class="modal-body p-4">
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -26,7 +27,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-semibold text-dark fs-12">Tahun Anggaran <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" name="tahun" value="2026" min="2020" max="2030" required>
+                            <input type="number" class="form-control" name="tahun" value="<?= date('Y'); ?>" min="2020" max="2035" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold text-dark fs-12">Tanggal Mulai <span class="text-danger">*</span></label>

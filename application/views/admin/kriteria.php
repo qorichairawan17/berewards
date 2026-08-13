@@ -1,3 +1,19 @@
+<!-- Toast Container (Top Right Placement Referencing auth/signin.php) -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
+    <div id="toastNotification" class="toast align-items-center border-0 text-white shadow-lg rounded-3" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body d-flex align-items-center gap-2.5 p-3">
+                <i id="toastIcon" class="fs-22 me-1"></i>
+                <div>
+                    <strong id="toastTitle" class="d-block fs-13 fw-bold mb-0.5"></strong>
+                    <span id="toastText" class="fs-12 text-white-80"></span>
+                </div>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
 <?php $this->load->view('admin/partials/kriteria/header-banner'); ?>
 <?php $this->load->view('admin/partials/kriteria/stats-cards'); ?>
 
@@ -9,6 +25,9 @@
                 <span class="text-primary fw-bold fs-11 text-uppercase tracking-wider">Tabel Referensi</span>
                 <h4 class="fw-bold text-dark mb-0">Master Kriteria Penilaian TOPSIS</h4>
             </div>
+            <button type="button" class="btn btn-brand px-3 shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalTambahKriteria">
+                <i class="ti ti-plus fs-16"></i> Tambah Kriteria Penilaian
+            </button>
         </div>
 
         <div class="table-responsive">
@@ -60,7 +79,11 @@
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <span class="badge bg-success rounded-pill px-2 py-1 fs-10">Aktif</span>
+                                    <?php if (!isset($row['aktif']) || $row['aktif'] == 1): ?>
+                                        <span class="badge bg-success rounded-pill px-2 py-1 fs-10">Aktif</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-secondary rounded-pill px-2 py-1 fs-10">Nonaktif</span>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex align-items-center justify-content-center gap-1">

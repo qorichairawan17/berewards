@@ -475,7 +475,15 @@ $config['csrf_exclude_uris'] = array(
     'timpenilai/simpan',
     'timpenilai/hapus',
     'timpenilai/detail',
-    'timpenilai/data'
+    'timpenilai/data',
+    'kriteria/simpan',
+    'kriteria/hapus',
+    'kriteria/detail',
+    'kriteria/data',
+    'periode/simpan',
+    'periode/hapus',
+    'periode/detail',
+    'periode/data'
 );
 
 /*
