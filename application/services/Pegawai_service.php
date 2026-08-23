@@ -143,13 +143,26 @@ class Pegawai_service
         }
 
         if (!empty($id_pegawai)) {
+            // Fetch old record before update for audit trail transparency
+            $old_pegawai = $this->CI->Pegawai_model->get_by_id($id_pegawai);
+
             // Update Operation
             $updated = $this->CI->Pegawai_model->update($id_pegawai, $data);
             if (!$updated) {
                 return array('status' => FALSE, 'message' => 'Gagal memperbarui data pegawai.');
             }
 
-            $this->log_audit('Pegawai', 'Memperbarui data pegawai NIP ' . $nip . ' (' . $data['nama'] . ')');
+            if (isset($this->CI->audit_service)) {
+                $this->CI->audit_service->log_update(
+                    'referensi_pegawai',
+                    $id_pegawai,
+                    $old_pegawai ?: array(),
+                    $data,
+                    'Data Pegawai',
+                    'Memperbarui data pegawai NIP ' . $nip . ' (' . $data['nama'] . ')'
+                );
+            }
+
             return array(
                 'status'  => TRUE,
                 'message' => 'Data pegawai ' . html_escape($data['nama']) . ' berhasil diperbarui.'
@@ -161,7 +174,16 @@ class Pegawai_service
                 return array('status' => FALSE, 'message' => 'Gagal menambahkan data pegawai baru.');
             }
 
-            $this->log_audit('Pegawai', 'Menambahkan pegawai baru NIP ' . $nip . ' (' . $data['nama'] . ')');
+            if (isset($this->CI->audit_service)) {
+                $this->CI->audit_service->log_insert(
+                    'referensi_pegawai',
+                    $inserted_id,
+                    $data,
+                    'Data Pegawai',
+                    'Menambahkan pegawai baru NIP ' . $nip . ' (' . $data['nama'] . ')'
+                );
+            }
+
             return array(
                 'status'  => TRUE,
                 'message' => 'Data pegawai baru ' . html_escape($data['nama']) . ' berhasil ditambahkan.'
@@ -190,7 +212,20 @@ class Pegawai_service
         // Check historical TOPSIS integrity
         if ($this->CI->Pegawai_model->is_used_in_topsis($id)) {
             $this->CI->Pegawai_model->set_active_status($id, 0);
-            $this->log_audit('Pegawai', 'Menonaktifkan pegawai NIP ' . $pegawai['nip'] . ' karena memiliki riwayat TOPSIS');
+            
+            if (isset($this->CI->audit_service)) {
+                $new_state = $pegawai;
+                $new_state['aktif'] = 0;
+                $this->CI->audit_service->log_update(
+                    'referensi_pegawai',
+                    $id,
+                    $pegawai,
+                    $new_state,
+                    'Data Pegawai',
+                    'Menonaktifkan pegawai NIP ' . $pegawai['nip'] . ' (' . $pegawai['nama'] . ') karena memiliki riwayat TOPSIS'
+                );
+            }
+
             return array(
                 'status'  => TRUE,
                 'message' => 'Pegawai ' . html_escape($pegawai['nama']) . ' memiliki riwayat penilaian TOPSIS. Data berhasil dinonaktifkan (Status: Nonaktif).'
@@ -203,7 +238,16 @@ class Pegawai_service
             return array('status' => FALSE, 'message' => 'Gagal menghapus data pegawai.');
         }
 
-        $this->log_audit('Pegawai', 'Menghapus data pegawai NIP ' . $pegawai['nip'] . ' (' . $pegawai['nama'] . ')');
+        if (isset($this->CI->audit_service)) {
+            $this->CI->audit_service->log_delete(
+                'referensi_pegawai',
+                $id,
+                $pegawai,
+                'Data Pegawai',
+                'Menghapus data pegawai NIP ' . $pegawai['nip'] . ' (' . $pegawai['nama'] . ')'
+            );
+        }
+
         return array(
             'status'  => TRUE,
             'message' => 'Data pegawai ' . html_escape($pegawai['nama']) . ' berhasil dihapus.'

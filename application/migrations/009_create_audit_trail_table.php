@@ -45,6 +45,30 @@ class Migration_Create_audit_trail_table extends CI_Migration {
                 'constraint' => '100',
                 'null'       => FALSE
             ),
+            'tipe_aksi' => array(
+                'type'       => 'VARCHAR',
+                'constraint' => '50',
+                'null'       => TRUE,
+                'default'    => 'ACTIVITY'
+            ),
+            'tabel_terkait' => array(
+                'type'       => 'VARCHAR',
+                'constraint' => '100',
+                'null'       => TRUE
+            ),
+            'id_record' => array(
+                'type'       => 'VARCHAR',
+                'constraint' => '50',
+                'null'       => TRUE
+            ),
+            'data_sebelum' => array(
+                'type' => 'LONGTEXT',
+                'null' => TRUE
+            ),
+            'data_sesudah' => array(
+                'type' => 'LONGTEXT',
+                'null' => TRUE
+            ),
             'aktivitas' => array(
                 'type' => 'TEXT',
                 'null' => FALSE

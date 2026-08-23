@@ -199,6 +199,11 @@ class Tim_penilai_service
             }
         }
 
+        $old_sk = NULL;
+        if (!empty($id_sk)) {
+            $old_sk = $this->CI->Tim_penilai_model->get_sk_by_id($id_sk);
+        }
+
         // Execute Database Transaction
         $this->CI->db->trans_start();
 
@@ -221,7 +226,29 @@ class Tim_penilai_service
             return array('status' => FALSE, 'message' => 'Gagal menyimpan data SK Tim Penilai ke database.');
         }
 
-        $this->log_audit('Tim Penilai', $act_msg);
+        if (isset($this->CI->audit_service)) {
+            $full_new_data = $sk_data;
+            $full_new_data['anggota'] = $anggota_list;
+
+            if (!empty($id_sk)) {
+                $this->CI->audit_service->log_update(
+                    'tim_penilai_sk',
+                    $id_sk,
+                    $old_sk ?: array(),
+                    $full_new_data,
+                    'Tim Penilai',
+                    $act_msg
+                );
+            } else {
+                $this->CI->audit_service->log_insert(
+                    'tim_penilai_sk',
+                    $target_id,
+                    $full_new_data,
+                    'Tim Penilai',
+                    $act_msg
+                );
+            }
+        }
 
         return array(
             'status'  => TRUE,
@@ -257,7 +284,15 @@ class Tim_penilai_service
             return array('status' => FALSE, 'message' => 'Gagal menghapus dokumen SK Tim Penilai.');
         }
 
-        $this->log_audit('Tim Penilai', 'Menghapus SK Tim Penilai ' . $sk['no_sk']);
+        if (isset($this->CI->audit_service)) {
+            $this->CI->audit_service->log_delete(
+                'tim_penilai_sk',
+                $id_sk,
+                $sk,
+                'Tim Penilai',
+                'Menghapus SK Tim Penilai ' . $sk['no_sk']
+            );
+        }
 
         return array(
             'status'  => TRUE,

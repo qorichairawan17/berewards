@@ -39,12 +39,13 @@ class Auth_service {
      * @param string   $modul
      * @param string   $aktivitas
      * @param string   $status
+     * @param string   $tipe_aksi
      * @return bool
      */
-    public function record_audit_log($id_user, $username, $nama_user, $role, $modul, $aktivitas, $status = 'Sukses')
+    public function record_audit_log($id_user, $username, $nama_user, $role, $modul, $aktivitas, $status = 'Sukses', $tipe_aksi = 'LOGIN')
     {
         if (isset($this->CI->audit_service)) {
-            return $this->CI->audit_service->log_activity($modul, $aktivitas, $status, $id_user, $username, $nama_user, $role);
+            return (bool) $this->CI->audit_service->log_activity($modul, $aktivitas, $status, $id_user, $username, $nama_user, $role, $tipe_aksi);
         }
         return FALSE;
     }
@@ -209,7 +210,8 @@ class Auth_service {
                 $role,
                 'Autentikasi Logout',
                 'Berhasil keluar dari sistem BeRewards',
-                'Sukses'
+                'Sukses',
+                'LOGOUT'
             );
         }
 

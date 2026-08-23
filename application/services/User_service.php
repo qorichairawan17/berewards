@@ -192,17 +192,23 @@ class User_service
             $data['password'] = password_hash(trim($input['password']), PASSWORD_BCRYPT);
         }
 
+        $old_user = NULL;
+        if (!empty($id_user)) {
+            $old_user = $this->CI->User_model->get_user_by_id($id_user);
+        }
+
         // Execute Database Transaction
         $this->CI->db->trans_start();
 
         if (!empty($id_user)) {
             // Update Operation
             $this->CI->User_model->update_user($id_user, $data);
-            $act_msg = 'Memperbarui data Pengguna (' . $username . ' - ' . $nama_lengkap . ') terhubung dengan Pegawai (' . $pegawai['nama'] . ')';
+            $target_id = $id_user;
+            $act_msg   = 'Memperbarui data Pengguna (' . $username . ' - ' . $nama_lengkap . ') terhubung dengan Pegawai (' . $pegawai['nama'] . ')';
         } else {
             // Insert Operation
-            $this->CI->User_model->insert_user($data);
-            $act_msg = 'Menambahkan Pengguna baru (' . $username . ' - ' . $nama_lengkap . ') terhubung dengan Pegawai (' . $pegawai['nama'] . ')';
+            $target_id = $this->CI->User_model->insert_user($data);
+            $act_msg   = 'Menambahkan Pengguna baru (' . $username . ' - ' . $nama_lengkap . ') terhubung dengan Pegawai (' . $pegawai['nama'] . ')';
         }
 
         $this->CI->db->trans_complete();
@@ -211,7 +217,26 @@ class User_service
             return array('status' => FALSE, 'message' => 'Gagal menyimpan data Pengguna ke database.');
         }
 
-        $this->log_audit('Manajemen Pengguna', $act_msg);
+        if (isset($this->CI->audit_service)) {
+            if (!empty($id_user)) {
+                $this->CI->audit_service->log_update(
+                    'pengguna',
+                    $id_user,
+                    $old_user ?: array(),
+                    $data,
+                    'Manajemen Pengguna',
+                    $act_msg
+                );
+            } else {
+                $this->CI->audit_service->log_insert(
+                    'pengguna',
+                    $target_id,
+                    $data,
+                    'Manajemen Pengguna',
+                    $act_msg
+                );
+            }
+        }
 
         return array(
             'status'  => TRUE,
@@ -248,7 +273,18 @@ class User_service
             return array('status' => FALSE, 'message' => 'Gagal menonaktifkan data Pengguna.');
         }
 
-        $this->log_audit('Manajemen Pengguna', 'Menonaktifkan Akun Pengguna ' . $user['username'] . ' (' . $user['nama_lengkap'] . ')');
+        if (isset($this->CI->audit_service)) {
+            $new_state = $user;
+            $new_state['aktif'] = 0;
+            $this->CI->audit_service->log_update(
+                'pengguna',
+                $id_user,
+                $user,
+                $new_state,
+                'Manajemen Pengguna',
+                'Menonaktifkan Akun Pengguna ' . $user['username'] . ' (' . $user['nama_lengkap'] . ')'
+            );
+        }
 
         return array(
             'status'  => TRUE,

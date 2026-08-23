@@ -131,17 +131,23 @@ class Periode_service
             $data['created_by'] = (int)$user_id;
         }
 
+        $old_periode = NULL;
+        if (!empty($id_periode)) {
+            $old_periode = $this->CI->Periode_model->get_periode_by_id($id_periode);
+        }
+
         // Execute Database Transaction
         $this->CI->db->trans_start();
 
         if (!empty($id_periode)) {
             // Update Operation
             $this->CI->Periode_model->update_periode($id_periode, $data);
-            $act_msg = 'Memperbarui Periode Penilaian (' . $nama_periode . ')';
+            $target_id = $id_periode;
+            $act_msg   = 'Memperbarui Periode Penilaian (' . $nama_periode . ')';
         } else {
             // Insert Operation
-            $this->CI->Periode_model->insert_periode($data);
-            $act_msg = 'Menambahkan Periode Penilaian baru (' . $nama_periode . ')';
+            $target_id = $this->CI->Periode_model->insert_periode($data);
+            $act_msg   = 'Menambahkan Periode Penilaian baru (' . $nama_periode . ')';
         }
 
         $this->CI->db->trans_complete();
@@ -150,7 +156,26 @@ class Periode_service
             return array('status' => FALSE, 'message' => 'Gagal menyimpan data Periode Penilaian ke database.');
         }
 
-        $this->log_audit('Periode Penilaian', $act_msg);
+        if (isset($this->CI->audit_service)) {
+            if (!empty($id_periode)) {
+                $this->CI->audit_service->log_update(
+                    'periode',
+                    $id_periode,
+                    $old_periode ?: array(),
+                    $data,
+                    'Periode Penilaian',
+                    $act_msg
+                );
+            } else {
+                $this->CI->audit_service->log_insert(
+                    'periode',
+                    $target_id,
+                    $data,
+                    'Periode Penilaian',
+                    $act_msg
+                );
+            }
+        }
 
         return array(
             'status'  => TRUE,
@@ -181,7 +206,19 @@ class Periode_service
             return array('status' => FALSE, 'message' => 'Gagal menonaktifkan data Periode Penilaian.');
         }
 
-        $this->log_audit('Periode Penilaian', 'Menonaktifkan Periode ' . $periode['nama_periode']);
+        if (isset($this->CI->audit_service)) {
+            $new_state = $periode;
+            $new_state['aktif'] = 0;
+            $new_state['status'] = 'tutup';
+            $this->CI->audit_service->log_update(
+                'periode',
+                $id_periode,
+                $periode,
+                $new_state,
+                'Periode Penilaian',
+                'Menonaktifkan Periode ' . $periode['nama_periode']
+            );
+        }
 
         return array(
             'status'  => TRUE,

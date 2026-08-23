@@ -8,7 +8,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Total Audit Log</p>
-                    <h4 class="fw-bold mb-0 text-dark">10 <span class="fs-12 text-muted fw-normal">Transaksi</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark"><?= isset($stats['total_logs']) ? number_format((int)$stats['total_logs'], 0, ',', '.') : '0'; ?> <span class="fs-12 text-muted fw-normal">Transaksi</span></h4>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Log Berhasil (Sukses)</p>
-                    <h4 class="fw-bold mb-0 text-dark">9 <span class="fs-12 text-muted fw-normal">Event</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark"><?= isset($stats['total_sukses']) ? number_format((int)$stats['total_sukses'], 0, ',', '.') : '0'; ?> <span class="fs-12 text-muted fw-normal">Event</span></h4>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Log Peringatan / Gagal</p>
-                    <h4 class="fw-bold mb-0 text-dark">1 <span class="fs-12 text-muted fw-normal">Gagal Login</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark"><?= isset($stats['total_gagal']) ? number_format((int)$stats['total_gagal'], 0, ',', '.') : '0'; ?> <span class="fs-12 text-muted fw-normal">Event</span></h4>
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Pengguna Terlibat</p>
-                    <h4 class="fw-bold mb-0 text-dark">6 <span class="fs-12 text-muted fw-normal">User</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark"><?= isset($stats['total_user']) ? number_format((int)$stats['total_user'], 0, ',', '.') : '0'; ?> <span class="fs-12 text-muted fw-normal">User</span></h4>
                 </div>
             </div>
         </div>

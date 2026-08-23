@@ -125,6 +125,11 @@ class Kriteria_service
             'aktif'         => 1
         );
 
+        $old_kriteria = NULL;
+        if (!empty($id_kriteria)) {
+            $old_kriteria = $this->CI->Kriteria_model->get_kriteria_by_id($id_kriteria);
+        }
+
         // Execute Database Transaction
         $this->CI->db->trans_start();
 
@@ -160,7 +165,26 @@ class Kriteria_service
             return array('status' => FALSE, 'message' => 'Gagal menyimpan data Kriteria Penilaian ke database.');
         }
 
-        $this->log_audit('Kriteria Penilaian', $act_msg);
+        if (isset($this->CI->audit_service)) {
+            if (!empty($id_kriteria)) {
+                $this->CI->audit_service->log_update(
+                    'kriteria',
+                    $id_kriteria,
+                    $old_kriteria ?: array(),
+                    $data,
+                    'Kriteria Penilaian',
+                    $act_msg
+                );
+            } else {
+                $this->CI->audit_service->log_insert(
+                    'kriteria',
+                    $target_id,
+                    $data,
+                    'Kriteria Penilaian',
+                    $act_msg
+                );
+            }
+        }
 
         return array(
             'status'  => TRUE,
@@ -191,7 +215,18 @@ class Kriteria_service
             return array('status' => FALSE, 'message' => 'Gagal menonaktifkan data Kriteria Penilaian.');
         }
 
-        $this->log_audit('Kriteria Penilaian', 'Menonaktifkan Kriteria ' . $kriteria['kode'] . ' - ' . $kriteria['nama_kriteria']);
+        if (isset($this->CI->audit_service)) {
+            $new_state = $kriteria;
+            $new_state['aktif'] = 0;
+            $this->CI->audit_service->log_update(
+                'kriteria',
+                $id_kriteria,
+                $kriteria,
+                $new_state,
+                'Kriteria Penilaian',
+                'Menonaktifkan Kriteria ' . $kriteria['kode'] . ' - ' . $kriteria['nama_kriteria']
+            );
+        }
 
         return array(
             'status'  => TRUE,
