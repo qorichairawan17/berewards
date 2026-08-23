@@ -9,6 +9,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body p-4 text-center">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                <input type="hidden" id="delete_id_user" name="id_user">
                 <div class="text-danger mb-3">
                     <i class="ti ti-trash fs-40"></i>
                 </div>

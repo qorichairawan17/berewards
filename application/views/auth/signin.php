@@ -72,7 +72,8 @@ $this->load->view('templates/header', get_defined_vars());
 
                         <!-- Form Signin dengan Handler Ajax -->
                         <form id="formSignin" action="<?= site_url('user/authenticate'); ?>" method="post" novalidate>
-                            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>" id="csrfTokenInput">
+                            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>"
+                                value="<?= $this->security->get_csrf_hash(); ?>" id="csrfTokenInput">
                             <div class="mb-3">
                                 <label class="form-label fw-semibold text-dark fs-12" for="username">Nama Pengguna</label>
                                 <div class="input-with-icon position-relative">

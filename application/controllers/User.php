@@ -4,6 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Class User
  * Controller for User Management and Authentication Logic.
+ * Following Clean Architecture: strictly thin controller that delegates all business logic,
+ * validation, and DB operations to User_service and Auth_service.
  * PHP 5.6+ and CodeIgniter 3 Compatible.
  */
 class User extends CI_Controller
@@ -14,6 +16,10 @@ class User extends CI_Controller
         $this->load->database();
         $this->load->library('session');
         $this->load->library('auth_service');
+
+        // Load Service Layers
+        $this->load->service('User_service');
+        $this->load->service('Setting_service');
     }
 
     /**
@@ -21,50 +27,18 @@ class User extends CI_Controller
      */
     public function index()
     {
-        // Sample list fallback if table is empty
-        $user_list = array();
-
-        if ($this->db->table_exists('pengguna')) {
-            $query = $this->db->get('pengguna');
-            if ($query && $query->num_rows() > 0) {
-                $user_list = $query->result_array();
-            }
+        // Require login for user management administration
+        if ($this->session->userdata('logged_in') !== TRUE) {
+            redirect('signin');
         }
 
-        if (empty($user_list)) {
-            $user_list = array(
-                array(
-                    'id_user'    => 1,
-                    'username'   => 'superadmin',
-                    'nama_user'  => 'Super Administrator SPK',
-                    'email'      => 'superadmin@pn-lubukpakam.go.id',
-                    'role'       => 'Superadmin',
-                    'status'     => 1,
-                    'last_login' => date('Y-m-d H:i:s')
-                ),
-                array(
-                    'id_user'    => 2,
-                    'username'   => 'admin_kepeg',
-                    'nama_user'  => 'Admin Kepegawaian & Ortala',
-                    'email'      => 'kepegawaian@pn-lubukpakam.go.id',
-                    'role'       => 'Administrator',
-                    'status'     => 1,
-                    'last_login' => date('Y-m-d H:i:s')
-                ),
-                array(
-                    'id_user'    => 3,
-                    'username'   => 'ketua_pn',
-                    'nama_user'  => "Dr. H. Ahmad Syafi'i, S.H., M.H.",
-                    'email'      => 'ketua@pn-lubukpakam.go.id',
-                    'role'       => 'Pimpinan',
-                    'status'     => 1,
-                    'last_login' => date('Y-m-d H:i:s')
-                )
-            );
-        }
+        $user_list    = $this->user_service->get_all_users();
+        $pegawai_list = $this->user_service->get_pegawai_options();
+        $stats        = $this->user_service->get_stats();
+        $settings     = $this->setting_service->get_settings();
 
         $this->load->view('templates/layout', array(
-            'page_title'   => 'Manajemen Pengguna',
+            'page_title'   => 'Manajemen Pengguna — BeRewards',
             'page_heading' => 'Manajemen Pengguna Sistem',
             'active_menu'  => 'user',
             'content_view' => 'admin/user',
@@ -79,9 +53,68 @@ class User extends CI_Controller
                 'assets/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js'
             ),
             'view_data'    => array(
-                'user_list' => $user_list
+                'user_list'    => $user_list,
+                'pegawai_list' => $pegawai_list,
+                'stats'        => $stats,
+                'settings'     => $settings
             )
         ));
+    }
+
+    /**
+     * JSON Endpoint to return user list, employee options, and stats for AJAX reload.
+     */
+    public function data()
+    {
+        $response = array(
+            'status'       => TRUE,
+            'data'         => $this->user_service->get_all_users(),
+            'pegawai_list' => $this->user_service->get_pegawai_options(),
+            'stats'        => $this->user_service->get_stats(),
+            'settings'     => $this->setting_service->get_settings()
+        );
+
+        $this->json_response($response);
+    }
+
+    /**
+     * JSON Endpoint to return single user detail by ID.
+     *
+     * @param int|null $id
+     */
+    public function detail($id = NULL)
+    {
+        if (empty($id)) {
+            $id = $this->input->post('id_user');
+        }
+
+        $result = $this->user_service->get_user_detail($id);
+        $this->json_response($result);
+    }
+
+    /**
+     * AJAX POST Endpoint for saving (insert / update) user data.
+     */
+    public function simpan()
+    {
+        $input_data = $this->input->post(NULL, TRUE); // XSS-clean POST data
+        $result     = $this->user_service->simpan_user($input_data);
+        $this->json_response($result);
+    }
+
+    /**
+     * AJAX POST Endpoint for deleting/deactivating user.
+     *
+     * @param int|null $id
+     */
+    public function hapus($id = NULL)
+    {
+        if (empty($id)) {
+            $id = $this->input->post('id_user');
+        }
+
+        $result = $this->user_service->hapus_user($id);
+        $this->json_response($result);
     }
 
     /**
@@ -193,5 +226,22 @@ class User extends CI_Controller
         $this->auth_service->logout();
         $this->session->set_flashdata('success', 'Anda telah berhasil keluar dari sistem BeRewards.');
         redirect('signin');
+    }
+
+    /**
+     * Private helper to output JSON response with updated CSRF token.
+     *
+     * @param array $data
+     */
+    private function json_response($data)
+    {
+        if (is_array($data)) {
+            $data['csrf_token_name'] = $this->security->get_csrf_token_name();
+            $data['csrf_hash']       = $this->security->get_csrf_hash();
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
     }
 }

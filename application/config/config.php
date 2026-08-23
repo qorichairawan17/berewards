@@ -468,6 +468,10 @@ $config['csrf_regenerate'] = FALSE;
 $config['csrf_exclude_uris'] = array(
     'user/authenticate',
     'user/login',
+    'user/simpan',
+    'user/hapus',
+    'user/detail',
+    'user/data',
     'pegawai/simpan',
     'pegawai/hapus',
     'pegawai/detail',
