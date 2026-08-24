@@ -35,28 +35,28 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        var bgClass = 'bg-primary';
-        var iconClass = 'ti ti-info-circle';
+        var bgClass   = 'bg-primary text-white';
+        var iconClass = 'ti ti-info-circle text-white';
 
         if (type === 'success') {
-            bgClass = 'bg-success';
-            iconClass = 'ti ti-circle-check';
+            bgClass   = 'bg-success text-white';
+            iconClass = 'ti ti-circle-check text-white';
         } else if (type === 'danger' || type === 'error') {
-            bgClass = 'bg-danger';
-            iconClass = 'ti ti-alert-circle';
+            bgClass   = 'bg-danger text-white';
+            iconClass = 'ti ti-alert-circle text-white';
         } else if (type === 'warning') {
-            bgClass = 'bg-warning text-dark';
-            iconClass = 'ti ti-alert-triangle';
+            bgClass   = 'bg-warning text-dark';
+            iconClass = 'ti ti-alert-triangle text-dark';
         } else if (type === 'info') {
-            bgClass = 'bg-info';
-            iconClass = 'ti ti-info-circle';
+            bgClass   = 'bg-info text-white';
+            iconClass = 'ti ti-info-circle text-white';
         }
 
-        toastEl.className = 'toast align-items-center border-0 shadow-lg rounded-3 ' + bgClass;
+        toastEl.className = 'toast align-items-center border-0 shadow-lg rounded-3 text-white ' + bgClass;
 
         $('#toastIcon').attr('class', iconClass + ' fs-22 me-1');
-        $('#toastTitle').text(title);
-        $('#toastText').text(message);
+        $('#toastTitle').attr('class', 'd-block fs-13 fw-bold mb-0.5 ' + (type === 'warning' ? 'text-dark' : 'text-white')).text(title);
+        $('#toastText').attr('class', 'fs-12 ' + (type === 'warning' ? 'text-dark' : 'text-white')).text(message);
 
         var bsToast = new bootstrap.Toast(toastEl, { delay: 4000 });
         bsToast.show();

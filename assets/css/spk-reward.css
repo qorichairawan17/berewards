@@ -136,3 +136,35 @@ body.spk-app {
 .muted-link { color: var(--spk-primary); font-size: 12px; font-weight: 600; text-decoration: none; }
 .muted-link:hover { color: var(--spk-primary-hover); text-decoration: underline; }
 .signin-security { align-items: center; color: #64748b; display: flex; font-size: 11px; gap: 6px; justify-content: center; margin-top: 20px; }
+
+/* Toast Notifications Styling (White text for colored backgrounds) */
+#toastNotification.bg-success,
+#toastNotification.bg-primary,
+#toastNotification.bg-danger,
+#toastNotification.bg-info,
+.toast.bg-success,
+.toast.bg-primary,
+.toast.bg-danger,
+.toast.bg-info {
+    color: #ffffff !important;
+}
+
+#toastNotification.bg-success #toastTitle,
+#toastNotification.bg-primary #toastTitle,
+#toastNotification.bg-danger #toastTitle,
+#toastNotification.bg-info #toastTitle,
+#toastNotification.bg-success #toastText,
+#toastNotification.bg-primary #toastText,
+#toastNotification.bg-danger #toastText,
+#toastNotification.bg-info #toastText,
+#toastNotification.bg-success #toastIcon,
+#toastNotification.bg-primary #toastIcon,
+#toastNotification.bg-danger #toastIcon,
+#toastNotification.bg-info #toastIcon,
+#toastNotification.bg-success .toast-body,
+#toastNotification.bg-primary .toast-body,
+#toastNotification.bg-danger .toast-body,
+#toastNotification.bg-info .toast-body {
+    color: #ffffff !important;
+}
+
