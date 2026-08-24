@@ -5,8 +5,8 @@
             <div class="card-body p-3 d-flex align-items-center justify-content-between">
                 <div>
                     <span class="text-muted fs-11 text-uppercase fw-semibold tracking-wider">Identitas Satker</span>
-                    <h3 class="fw-bold text-dark mb-0 mt-1 fs-16"><?= html_escape($satker['singkatan']); ?></h3>
-                    <span class="text-primary fs-11 fw-medium"><i class="ti ti-check me-1"></i><?= html_escape($satker['kode_satker']); ?></span>
+                    <h3 class="fw-bold text-dark mb-0 mt-1 fs-16" id="kpiSatkerShort"><?= html_escape(!empty($satker['singkatan']) ? $satker['singkatan'] : 'PN'); ?></h3>
+                    <span class="text-primary fs-11 fw-medium"><i class="ti ti-check me-1"></i><span id="kpiSatkerKode"><?= html_escape($satker['kode_satker']); ?></span></span>
                 </div>
                 <div class="kpi-icon indigo flex-shrink-0">
                     <i class="ti ti-building-bank"></i>

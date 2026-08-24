@@ -6,22 +6,22 @@
         <div class="card-body p-4 text-white position-relative">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="d-flex align-items-center gap-2">
-                    <img src="<?= base_url($satker['logo']); ?>" alt="Logo" height="28" class="rounded">
-                    <span class="fw-bold fs-12 text-uppercase tracking-wider">MARI &bull; PN LUBUK PAKAM</span>
+                    <img src="<?= base_url($satker['logo']); ?>" alt="Logo" height="28" class="rounded sidebarLogoImg">
+                    <span id="sidebarSatkerShort" class="fw-bold fs-12 text-uppercase tracking-wider">MARI &bull; <?= html_escape(!empty($satker['singkatan']) ? $satker['singkatan'] : 'PN'); ?></span>
                 </div>
-                <span
+                <span id="sidebarSatkerKelasBadge"
                     class="badge bg-primary bg-opacity-20 text-white border border-white border-opacity-25 fs-10"><?= html_escape($satker['kelas_pengadilan']); ?></span>
             </div>
 
             <div class="text-center py-2">
                 <div class="avatar-xl rounded-circle bg-white p-2 shadow mx-auto mb-2 d-flex align-items-center justify-content-center"
                     style="width: 76px; height: 76px;">
-                    <img src="<?= base_url($satker['logo']); ?>" alt="Logo Satker" class="img-fluid rounded" style="max-height: 60px;">
+                    <img src="<?= base_url($satker['logo']); ?>" alt="Logo Satker" class="img-fluid rounded sidebarLogoImg" style="max-height: 60px;">
                 </div>
-                <h5 class="fw-bold text-white mb-0 fs-15"><?= html_escape($satker['nama_satker']); ?></h5>
-                <small class="text-white text-opacity-75 fs-11 d-block mb-2">Kode Satker: <strong><?= html_escape($satker['kode_satker']); ?></strong>
-                    &bull; Wilayah: <strong><?= html_escape($satker['kode_wilayah']); ?></strong></small>
-                <span class="badge bg-primary text-white border border-primary-subtle px-3 py-1 fs-11">
+                <h5 id="sidebarSatkerNama" class="fw-bold text-white mb-0 fs-15"><?= html_escape($satker['nama_satker']); ?></h5>
+                <small class="text-white text-opacity-75 fs-11 d-block mb-2">Kode Satker: <strong id="sidebarSatkerKode"><?= html_escape($satker['kode_satker']); ?></strong>
+                    &bull; Wilayah: <strong id="sidebarSatkerWilayah"><?= html_escape($satker['kode_wilayah']); ?></strong></small>
+                <span id="sidebarSatkerPT" class="badge bg-primary text-white border border-primary-subtle px-3 py-1 fs-11">
                     <?= html_escape($satker['pengadilan_tinggi']); ?>
                 </span>
             </div>
@@ -29,15 +29,15 @@
             <div class="mt-3 pt-3 border-top border-white border-opacity-15 fs-11 text-white text-opacity-80">
                 <div class="d-flex justify-content-between mb-1">
                     <span>Telepon:</span>
-                    <strong class="text-white"><?= html_escape($satker['telepon']); ?></strong>
+                    <strong id="sidebarSatkerTelepon" class="text-white"><?= html_escape($satker['telepon']); ?></strong>
                 </div>
                 <div class="d-flex justify-content-between mb-1">
                     <span>Email:</span>
-                    <strong class="text-white"><?= html_escape($satker['email']); ?></strong>
+                    <strong id="sidebarSatkerEmail" class="text-white"><?= html_escape($satker['email']); ?></strong>
                 </div>
                 <div class="d-flex justify-content-between">
                     <span>Website:</span>
-                    <strong class="text-white"><?= html_escape($satker['website']); ?></strong>
+                    <strong id="sidebarSatkerWebsite" class="text-white"><?= html_escape($satker['website']); ?></strong>
                 </div>
             </div>
         </div>
@@ -62,8 +62,8 @@
                     </div>
                     <div class="overflow-hidden">
                         <small class="text-primary fw-bold fs-10 text-uppercase d-block">Ketua Pengadilan</small>
-                        <strong class="text-dark fs-12 d-block text-truncate"><?= html_escape($pimpinan['ketua']['nama']); ?></strong>
-                        <small class="text-muted fs-11 d-block">NIP. <?= html_escape($pimpinan['ketua']['nip']); ?></small>
+                        <strong id="sidebarKetuaNama" class="text-dark fs-12 d-block text-truncate"><?= html_escape($pimpinan['ketua']['nama']); ?></strong>
+                        <small id="sidebarKetuaNip" class="text-muted fs-11 d-block">NIP. <?= html_escape($pimpinan['ketua']['nip']); ?></small>
                     </div>
                 </div>
 
@@ -75,8 +75,8 @@
                     </div>
                     <div class="overflow-hidden">
                         <small class="text-info fw-bold fs-10 text-uppercase d-block">Wakil Ketua Pengadilan</small>
-                        <strong class="text-dark fs-12 d-block text-truncate"><?= html_escape($pimpinan['wakil_ketua']['nama']); ?></strong>
-                        <small class="text-muted fs-11 d-block">NIP. <?= html_escape($pimpinan['wakil_ketua']['nip']); ?></small>
+                        <strong id="sidebarWakilNama" class="text-dark fs-12 d-block text-truncate"><?= html_escape($pimpinan['wakil_ketua']['nama']); ?></strong>
+                        <small id="sidebarWakilNip" class="text-muted fs-11 d-block">NIP. <?= html_escape($pimpinan['wakil_ketua']['nip']); ?></small>
                     </div>
                 </div>
 
@@ -88,8 +88,8 @@
                     </div>
                     <div class="overflow-hidden">
                         <small class="text-warning fw-bold fs-10 text-uppercase d-block">Panitera Pengadilan</small>
-                        <strong class="text-dark fs-12 d-block text-truncate"><?= html_escape($pimpinan['panitera']['nama']); ?></strong>
-                        <small class="text-muted fs-11 d-block">NIP. <?= html_escape($pimpinan['panitera']['nip']); ?></small>
+                        <strong id="sidebarPaniteraNama" class="text-dark fs-12 d-block text-truncate"><?= html_escape($pimpinan['panitera']['nama']); ?></strong>
+                        <small id="sidebarPaniteraNip" class="text-muted fs-11 d-block">NIP. <?= html_escape($pimpinan['panitera']['nip']); ?></small>
                     </div>
                 </div>
 
@@ -101,8 +101,8 @@
                     </div>
                     <div class="overflow-hidden">
                         <small class="text-success fw-bold fs-10 text-uppercase d-block">Sekretaris Pengadilan</small>
-                        <strong class="text-dark fs-12 d-block text-truncate"><?= html_escape($pimpinan['sekretaris']['nama']); ?></strong>
-                        <small class="text-muted fs-11 d-block">NIP. <?= html_escape($pimpinan['sekretaris']['nip']); ?></small>
+                        <strong id="sidebarSekretarisNama" class="text-dark fs-12 d-block text-truncate"><?= html_escape($pimpinan['sekretaris']['nama']); ?></strong>
+                        <small id="sidebarSekretarisNip" class="text-muted fs-11 d-block">NIP. <?= html_escape($pimpinan['sekretaris']['nip']); ?></small>
                     </div>
                 </div>
 
