@@ -8,7 +8,8 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
-            <form id="formEditLaporan">
+            <form id="formEditLaporan" action="<?= site_url('laporan/update'); ?>" method="POST">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <input type="hidden" id="edit_id_laporan" name="id_laporan">
                 <div class="modal-body p-4">
                     <div class="row g-3">
@@ -39,7 +40,9 @@
                 </div>
                 <div class="modal-footer border-top bg-light">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-brand">Perbarui Dokumen</button>
+                    <button type="submit" class="btn btn-brand" id="btnSubmitEditLaporan">
+                        <i class="ti ti-check me-1"></i> Perbarui Dokumen
+                    </button>
                 </div>
             </form>
         </div>

@@ -1,3 +1,19 @@
+<!-- Toast Container (Top Right Placement) -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
+    <div id="toastNotification" class="toast align-items-center border-0 text-white shadow-lg rounded-3" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body d-flex align-items-center gap-2.5 p-3 text-white">
+                <i id="toastIcon" class="fs-22 me-1 text-white"></i>
+                <div class="text-white">
+                    <strong id="toastTitle" class="d-block fs-13 fw-bold mb-0.5 text-white"></strong>
+                    <span id="toastText" class="fs-12 text-white"></span>
+                </div>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
 <?php $this->load->view('admin/partials/laporan/header-banner'); ?>
 <?php $this->load->view('admin/partials/laporan/stats-cards'); ?>
 
@@ -8,6 +24,11 @@
             <div>
                 <span class="text-primary fw-bold fs-11 text-uppercase tracking-wider">Arsip Dokumen</span>
                 <h4 class="fw-bold text-dark mb-0">Daftar Berita Acara Penetapan Reward TOPSIS</h4>
+            </div>
+            <div>
+                <button type="button" class="btn btn-brand btn-sm shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambahLaporan">
+                    <i class="ti ti-file-plus me-1"></i> Buat Berita Acara
+                </button>
             </div>
         </div>
 
@@ -28,7 +49,7 @@
                 <tbody>
                     <?php if (!empty($laporan_list)): ?>
                         <?php $no = 1; foreach ($laporan_list as $row): ?>
-                            <tr>
+                            <tr id="row_laporan_<?= $row['id_laporan']; ?>">
                                 <td class="text-center fw-semibold"><?= $no++; ?></td>
                                 <td>
                                     <strong class="d-block text-dark fs-13"><?= html_escape($row['no_ba']); ?></strong>
@@ -47,7 +68,8 @@
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <span class="fw-bold text-primary fs-13">V = <?= number_format($row['skor_topsis'], 4); ?></span>
+                                    <span class="fw-bold text-primary fs-13"><?= number_format($row['skor_topsis'], 4); ?></span>
+                                    <small class="d-block text-muted fs-10"><?= html_escape($row['pemenang_nama']); ?></small>
                                 </td>
                                 <td><?= date('d M Y', strtotime($row['tanggal_terbit'])); ?></td>
                                 <td>

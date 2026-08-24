@@ -8,7 +8,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Total Berita Acara</p>
-                    <h4 class="fw-bold mb-0 text-dark">10 <span class="fs-12 text-muted fw-normal">Dokumen</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark" id="stat_total_ba"><?= isset($stats['total_ba']) ? $stats['total_ba'] : 0; ?> <span class="fs-12 text-muted fw-normal">Dokumen</span></h4>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">BA Disahkan</p>
-                    <h4 class="fw-bold mb-0 text-dark">6 <span class="fs-12 text-muted fw-normal">Resmi</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark" id="stat_disahkan"><?= isset($stats['disahkan']) ? $stats['disahkan'] : 0; ?> <span class="fs-12 text-muted fw-normal">Resmi</span></h4>
                 </div>
             </div>
         </div>
@@ -33,8 +33,8 @@
                     <i class="ti ti-archive"></i>
                 </div>
                 <div>
-                    <p class="text-muted fs-12 mb-0">BA Terarsip</p>
-                    <h4 class="fw-bold mb-0 text-dark">3 <span class="fs-12 text-muted fw-normal">Arsip</span></h4>
+                    <p class="text-muted fs-12 mb-0">BA Terarsip / Draft</p>
+                    <h4 class="fw-bold mb-0 text-dark" id="stat_arsip"><?= (isset($stats['arsip']) ? $stats['arsip'] : 0) + (isset($stats['draft']) ? $stats['draft'] : 0); ?> <span class="fs-12 text-muted fw-normal">Dokumen</span></h4>
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
                 </div>
                 <div>
                     <p class="text-muted fs-12 mb-0">Format Ekspor</p>
-                    <h4 class="fw-bold mb-0 text-dark">Word <span class="fs-12 text-muted fw-normal">.docx</span></h4>
+                    <h4 class="fw-bold mb-0 text-dark">Word <span class="fs-12 text-muted fw-normal">.docx (PHPWord)</span></h4>
                 </div>
             </div>
         </div>

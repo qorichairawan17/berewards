@@ -2,398 +2,453 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * Laporan_service — Berita Acara Word Export Service
- *
- * Mengelola pembuatan dokumen .docx Berita Acara Penetapan Reward
- * menggunakan PHPWord yang diletakkan di application/third_party/PHPWord/.
- *
- * Cara pakai dari Controller:
- *   $this->load->service('Laporan_service');
- *   $this->laporan_service->export_berita_acara($laporan_data);
- *
- * Atau langsung dari method static tanpa Service loader:
- *   Laporan_service::export($laporan_data);
+ * Class Laporan_service
+ * 
+ * Service Layer untuk mengelola seluruh alur logika bisnis Laporan & Berita Acara
+ * Penetapan Reward Pegawai Pengadilan Negeri menggunakan Metode TOPSIS.
+ * 
+ * Mengorelasikan data dari:
+ * - Tim_penilai_service (SK Tim Penilai & Penandatangan)
+ * - Periode_service (Periode Penilaian Kinerja)
+ * - Topsis_model & Topsis_service (Sesi Perhitungan & Hasil Skor Preferensi)
+ * - Setting_service (Identitas Satker, Kop Surat, dan Pimpinan Pengadilan)
+ * - Export_word_service (Penerbitan Dokumen .docx)
+ * 
+ * Sesuai prinsip Clean Architecture dan pemisahan tanggung jawab (SoC).
+ * 
+ * @author BeRewards Core Engine
+ * @version 1.0.0
  */
 class Laporan_service
 {
-    /** Path ke direktori PHPWord third_party */
-    const PHPWORD_PATH = APPPATH . 'third_party/PHPWord/';
-
-    /** Instansi CodeIgniter */
-    private $CI;
-
-    // -----------------------------------------------------------------------
-    // Constructor
-    // -----------------------------------------------------------------------
+    /**
+     * CodeIgniter Super Object
+     * @var CI_Controller
+     */
+    protected $CI;
 
     public function __construct()
     {
         $this->CI =& get_instance();
-        $this->_load_phpword();
+        $this->CI->load->database();
+        $this->CI->load->model('Laporan_model');
+        $this->CI->load->model('Topsis_model');
+        $this->CI->load->model('Periode_model');
+        $this->CI->load->model('Tim_penilai_model');
+        $this->CI->load->library('form_validation');
+
+        // Load Service pendukung
+        if (!isset($this->CI->setting_service)) {
+            $this->CI->load->service('Setting_service');
+        }
+        if (!isset($this->CI->tim_penilai_service)) {
+            $this->CI->load->service('Tim_penilai_service');
+        }
+        if (!isset($this->CI->export_word_service)) {
+            $this->CI->load->service('Export_word_service');
+        }
+        if (!isset($this->CI->audit_service)) {
+            @$this->CI->load->service('audit_service');
+        }
     }
 
-    // -----------------------------------------------------------------------
-    // PHPWord Bootstrapper
-    // -----------------------------------------------------------------------
+    /**
+     * Mengambil daftar seluruh Berita Acara yang tersimpan di database.
+     * 
+     * @param array $filter Filter opsional
+     * @return array
+     */
+    public function get_laporan_list(array $filter = array())
+    {
+        return $this->CI->Laporan_model->get_all_laporan($filter);
+    }
 
     /**
-     * Load PHPWord dari application/third_party/PHPWord/ tanpa Composer.
-     *
-     * PHPWord memakai PSR-4:
-     *   Namespace prefix : PhpOffice\PhpWord\
-     *   Base directory   : src/PhpWord/
-     *
-     * Contoh pemetaan:
-     *   PhpOffice\PhpWord\PhpWord          → src/PhpWord/PhpWord.php
-     *   PhpOffice\PhpWord\IOFactory        → src/PhpWord/IOFactory.php
-     *   PhpOffice\PhpWord\Style\Font       → src/PhpWord/Style/Font.php
+     * Mengambil detail satu Berita Acara beserta informasi lengkapnya.
+     * 
+     * @param int $id_laporan
+     * @return array|null
      */
-    private function _load_phpword()
+    public function get_laporan_detail($id_laporan)
     {
-        // Hindari double-load
-        if (class_exists('PhpOffice\\PhpWord\\PhpWord', false)) {
-            return;
+        $id = (int)$id_laporan;
+        if ($id <= 0) {
+            return NULL;
         }
 
-        $phpword_src = self::PHPWORD_PATH . 'src/';
+        $laporan = $this->CI->Laporan_model->get_laporan_by_id($id);
+        if (!$laporan) {
+            return NULL;
+        }
 
-        if (!is_dir($phpword_src)) {
-            show_error(
-                'PHPWord tidak ditemukan di <code>application/third_party/PHPWord/src/</code>. ' .
-                'Pastikan PHPWord sudah disalin ke direktori tersebut.',
-                500,
-                'PHPWord Missing'
+        // Ambil info pimpinan dan satker dari Setting_service
+        $settings = $this->CI->setting_service->get_settings();
+        $laporan['satker']   = $settings['satker'];
+        $laporan['pimpinan'] = $settings['pimpinan'];
+
+        // Ambil info SK Tim Penilai jika ada
+        if (!empty($laporan['id_sk'])) {
+            $laporan['tim_penilai'] = $this->CI->Tim_penilai_model->get_sk_by_id((int)$laporan['id_sk']);
+        }
+
+        return $laporan;
+    }
+
+    /**
+     * Mengambil opsi-opsi untuk form tambah Berita Acara:
+     * - Sesi TOPSIS yang berstatus 'final'
+     * - SK Tim Penilai yang berstatus 'Aktif'
+     * - Auto-generated Nomor Berita Acara
+     * 
+     * @return array
+     */
+    public function get_form_options()
+    {
+        $settings     = $this->CI->setting_service->get_settings();
+        $satker       = $settings['satker'];
+        $app          = $settings['app'];
+
+        $proses_list  = $this->CI->Laporan_model->get_available_topsis_proses();
+        $sk_list      = $this->CI->Tim_penilai_model->get_all_sk();
+        $periode_list = $this->CI->Periode_model->get_all_periode();
+
+        // Cari SK Aktif secara default
+        $active_sk = NULL;
+        foreach ($sk_list as $sk) {
+            if (strtolower($sk['status']) === 'aktif') {
+                $active_sk = $sk;
+                break;
+            }
+        }
+        if (!$active_sk && !empty($sk_list)) {
+            $active_sk = $sk_list[0];
+        }
+
+        // Hitung nomor BA rekomendasi
+        $bulan_romawi = $this->_get_bulan_romawi((int)date('n'));
+        $nomor_ba_auto = $this->CI->Laporan_model->generate_nomor_ba(
+            !empty($app['format_nomor_ba']) ? $app['format_nomor_ba'] : '',
+            !empty($satker['kode_wilayah']) ? $satker['kode_wilayah'] : 'W2.U4',
+            $bulan_romawi,
+            date('Y')
+        );
+
+        return array(
+            'available_proses' => $proses_list,
+            'sk_list'          => $sk_list,
+            'active_sk'        => $active_sk,
+            'periode_list'     => $periode_list,
+            'nomor_ba_auto'    => $nomor_ba_auto,
+            'default_ketua'    => $active_sk && !empty($active_sk['ketua']) ? $active_sk['ketua']['nama'] : (!empty($satker['nama_ketua']) ? $satker['nama_ketua'] : '')
+        );
+    }
+
+    /**
+     * Membuat Berita Acara baru dari form input AJAX.
+     * 
+     * @param array $input Data $_POST
+     * @return array Response payload array
+     */
+    public function create_laporan(array $input)
+    {
+        $id_proses = isset($input['id_proses']) ? (int)$input['id_proses'] : 0;
+        if ($id_proses <= 0) {
+            return array('status' => FALSE, 'message' => 'Sesi Penilaian TOPSIS wajib dipilih.');
+        }
+
+        // Ambil data sesi proses TOPSIS
+        $proses = $this->CI->Topsis_model->get_proses_by_id($id_proses);
+        if (!$proses) {
+            return array('status' => FALSE, 'message' => 'Sesi proses TOPSIS tidak ditemukan.');
+        }
+
+        // Ambil pemenang rank #1 dari sesi ini
+        $winner = $this->CI->db->select('ht.*, pa.nama_snapshot, pa.nip_snapshot, pa.id_pegawai')
+                               ->from('hasil_topsis ht')
+                               ->join('topsis_proses_alternatif pa', 'ht.id_proses_alternatif = pa.id_proses_alternatif', 'left')
+                               ->where('ht.id_proses', $id_proses)
+                               ->where('ht.ranking', 1)
+                               ->get()
+                               ->row_array();
+
+        if (!$winner) {
+            return array('status' => FALSE, 'message' => 'Sesi proses TOPSIS ini belum memiliki hasil perhitungan atau pemenang rank #1.');
+        }
+
+        $no_ba = !empty($input['no_ba']) ? trim($input['no_ba']) : '';
+        if (empty($no_ba)) {
+            return array('status' => FALSE, 'message' => 'Nomor Berita Acara wajib diisi.');
+        }
+
+        // Cek duplikasi no_ba
+        $exists = $this->CI->db->where('no_ba', $no_ba)->count_all_results('laporan_ba');
+        if ($exists > 0) {
+            return array('status' => FALSE, 'message' => 'Nomor Berita Acara ' . $no_ba . ' sudah pernah diterbitkan.');
+        }
+
+        $id_sk = !empty($input['id_sk']) ? (int)$input['id_sk'] : NULL;
+        if (!$id_sk) {
+            // Cari SK Aktif otomatis
+            $sk_aktif = $this->CI->db->get_where('tim_penilai_sk', array('status' => 'Aktif'))->row_array();
+            if ($sk_aktif) {
+                $id_sk = (int)$sk_aktif['id_sk'];
+            }
+        }
+
+        $ketua_panitia = !empty($input['ketua_panitia']) ? trim($input['ketua_panitia']) : '';
+        if (empty($ketua_panitia) && $id_sk) {
+            $sk_detail = $this->CI->Tim_penilai_model->get_sk_by_id($id_sk);
+            if ($sk_detail && !empty($sk_detail['ketua'])) {
+                $ketua_panitia = $sk_detail['ketua']['nama'];
+            }
+        }
+
+        $tanggal_terbit = !empty($input['tanggal_terbit']) ? trim($input['tanggal_terbit']) : date('Y-m-d');
+        $status         = !empty($input['status']) ? trim($input['status']) : 'Disahkan';
+
+        $data_insert = array(
+            'no_ba'          => $no_ba,
+            'id_proses'      => $id_proses,
+            'id_periode'     => (int)$proses['id_periode'],
+            'id_sk'          => $id_sk,
+            'kategori'       => !empty($input['kategori']) ? $input['kategori'] : $proses['kategori'],
+            'id_pemenang'    => (int)$winner['id_pegawai'],
+            'pemenang_nama'  => $winner['nama_snapshot'],
+            'pemenang_nip'   => $winner['nip_snapshot'],
+            'skor_topsis'    => (float)$winner['nilai_preferensi'],
+            'tanggal_terbit' => $tanggal_terbit,
+            'status'         => $status,
+            'ketua_panitia'  => $ketua_panitia,
+            'created_by'     => $this->CI->session->userdata('user_id') ? $this->CI->session->userdata('user_id') : 1
+        );
+
+        $id_new = $this->CI->Laporan_model->insert_laporan($data_insert);
+        if ($id_new) {
+            $this->_log_audit('BUAT_BERITA_ACARA', 'Menerbitkan Berita Acara Penetapan Reward No. ' . $no_ba . ' untuk sesi TOPSIS ID #' . $id_proses);
+            return array(
+                'status'     => TRUE,
+                'message'    => 'Berita Acara Penetapan Reward TOPSIS berhasil diterbitkan.',
+                'id_laporan' => $id_new
             );
         }
 
-        // PSR-4 autoloader: PhpOffice\PhpWord\ → src/PhpWord/
-        $prefix   = 'PhpOffice\\PhpWord\\';
-        $base_dir = $phpword_src . 'PhpWord' . DIRECTORY_SEPARATOR;
-        $len      = strlen($prefix);
+        return array('status' => FALSE, 'message' => 'Gagal menyimpan Berita Acara ke basis data.');
+    }
 
-        spl_autoload_register(function ($class) use ($prefix, $base_dir, $len) {
-            // Hanya tangani kelas dengan prefix yang sesuai
-            if (strncmp($prefix, $class, $len) !== 0) {
-                return;
+    /**
+     * Memperbarui data Berita Acara dari form edit.
+     * 
+     * @param int   $id_laporan
+     * @param array $input
+     * @return array
+     */
+    public function update_laporan($id_laporan, array $input)
+    {
+        $id = (int)$id_laporan;
+        if ($id <= 0) {
+            return array('status' => FALSE, 'message' => 'ID Berita Acara tidak valid.');
+        }
+
+        $existing = $this->CI->Laporan_model->get_laporan_by_id($id);
+        if (!$existing) {
+            return array('status' => FALSE, 'message' => 'Dokumen Berita Acara tidak ditemukan.');
+        }
+
+        $no_ba = !empty($input['no_ba']) ? trim($input['no_ba']) : $existing['no_ba'];
+        
+        // Cek duplikasi jika no_ba diubah
+        if ($no_ba !== $existing['no_ba']) {
+            $exists = $this->CI->db->where('no_ba', $no_ba)->where('id_laporan !=', $id)->count_all_results('laporan_ba');
+            if ($exists > 0) {
+                return array('status' => FALSE, 'message' => 'Nomor Berita Acara ' . $no_ba . ' sudah digunakan pada dokumen lain.');
             }
-            // Sisa setelah prefix → path relatif file
-            $relative_class = substr($class, $len);
-            $file = $base_dir . str_replace('\\', DIRECTORY_SEPARATOR, $relative_class) . '.php';
-            if (file_exists($file)) {
-                require_once $file;
-            }
-        });
-
-        // Load Settings agar konstanta internal PHPWord tersedia sejak awal
-        require_once $base_dir . 'Settings.php';
-    }
-
-
-    // -----------------------------------------------------------------------
-    // Public — Export Berita Acara
-    // -----------------------------------------------------------------------
-
-    /**
-     * Bangun dan kirim file .docx Berita Acara ke browser sebagai download.
-     *
-     * @param array $laporan  Data satu baris laporan, harus memiliki key:
-     *                        no_ba, nama_periode, kategori, tanggal_terbit,
-     *                        ketua_panitia, top_3 (array kandidat).
-     * @return void           Langsung output ke browser; tidak return nilai.
-     */
-    public function export_berita_acara(array $laporan)
-    {
-        $phpWord = new \PhpOffice\PhpWord\PhpWord();
-
-        // --- Pengaturan dokumen global ---
-        $phpWord->setDefaultFontName('Times New Roman');
-        $phpWord->setDefaultFontSize(12);
-
-        // --- Section dengan margin kertas A4 (twip: 1 cm = 567 twip) ---
-        $section = $phpWord->addSection([
-            'paperSize'    => 'A4',
-            'marginTop'    => 1134,   // ±2 cm
-            'marginBottom' => 1134,
-            'marginLeft'   => 1701,   // ±3 cm (sisi kiri lebih lebar utk jilid)
-            'marginRight'  => 1134,
-        ]);
-
-        // ===================================================================
-        // 1. KOP SURAT
-        // ===================================================================
-        $styleKopInstansi = [
-            'bold'      => true,
-            'size'      => 14,
-            'allCaps'   => true,
-        ];
-        $styleKopAlamat = [
-            'size' => 10,
-        ];
-        $styleCenter = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER];
-
-        $section->addText(
-            'PENGADILAN NEGERI LUBUK PAKAM',
-            $styleKopInstansi,
-            $styleCenter
-        );
-        $section->addText(
-            'KELAS I-A',
-            ['bold' => true, 'size' => 12],
-            $styleCenter
-        );
-        $section->addText(
-            'Jl. Kemerdekaan No. 173, Lubuk Pakam, Deli Serdang, Sumatera Utara 20517',
-            $styleKopAlamat,
-            $styleCenter
-        );
-        $section->addText(
-            'Telp. (061) 7952181 | Fax. (061) 7952182 | Email: pn.lubukpakam@gmail.com',
-            $styleKopAlamat,
-            $styleCenter
-        );
-
-        // Garis pembatas kop
-        $section->addLine([
-            'width'     => 8000,
-            'height'    => 0,
-            'color'     => '000000',
-        ]);
-        $section->addTextBreak(1);
-
-        // ===================================================================
-        // 2. JUDUL BERITA ACARA
-        // ===================================================================
-        $styleJudul = ['bold' => true, 'size' => 12, 'allCaps' => true];
-
-        $section->addText(
-            'BERITA ACARA PENETAPAN REWARD ' . strtoupper($laporan['kategori']),
-            $styleJudul,
-            $styleCenter
-        );
-        $section->addText(
-            'PERIODE ' . strtoupper($laporan['nama_periode']),
-            $styleJudul,
-            $styleCenter
-        );
-        $section->addText(
-            'Nomor: ' . $laporan['no_ba'],
-            ['size' => 11],
-            $styleCenter
-        );
-        $section->addTextBreak(1);
-
-        // ===================================================================
-        // 3. DASAR
-        // ===================================================================
-        $styleNormal  = ['size' => 12];
-        $styleJustify = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::BOTH];
-
-        $section->addText('Dasar:', ['bold' => true, 'size' => 12], $styleJustify);
-
-        $dasar = [
-            '1. Peraturan Mahkamah Agung Republik Indonesia tentang manajemen kinerja pegawai;',
-            '2. Surat Keputusan Ketua Pengadilan Negeri Lubuk Pakam tentang pemberian reward pegawai berprestasi;',
-            '3. Hasil perhitungan metode TOPSIS (Technique for Order of Preference by Similarity to Ideal Solution) periode ' . $laporan['nama_periode'] . '.',
-        ];
-
-        foreach ($dasar as $d) {
-            $section->addListItem($d, 0, $styleNormal, 'listBullet', $styleJustify);
         }
 
-        $section->addTextBreak(1);
-
-        // ===================================================================
-        // 4. NARASI PEMBUKA
-        // ===================================================================
-        $tanggalFormatted = $this->_format_tanggal($laporan['tanggal_terbit']);
-        $hariIni          = $this->_format_tanggal(date('Y-m-d'));
-
-        $section->addText(
-            'Pada hari ini, ' . $hariIni . ', telah dilaksanakan penilaian kinerja ' .
-            'menggunakan metode TOPSIS untuk menentukan penerima reward kategori ' .
-            $laporan['kategori'] . ' pada periode ' . $laporan['nama_periode'] .
-            ', dengan hasil penilaian sebagaimana tercantum dalam tabel berikut:',
-            $styleNormal,
-            $styleJustify
+        $data_update = array(
+            'no_ba'          => $no_ba,
+            'status'         => !empty($input['status']) ? trim($input['status']) : $existing['status'],
+            'tanggal_terbit' => !empty($input['tanggal_terbit']) ? trim($input['tanggal_terbit']) : $existing['tanggal_terbit'],
+            'ketua_panitia'  => !empty($input['ketua_panitia']) ? trim($input['ketua_panitia']) : $existing['ketua_panitia']
         );
-        $section->addTextBreak(1);
 
-        // ===================================================================
-        // 5. TABEL HASIL (TOP 3 KANDIDAT)
-        // ===================================================================
-        $top3 = isset($laporan['top_3']) ? $laporan['top_3'] : [];
-
-        $tableStyle = [
-            'borderSize'    => 6,
-            'borderColor'   => '333333',
-            'cellMargin'    => 80,
-            'alignment'     => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER,
-        ];
-
-        $table = $section->addTable($tableStyle);
-
-        // Header baris
-        $headerFontStyle = ['bold' => true, 'size' => 11];
-        $headerParaStyle = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER];
-        $cellHeaderStyle = ['bgColor' => 'D6E4F7'];
-
-        $headers = [
-            ['text' => 'No.',           'width' => 600],
-            ['text' => 'Nama Pegawai',  'width' => 3200],
-            ['text' => 'NIP',           'width' => 2400],
-            ['text' => 'Jabatan',       'width' => 1800],
-            ['text' => 'Nilai (Ci)',    'width' => 1200],
-            ['text' => 'Keterangan',    'width' => 1800],
-        ];
-
-        $table->addRow(null, ['tblHeader' => true]);
-        foreach ($headers as $h) {
-            $cell = $table->addCell($h['width'], $cellHeaderStyle);
-            $cell->addText($h['text'], $headerFontStyle, $headerParaStyle);
+        if (!empty($input['id_sk'])) {
+            $data_update['id_sk'] = (int)$input['id_sk'];
         }
 
-        // Baris data
-        $styleDataCenter = ['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER];
-
-        foreach ($top3 as $i => $kandidat) {
-            $rank = isset($kandidat['rank']) ? (int) $kandidat['rank'] : ($i + 1);
-            $ket  = $this->_keterangan_rank($rank);
-
-            $table->addRow();
-            $table->addCell(600)->addText((string) $rank, $styleNormal, $styleDataCenter);
-            $table->addCell(3200)->addText(isset($kandidat['nama']) ? $kandidat['nama'] : '-', $styleNormal);
-            $table->addCell(2400)->addText(isset($kandidat['nip'])  ? $kandidat['nip']  : '-', ['size' => 10]);
-            $table->addCell(1800)->addText(isset($kandidat['kategori']) ? $kandidat['kategori'] : $laporan['kategori'], $styleNormal);
-            $table->addCell(1200)->addText(number_format((float)(isset($kandidat['skor']) ? $kandidat['skor'] : 0), 4, ',', '.'), $styleNormal, $styleDataCenter);
-            $table->addCell(1800)->addText($ket, $styleNormal, $styleDataCenter);
+        $res = $this->CI->Laporan_model->update_laporan($id, $data_update);
+        if ($res) {
+            $this->_log_audit('UPDATE_BERITA_ACARA', 'Memperbarui dokumen Berita Acara No. ' . $no_ba);
+            return array('status' => TRUE, 'message' => 'Dokumen Berita Acara berhasil diperbarui.');
         }
 
-        $section->addTextBreak(2);
-
-        // ===================================================================
-        // 6. NARASI PENUTUP
-        // ===================================================================
-        $pemenang = !empty($top3[0]['nama']) ? $top3[0]['nama'] : '-';
-
-        $section->addText(
-            'Berdasarkan hasil perhitungan metode TOPSIS di atas, ditetapkan bahwa:',
-            $styleNormal,
-            $styleJustify
-        );
-        $section->addTextBreak(1);
-
-        $section->addText(
-            'Nama   : ' . $pemenang,
-            ['bold' => true, 'size' => 12]
-        );
-        $section->addText(
-            'NIP    : ' . (!empty($top3[0]['nip']) ? $top3[0]['nip'] : '-'),
-            ['bold' => true, 'size' => 12]
-        );
-        $section->addText(
-            'Nilai (Ci) : ' . number_format((float)(isset($top3[0]['skor']) ? $top3[0]['skor'] : 0), 4, ',', '.'),
-            ['bold' => true, 'size' => 12]
-        );
-        $section->addTextBreak(1);
-
-        $section->addText(
-            'sebagai PENERIMA REWARD TERBAIK kategori ' . strtoupper($laporan['kategori']) .
-            ' periode ' . $laporan['nama_periode'] . '.',
-            ['bold' => true, 'size' => 12],
-            $styleJustify
-        );
-        $section->addTextBreak(1);
-
-        $section->addText(
-            'Demikian Berita Acara ini dibuat dengan sebenarnya untuk dipergunakan sebagaimana mestinya.',
-            $styleNormal,
-            $styleJustify
-        );
-        $section->addTextBreak(2);
-
-        // ===================================================================
-        // 7. TANDA TANGAN (dua kolom)
-        // ===================================================================
-        $sigTable = $section->addTable(['cellMargin' => 80]);
-        $sigTable->addRow();
-
-        // Kolom kiri — Ketua Pengadilan
-        $cLeft = $sigTable->addCell(5000);
-        $cLeft->addText('Mengetahui,', $styleNormal, $styleCenter);
-        $cLeft->addText('Ketua Pengadilan Negeri Lubuk Pakam', $styleNormal, $styleCenter);
-        $cLeft->addTextBreak(3);
-        $cLeft->addText('( ................................................ )', $styleNormal, $styleCenter);
-        $cLeft->addText('NIP. ......................................................', ['size' => 11], $styleCenter);
-
-        // Kolom kanan — Ketua Panitia / Panitera
-        $cRight = $sigTable->addCell(5000);
-        $cRight->addText('Lubuk Pakam, ' . $tanggalFormatted, $styleNormal, $styleCenter);
-        $cRight->addText(
-            isset($laporan['ketua_panitia']) && $laporan['ketua_panitia']
-                ? $laporan['ketua_panitia']
-                : 'Ketua Panitia',
-            ['bold' => true, 'size' => 12],
-            $styleCenter
-        );
-        $cRight->addTextBreak(3);
-        $cRight->addText('( ................................................ )', $styleNormal, $styleCenter);
-        $cRight->addText('NIP. ......................................................', ['size' => 11], $styleCenter);
-
-        // ===================================================================
-        // 8. OUTPUT KE BROWSER
-        // ===================================================================
-        $noba_clean  = preg_replace('/[^A-Za-z0-9\-_]/', '_', isset($laporan['no_ba']) ? $laporan['no_ba'] : 'BA');
-        $periode_clean = preg_replace('/[^A-Za-z0-9\-_]/', '_', isset($laporan['nama_periode']) ? $laporan['nama_periode'] : '');
-        $filename    = 'BeritaAcara_' . $laporan['kategori'] . '_' . $periode_clean . '_' . $noba_clean . '.docx';
-
-        // Bersihkan buffer output agar tidak ada karakter sebelum header
-        if (ob_get_level()) {
-            ob_end_clean();
-        }
-
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-        header('Cache-Control: max-age=0');
-        header('Pragma: public');
-
-        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-        $writer->save('php://output');
-        exit;
-    }
-
-    // -----------------------------------------------------------------------
-    // Helpers
-    // -----------------------------------------------------------------------
-
-    /**
-     * Format tanggal Y-m-d menjadi "dd Bulan YYYY" dalam Bahasa Indonesia.
-     */
-    private function _format_tanggal($date_str)
-    {
-        $bulan = [
-            1  => 'Januari',   2  => 'Februari', 3  => 'Maret',
-            4  => 'April',     5  => 'Mei',       6  => 'Juni',
-            7  => 'Juli',      8  => 'Agustus',   9  => 'September',
-            10 => 'Oktober',   11 => 'November',  12 => 'Desember',
-        ];
-        $ts = strtotime($date_str);
-        if (!$ts) {
-            return $date_str;
-        }
-        return date('d', $ts) . ' ' . $bulan[(int) date('n', $ts)] . ' ' . date('Y', $ts);
+        return array('status' => FALSE, 'message' => 'Gagal memperbarui Berita Acara.');
     }
 
     /**
-     * Keterangan berdasarkan ranking TOPSIS.
+     * Menghapus atau mengarsipkan Berita Acara.
+     * 
+     * @param int $id_laporan
+     * @return array
      */
-    private function _keterangan_rank($rank)
+    public function delete_laporan($id_laporan)
     {
-        switch ((int) $rank) {
-            case 1:  return 'Penerima Reward';
-            case 2:  return 'Runner Up I';
-            case 3:  return 'Runner Up II';
-            default: return 'Kandidat';
+        $id = (int)$id_laporan;
+        if ($id <= 0) {
+            return array('status' => FALSE, 'message' => 'ID Berita Acara tidak valid.');
+        }
+
+        $existing = $this->CI->Laporan_model->get_laporan_by_id($id);
+        if (!$existing) {
+            return array('status' => FALSE, 'message' => 'Dokumen Berita Acara tidak ditemukan.');
+        }
+
+        $res = $this->CI->Laporan_model->delete_laporan($id);
+        if ($res) {
+            $this->_log_audit('HAPUS_BERITA_ACARA', 'Menghapus dokumen Berita Acara No. ' . $existing['no_ba']);
+            return array('status' => TRUE, 'message' => 'Dokumen Berita Acara berhasil dihapus.');
+        }
+
+        return array('status' => FALSE, 'message' => 'Gagal menghapus dokumen Berita Acara.');
+    }
+
+    /**
+     * Mengekspor Berita Acara ke format Microsoft Word (.docx).
+     * 
+     * @param int $id_laporan
+     * @return void
+     */
+    public function export_berita_acara($id_laporan)
+    {
+        $id = (int)$id_laporan;
+        if ($id <= 0) {
+            show_error('ID Berita Acara tidak valid.', 400, 'Export Error');
+        }
+
+        $laporan = $this->get_laporan_detail($id);
+        if (!$laporan) {
+            show_error('Data Berita Acara tidak ditemukan.', 404, 'Export Error');
+        }
+
+        $settings    = $this->CI->setting_service->get_settings();
+        $satker      = $settings['satker'];
+        $pimpinan    = $settings['pimpinan'];
+        $tim_penilai = isset($laporan['tim_penilai']) ? $laporan['tim_penilai'] : array();
+
+        $this->CI->export_word_service->export_berita_acara($laporan, $satker, $pimpinan, $tim_penilai);
+    }
+
+    /**
+     * Mengekspor Berita Acara langsung dari Sesi Proses TOPSIS (meskipun belum di-insert manual).
+     * 
+     * @param int $id_proses
+     * @return void
+     */
+    public function export_berita_acara_proses($id_proses)
+    {
+        $id_p = (int)$id_proses;
+        if ($id_p <= 0) {
+            show_error('ID Sesi TOPSIS tidak valid.', 400, 'Export Error');
+        }
+
+        // Cek apakah sudah ada di laporan_ba
+        $laporan = $this->CI->Laporan_model->get_laporan_by_proses($id_p);
+        if ($laporan) {
+            $this->export_berita_acara($laporan['id_laporan']);
+            return;
+        }
+
+        // Jika belum tersimpan di laporan_ba, konstruksi data on-the-fly
+        $proses = $this->CI->Topsis_model->get_proses_by_id($id_p);
+        if (!$proses) {
+            show_error('Sesi kalkulasi TOPSIS tidak ditemukan.', 404, 'Export Error');
+        }
+
+        $candidates = $this->CI->Laporan_model->get_all_ranked_candidates($id_p);
+        if (empty($candidates)) {
+            show_error('Sesi TOPSIS ini belum memiliki hasil perankingan. Silakan jalankan proses perhitungan TOPSIS terlebih dahulu.', 400, 'Export Error');
+        }
+
+        $settings = $this->CI->setting_service->get_settings();
+        $satker   = $settings['satker'];
+        $app      = $settings['app'];
+
+        $sk_aktif = $this->CI->db->get_where('tim_penilai_sk', array('status' => 'Aktif'))->row_array();
+        $id_sk    = $sk_aktif ? (int)$sk_aktif['id_sk'] : NULL;
+        $tim_p    = $id_sk ? $this->CI->Tim_penilai_model->get_sk_by_id($id_sk) : array();
+
+        $bulan_romawi = $this->_get_bulan_romawi((int)date('n'));
+        $no_ba = $this->CI->Laporan_model->generate_nomor_ba(
+            !empty($app['format_nomor_ba']) ? $app['format_nomor_ba'] : '',
+            !empty($satker['kode_wilayah']) ? $satker['kode_wilayah'] : 'W2.U4',
+            $bulan_romawi,
+            date('Y')
+        );
+
+        $winner = $candidates[0];
+
+        $laporan_data = array(
+            'no_ba'          => $no_ba,
+            'id_proses'      => $id_p,
+            'id_periode'     => (int)$proses['id_periode'],
+            'nama_periode'   => $proses['nama_periode'],
+            'kategori'       => $proses['kategori'],
+            'pemenang_nama'  => $winner['nama'],
+            'pemenang_nip'   => $winner['nip'],
+            'skor_topsis'    => (float)$winner['skor'],
+            'tanggal_terbit' => date('Y-m-d'),
+            'status'         => 'Disahkan',
+            'ketua_panitia'  => $tim_p && !empty($tim_p['ketua']) ? $tim_p['ketua']['nama'] : (!empty($satker['nama_ketua']) ? $satker['nama_ketua'] : ''),
+            'no_sk'          => $tim_p && !empty($tim_p['no_sk']) ? $tim_p['no_sk'] : '',
+            'all_candidates' => $candidates,
+            'top_3'          => array_slice($candidates, 0, 3)
+        );
+
+        $this->CI->export_word_service->export_berita_acara($laporan_data, $satker, $settings['pimpinan'], $tim_p);
+    }
+
+    /**
+     * Mengambil statistik KPI untuk view Laporan & Berita Acara.
+     * 
+     * @return array
+     */
+    public function get_stats()
+    {
+        return $this->CI->Laporan_model->get_stats();
+    }
+
+    /**
+     * Helper konversi angka bulan ke Romawi (I s/d XII).
+     * 
+     * @param int $month
+     * @return string
+     */
+    private function _get_bulan_romawi($month)
+    {
+        $romawi = array(
+            1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V', 6 => 'VI',
+            7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X', 11 => 'XI', 12 => 'XII'
+        );
+        return isset($romawi[$month]) ? $romawi[$month] : 'VIII';
+    }
+
+    /**
+     * Helper audit trail logging.
+     * 
+     * @param string $action
+     * @param string $details
+     * @return void
+     */
+    private function _log_audit($action, $details)
+    {
+        if (isset($this->CI->audit_service)) {
+            @$this->CI->audit_service->log_activity(
+                $this->CI->session->userdata('user_id') ? $this->CI->session->userdata('user_id') : 1,
+                $this->CI->session->userdata('username') ? $this->CI->session->userdata('username') : 'System',
+                $this->CI->session->userdata('role') ? $this->CI->session->userdata('role') : 'Administrator',
+                $action,
+                $details,
+                $this->CI->input->ip_address()
+            );
         }
     }
 }

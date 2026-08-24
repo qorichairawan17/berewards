@@ -81,8 +81,8 @@
                                 class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fs-11 mt-2"><?= html_escape($cand['kategori']); ?></span>
                         </div>
                         <div class="p-3 bg-light rounded text-center border">
-                            <small class="text-muted fs-11 d-block mb-1">Skor Preferensi TOPSIS</small>
-                            <h4 class="fw-bold text-primary mb-0">V = <?= number_format($cand['skor'], 4); ?></h4>
+                            <small class="text-muted fs-11 d-block mb-1">Skor Preferensi Akhir</small>
+                            <h4 class="fw-bold text-primary mb-0"><?= number_format($cand['skor'], 4); ?></h4>
                         </div>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
                         <div class="row g-3">
                             <div class="col-sm-4">
                                 <div class="p-3 bg-light rounded-3 text-center border">
-                                    <span class="d-block text-muted fs-11 mb-1">Skor Preferensi ($V_i$)</span>
+                                    <span class="d-block text-muted fs-11 mb-1">Skor Preferensi</span>
                                     <h3 class="fw-bold text-primary mb-0" id="detail_vi"><?= number_format($laporan_info['top_3'][0]['skor'], 4); ?>
                                     </h3>
                                     <small class="text-success fw-semibold fs-11" id="detail_rank_label">Rank #1 (Penerima Reward)</small>
@@ -115,24 +115,24 @@
                             </div>
                             <div class="col-sm-4">
                                 <div class="p-3 bg-light rounded-3 text-center border">
-                                    <span class="d-block text-muted fs-11 mb-1">Jarak Solusi Positif ($D^+$)</span>
+                                    <span class="d-block text-muted fs-11 mb-1">Jarak Solusi Positif</span>
                                     <h4 class="fw-bold text-dark mb-0" id="detail_dplus"><?= number_format($laporan_info['top_3'][0]['dplus'], 4); ?>
                                     </h4>
-                                    <small class="text-muted fs-11">Jarak terdekat ke SIP</small>
+                                    <small class="text-muted fs-11">Jarak terdekat ke Ideal Positif</small>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="p-3 bg-light rounded-3 text-center border">
-                                    <span class="d-block text-muted fs-11 mb-1">Jarak Solusi Negatif ($D^-$)</span>
+                                    <span class="d-block text-muted fs-11 mb-1">Jarak Solusi Negatif</span>
                                     <h4 class="fw-bold text-dark mb-0" id="detail_dminus">
                                         <?= number_format($laporan_info['top_3'][0]['dminus'], 4); ?>
                                     </h4>
-                                    <small class="text-muted fs-11">Jarak terjauh dari SIN</small>
+                                    <small class="text-muted fs-11">Jarak terjauh dari Ideal Negatif</small>
                                 </div>
                             </div>
 
                             <div class="col-12 mt-3">
-                                <h6 class="fw-bold text-dark fs-12 mb-2">Evaluasi Kriteria Kinerja ($C_1 - C_4$):</h6>
+                                <h6 class="fw-bold text-dark fs-12 mb-2">Evaluasi Kriteria Kinerja:</h6>
                                 <div class="progress-stacked" style="height: 12px;">
                                     <div class="progress" role="progressbar" style="width: 25%" aria-label="C1" aria-valuenow="25" aria-valuemin="0"
                                         aria-valuemax="100">
