@@ -37,6 +37,17 @@ class Periode_model extends CI_Model
     }
 
     /**
+     * Alias for get_all_periode() to ensure standard interface consistency.
+     *
+     * @param bool $aktif_only
+     * @return array
+     */
+    public function get_all($aktif_only = FALSE)
+    {
+        return $this->get_all_periode($aktif_only);
+    }
+
+    /**
      * Get single period record by ID.
      *
      * @param int $id_periode
@@ -45,6 +56,17 @@ class Periode_model extends CI_Model
     public function get_periode_by_id($id_periode)
     {
         return $this->db->get_where($this->table, array($this->primary_key => (int)$id_periode))->row_array();
+    }
+
+    /**
+     * Alias for get_periode_by_id() to ensure standard interface consistency.
+     *
+     * @param int $id_periode
+     * @return array|null
+     */
+    public function get_by_id($id_periode)
+    {
+        return $this->get_periode_by_id($id_periode);
     }
 
     /**

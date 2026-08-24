@@ -487,7 +487,14 @@ $config['csrf_exclude_uris'] = array(
     'periode/simpan',
     'periode/hapus',
     'periode/detail',
-    'periode/data'
+    'periode/data',
+    'proses/simpan_sesi',
+    'proses/simpan_nilai',
+    'proses/hitung',
+    'proses/hapus',
+    'proses/detail',
+    'proses/data',
+    'proses/data_detail'
 );
 
 /*

@@ -1,9 +1,24 @@
+<!-- Toast Container (Top Right Placement Referencing auth/signin.php) -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
+    <div id="toastNotification" class="toast align-items-center border-0 text-white shadow-lg rounded-3" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body d-flex align-items-center gap-2.5 p-3">
+                <i id="toastIcon" class="fs-22 me-1"></i>
+                <div>
+                    <strong id="toastTitle" class="d-block fs-13 fw-bold mb-0.5"></strong>
+                    <span id="toastText" class="fs-12 text-white-80"></span>
+                </div>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
 <?php $this->load->view('admin/partials/penilaian/detail-header'); ?>
 <?php $this->load->view('admin/partials/penilaian/stats-cards'); ?>
 <?php $this->load->view('admin/partials/penilaian/detail-tables'); ?>
 
 <!-- Modals -->
-<?php $this->load->view('admin/partials/penilaian/modal-add'); ?>
 <?php $this->load->view('admin/partials/penilaian/modal-input-nilai'); ?>
 <?php $this->load->view('admin/partials/penilaian/modal-edit'); ?>
 <?php $this->load->view('admin/partials/penilaian/modal-detail'); ?>
@@ -11,40 +26,3 @@
 
 <!-- Page Script -->
 <?php $this->load->view('admin/partials/penilaian/script-init'); ?>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    if ($.fn.DataTable) {
-        $('#tableHasilTopsis').DataTable({
-            language: {
-                search: "Cari:",
-                lengthMenu: "Tampilkan _MENU_ data",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                infoEmpty: "Tidak ada data",
-                zeroRecords: "Data hasil TOPSIS tidak ditemukan",
-                paginate: {
-                    first: "Awal",
-                    last: "Akhir",
-                    next: "Lanjut",
-                    previous: "Sebelum"
-                }
-            },
-            pageLength: 10,
-            responsive: true,
-            order: [[0, 'asc']]
-        });
-    }
-
-    $('#btnRecalculateTopsis').on('click', function() {
-        alert('Sukses! Kalkulasi ulang TOPSIS untuk <?= html_escape($periode_info['nama_periode']); ?> berhasil diperbarui.');
-    });
-
-    $('#formInputNilaiPegawai').on('submit', function(e) {
-        e.preventDefault();
-        var modalEl = document.getElementById('modalInputNilaiPegawai');
-        var modal = bootstrap.Modal.getInstance(modalEl);
-        if (modal) modal.hide();
-        alert('Sukses! Nilai kriteria alternative pegawai berhasil disimpan dan ditambahkan ke sesi penilaian ini.');
-        this.reset();
-    });
-});
-</script>

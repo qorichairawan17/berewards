@@ -19,13 +19,13 @@
                 <?php endif; ?>
             </span>
         </div>
-        <p class="text-muted fs-13 mb-0 mt-1">Input nilai kriteria alternatif untuk setiap pegawai, lalu tekan tombol <strong>Proses Perhitungan TOPSIS</strong> untuk mengkalkulasi skor preferensi $V_i$ dan mengubah status menjadi <strong>Final</strong>.</p>
+        <p class="text-muted fs-13 mb-0 mt-1">Input nilai kriteria alternatif untuk setiap pegawai, lalu tekan tombol <strong>Proses Perhitungan TOPSIS</strong> untuk mengkalkulasi skor preferensi akhir dan mengubah status menjadi <strong>Final</strong>.</p>
     </div>
     <div class="d-flex align-items-center gap-2">
         <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalInputNilaiPegawai">
             <i class="ti ti-user-plus me-1"></i> Input Nilai Alternative
         </button>
-        <button type="button" class="btn btn-success shadow-sm" id="btnProsesHitungTopsis">
+        <button type="button" class="btn btn-success shadow-sm" id="btnProsesHitungTopsis" data-id="<?= $id_proses; ?>">
             <i class="ti ti-calculator me-1"></i> Proses Perhitungan TOPSIS
         </button>
     </div>

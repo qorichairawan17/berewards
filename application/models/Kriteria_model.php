@@ -52,6 +52,18 @@ class Kriteria_model extends CI_Model
     }
 
     /**
+     * Alias for get_all_kriteria() to ensure standard interface consistency.
+     *
+     * @param string|null $kategori
+     * @param bool        $aktif_only
+     * @return array
+     */
+    public function get_all($kategori = NULL, $aktif_only = FALSE)
+    {
+        return $this->get_all_kriteria($kategori, $aktif_only);
+    }
+
+    /**
      * Get single kriteria record by ID.
      *
      * @param int $id_kriteria
@@ -71,6 +83,17 @@ class Kriteria_model extends CI_Model
         }
 
         return $kriteria;
+    }
+
+    /**
+     * Alias for get_kriteria_by_id() to ensure standard interface consistency.
+     *
+     * @param int $id_kriteria
+     * @return array|null
+     */
+    public function get_by_id($id_kriteria)
+    {
+        return $this->get_kriteria_by_id($id_kriteria);
     }
 
     /**

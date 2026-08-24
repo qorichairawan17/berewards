@@ -4,7 +4,7 @@
         <div class="modal-content border-0 shadow-lg">
             <div class="modal-header border-bottom bg-danger-subtle text-danger">
                 <h5 class="modal-title fw-bold" id="modalHapusPenilaianLabel">
-                    <i class="ti ti-alert-triangle me-2"></i>Konfirmasi Hapus Penilaian
+                    <i class="ti ti-alert-triangle me-2"></i>Konfirmasi Hapus Sesi Penilaian
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
@@ -12,9 +12,10 @@
                 <div class="text-danger mb-3">
                     <i class="ti ti-trash fs-40"></i>
                 </div>
-                <h6 class="fw-bold text-dark mb-2">Apakah Anda yakin ingin menghapus data penilaian pegawai ini?</h6>
+                <h6 class="fw-bold text-dark mb-2">Apakah Anda yakin ingin menghapus / mereset sesi penilaian ini?</h6>
                 <p class="text-muted fs-13 mb-0" id="delete_nama_penilaian">-</p>
-                <small class="text-muted fs-11 d-block mt-2">Menghapus data akan memicu recalculation otomatis pada daftar peringkat TOPSIS.</small>
+                <input type="hidden" id="delete_id_proses">
+                <small class="text-muted fs-11 d-block mt-2">Menghapus sesi ini akan mereset seluruh matriks nilai dan kalkulasi TOPSIS di dalamnya.</small>
             </div>
             <div class="modal-footer border-top bg-light">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
