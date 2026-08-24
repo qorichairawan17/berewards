@@ -144,19 +144,56 @@ class Kriteria_service
             $act_msg   = 'Menambahkan Kriteria Penilaian TOPSIS baru (' . $kode . ' - ' . $nama_kriteria . ')';
         }
 
-        // Auto-generate default 5-point rating scale for qualitative data if not present
+        // Handle Sub Kriteria / Skala Penilaian Kualitatif
         if ($jenis_data === 'kualitatif') {
-            $existing_skala = $this->CI->Kriteria_model->get_skala_by_kriteria($target_id);
-            if (empty($existing_skala)) {
-                $default_skala = array(
-                    array('label' => 'Sangat Baik',  'nilai' => 5.00, 'urutan' => 1),
-                    array('label' => 'Baik',         'nilai' => 4.00, 'urutan' => 2),
-                    array('label' => 'Cukup',        'nilai' => 3.00, 'urutan' => 3),
-                    array('label' => 'Kurang',       'nilai' => 2.00, 'urutan' => 4),
-                    array('label' => 'Sangat Kurang','nilai' => 1.00, 'urutan' => 5)
-                );
-                $this->CI->Kriteria_model->save_skala($target_id, $default_skala);
+            $submitted_skala = array();
+
+            // Cek apakah ada data sub kriteria dari input form (array atau json)
+            if (!empty($input['skala_sub_kriteria']) && is_array($input['skala_sub_kriteria'])) {
+                $sub_arr = $input['skala_sub_kriteria'];
+                $val_arr = isset($input['skala_nilai']) ? $input['skala_nilai'] : array();
+                $ket_arr = isset($input['skala_keterangan']) ? $input['skala_keterangan'] : array();
+
+                foreach ($sub_arr as $idx => $sub_item) {
+                    $sub_text = trim($sub_item);
+                    if ($sub_text === '') continue;
+
+                    $val_item = isset($val_arr[$idx]) && is_numeric($val_arr[$idx]) ? (float)$val_arr[$idx] : (float)(5 - $idx);
+                    $ket_item = isset($ket_arr[$idx]) ? trim($ket_arr[$idx]) : '';
+
+                    $submitted_skala[] = array(
+                        'sub_kriteria' => $sub_text,
+                        'nilai'        => $val_item,
+                        'keterangan'   => $ket_item,
+                        'label'        => !empty($ket_item) ? $ket_item : $sub_text,
+                        'urutan'       => $idx + 1
+                    );
+                }
+            } elseif (!empty($input['skala_json'])) {
+                $decoded = json_decode($input['skala_json'], TRUE);
+                if (is_array($decoded)) {
+                    $submitted_skala = $decoded;
+                }
             }
+
+            if (!empty($submitted_skala)) {
+                $this->CI->Kriteria_model->save_skala($target_id, $submitted_skala);
+            } else {
+                $existing_skala = $this->CI->Kriteria_model->get_skala_by_kriteria($target_id);
+                if (empty($existing_skala)) {
+                    $default_skala = array(
+                        array('sub_kriteria' => 'Sangat Memenuhi Standar & Tanpa Pelanggaran', 'nilai' => 5.00, 'keterangan' => 'Sangat Baik',  'urutan' => 1),
+                        array('sub_kriteria' => 'Memenuhi Standar dengan Baik',               'nilai' => 4.00, 'keterangan' => 'Baik',         'urutan' => 2),
+                        array('sub_kriteria' => 'Cukup Memenuhi Standar Operasional',         'nilai' => 3.00, 'keterangan' => 'Cukup Baik',   'urutan' => 3),
+                        array('sub_kriteria' => 'Terdapat Beberapa Catatan Keterlambatan',    'nilai' => 2.00, 'keterangan' => 'Kurang Baik',  'urutan' => 4),
+                        array('sub_kriteria' => 'Tidak Memenuhi Standar / Pelanggaran',       'nilai' => 1.00, 'keterangan' => 'Buruk',        'urutan' => 5)
+                    );
+                    $this->CI->Kriteria_model->save_skala($target_id, $default_skala);
+                }
+            }
+        } else {
+            // Jika jenis data kuantitatif, bersihkan opsi skala kriteria
+            $this->CI->Kriteria_model->save_skala($target_id, array());
         }
 
         $this->CI->db->trans_complete();

@@ -48,6 +48,39 @@
                                 <option value="cost">Cost (Makin Rendah Makin Baik)</option>
                             </select>
                         </div>
+
+                        <!-- Sub Kriteria / Skala Rating Builder (Kualitatif Only) -->
+                        <div class="col-12 mt-3" id="edit_skala_container">
+                            <div class="card border border-warning-subtle bg-warning-subtle bg-opacity-10 rounded-3 p-3 mb-0">
+                                <div class="d-flex justify-content-between align-items-center mb-2.5">
+                                    <div>
+                                        <h6 class="fw-bold text-dark mb-0 fs-13 d-flex align-items-center gap-1.5">
+                                            <i class="ti ti-list-details text-warning fs-16"></i> Opsi Skala & Sub Kriteria (1 - 5)
+                                        </h6>
+                                        <span class="text-muted fs-11">Tentukan deskripsi sub kriteria, bobot nilai skala, dan keterangan predikat.</span>
+                                    </div>
+                                    <button type="button" class="btn btn-xs btn-outline-primary btn-add-skala-row-edit d-flex align-items-center gap-1 fs-11 px-2.5 py-1">
+                                        <i class="ti ti-plus fs-13"></i> Tambah Opsi
+                                    </button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-bordered bg-white align-middle mb-0" id="tableEditSkala">
+                                        <thead class="table-light">
+                                            <tr class="fs-11 text-dark">
+                                                <th style="width: 40px;" class="text-center">No</th>
+                                                <th>Sub Kriteria</th>
+                                                <th style="width: 100px;" class="text-center">Bobot</th>
+                                                <th style="width: 150px;">Keterangan</th>
+                                                <th style="width: 45px;" class="text-center">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyEditSkala">
+                                            <!-- Dynamic rows populated from AJAX -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer border-top bg-light">

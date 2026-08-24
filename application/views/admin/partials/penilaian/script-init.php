@@ -118,7 +118,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (scores && typeof scores === 'object') {
             $.each(scores, function(kr_id, val) {
-                $('#edit_c_' + kr_id).val(val);
+                var el = $('#edit_c_' + kr_id);
+                if (el.length) {
+                    if (el.is('select')) {
+                        el.val(val);
+                        if (!el.val() && val !== undefined && val !== null) {
+                            el.val(parseFloat(val));
+                        }
+                    } else {
+                        el.val(val);
+                    }
+                }
             });
         }
     });

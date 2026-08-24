@@ -87,15 +87,25 @@ class Migration_Create_kriteria_tables extends CI_Migration {
                 'unsigned'   => TRUE,
                 'null'       => FALSE
             ),
+            'sub_kriteria' => array(
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+                'null'       => TRUE
+            ),
             'label' => array(
                 'type'       => 'VARCHAR',
-                'constraint' => '100',
-                'null'       => FALSE
+                'constraint' => '150',
+                'null'       => TRUE
             ),
             'nilai' => array(
                 'type'       => 'DECIMAL',
                 'constraint' => '5,2',
                 'null'       => FALSE
+            ),
+            'keterangan' => array(
+                'type'       => 'VARCHAR',
+                'constraint' => '100',
+                'null'       => TRUE
             ),
             'urutan' => array(
                 'type'       => 'INT',
@@ -141,11 +151,11 @@ class Migration_Create_kriteria_tables extends CI_Migration {
         $sample_skala = array();
 
         foreach ($kualitatif_ids as $id_kriteria) {
-            $sample_skala[] = array('id_kriteria' => $id_kriteria, 'label' => 'Sangat Baik', 'nilai' => 5.00, 'urutan' => 1, 'created_at' => date('Y-m-d H:i:s'));
-            $sample_skala[] = array('id_kriteria' => $id_kriteria, 'label' => 'Baik',        'nilai' => 4.00, 'urutan' => 2, 'created_at' => date('Y-m-d H:i:s'));
-            $sample_skala[] = array('id_kriteria' => $id_kriteria, 'label' => 'Cukup',       'nilai' => 3.00, 'urutan' => 3, 'created_at' => date('Y-m-d H:i:s'));
-            $sample_skala[] = array('id_kriteria' => $id_kriteria, 'label' => 'Kurang',      'nilai' => 2.00, 'urutan' => 4, 'created_at' => date('Y-m-d H:i:s'));
-            $sample_skala[] = array('id_kriteria' => $id_kriteria, 'label' => 'Sangat Kurang','nilai' => 1.00, 'urutan' => 5, 'created_at' => date('Y-m-d H:i:s'));
+            $sample_skala[] = array('id_kriteria' => $id_kriteria, 'sub_kriteria' => 'Sangat Memenuhi Standar & Tanpa Pelanggaran', 'label' => 'Sangat Baik',  'nilai' => 5.00, 'keterangan' => 'Sangat Baik',  'urutan' => 1, 'created_at' => date('Y-m-d H:i:s'));
+            $sample_skala[] = array('id_kriteria' => $id_kriteria, 'sub_kriteria' => 'Memenuhi Standar dengan Baik',               'label' => 'Baik',         'nilai' => 4.00, 'keterangan' => 'Baik',         'urutan' => 2, 'created_at' => date('Y-m-d H:i:s'));
+            $sample_skala[] = array('id_kriteria' => $id_kriteria, 'sub_kriteria' => 'Cukup Memenuhi Standar Operasional',         'label' => 'Cukup',        'nilai' => 3.00, 'keterangan' => 'Cukup Baik',   'urutan' => 3, 'created_at' => date('Y-m-d H:i:s'));
+            $sample_skala[] = array('id_kriteria' => $id_kriteria, 'sub_kriteria' => 'Terdapat Beberapa Catatan Keterlambatan',    'label' => 'Kurang',       'nilai' => 2.00, 'keterangan' => 'Kurang Baik',  'urutan' => 4, 'created_at' => date('Y-m-d H:i:s'));
+            $sample_skala[] = array('id_kriteria' => $id_kriteria, 'sub_kriteria' => 'Tidak Memenuhi Standar / Pelanggaran',       'label' => 'Sangat Kurang','nilai' => 1.00, 'keterangan' => 'Buruk',        'urutan' => 5, 'created_at' => date('Y-m-d H:i:s'));
         }
 
         $this->db->insert_batch('skala_kriteria', $sample_skala);

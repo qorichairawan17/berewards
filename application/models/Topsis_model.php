@@ -187,7 +187,8 @@ class Topsis_model extends CI_Model
     // =========================================================================
 
     /**
-     * Mengambil daftar kriteria snapshot untuk sesi proses tertentu.
+     * Mengambil daftar kriteria snapshot untuk sesi proses tertentu,
+     * dilengkapi dengan daftar opsi skala kualitatif jika jenis_data adalah kualitatif.
      * 
      * @param int $id_proses
      * @return array
@@ -198,7 +199,34 @@ class Topsis_model extends CI_Model
         $this->db->where('id_proses', (int)$id_proses);
         $this->db->order_by('urutan', 'ASC');
         $this->db->order_by('id_proses_kriteria', 'ASC');
-        return $this->db->get()->result_array();
+        $kriteria_list = $this->db->get()->result_array();
+
+        foreach ($kriteria_list as &$kr) {
+            $kr['skala_list'] = array();
+            if ($kr['jenis_data'] === 'kualitatif') {
+                $ref_id = !empty($kr['ref_kriteria_id']) ? (int)$kr['ref_kriteria_id'] : 0;
+                if ($ref_id > 0) {
+                    $this->db->from('skala_kriteria');
+                    $this->db->where('id_kriteria', $ref_id);
+                    $this->db->order_by('urutan', 'ASC');
+                    $this->db->order_by('nilai', 'DESC');
+                    $kr['skala_list'] = $this->db->get()->result_array();
+                }
+
+                // Fallback default 1-5 scale jika belum ada di database
+                if (empty($kr['skala_list'])) {
+                    $kr['skala_list'] = array(
+                        array('sub_kriteria' => 'Sangat Memenuhi Standar & Tanpa Pelanggaran', 'nilai' => 5.00, 'keterangan' => 'Sangat Baik',  'label' => 'Sangat Baik'),
+                        array('sub_kriteria' => 'Memenuhi Standar dengan Baik',               'nilai' => 4.00, 'keterangan' => 'Baik',         'label' => 'Baik'),
+                        array('sub_kriteria' => 'Cukup Memenuhi Standar Operasional',         'nilai' => 3.00, 'keterangan' => 'Cukup Baik',   'label' => 'Cukup Baik'),
+                        array('sub_kriteria' => 'Terdapat Beberapa Catatan Keterlambatan',    'nilai' => 2.00, 'keterangan' => 'Kurang Baik',  'label' => 'Kurang Baik'),
+                        array('sub_kriteria' => 'Tidak Memenuhi Standar / Pelanggaran',       'nilai' => 1.00, 'keterangan' => 'Buruk',        'label' => 'Buruk')
+                    );
+                }
+            }
+        }
+
+        return $kriteria_list;
     }
 
     /**

@@ -194,12 +194,35 @@ class Kriteria_model extends CI_Model
         }
 
         $now = date('Y-m-d H:i:s');
-        foreach ($skala_list as &$row) {
-            $row['id_kriteria'] = $id_kriteria;
-            $row['created_at']  = $now;
+        $batch_data = array();
+        $urutan = 1;
+
+        foreach ($skala_list as $row) {
+            if (!isset($row['nilai']) && !isset($row['bobot']) && !isset($row['sub_kriteria'])) {
+                continue;
+            }
+
+            $nilai = isset($row['nilai']) ? (float)$row['nilai'] : (isset($row['bobot']) ? (float)$row['bobot'] : 0.0);
+            $sub   = isset($row['sub_kriteria']) ? trim($row['sub_kriteria']) : (isset($row['label']) ? trim($row['label']) : '');
+            $ket   = isset($row['keterangan']) ? trim($row['keterangan']) : (isset($row['label']) ? trim($row['label']) : '');
+            $label = !empty($ket) ? $ket : $sub;
+
+            $batch_data[] = array(
+                'id_kriteria'  => $id_kriteria,
+                'sub_kriteria' => $sub,
+                'label'        => $label,
+                'nilai'        => $nilai,
+                'keterangan'   => $ket,
+                'urutan'       => isset($row['urutan']) ? (int)$row['urutan'] : $urutan++,
+                'created_at'   => $now
+            );
         }
 
-        return $this->db->insert_batch($this->table_skala, $skala_list);
+        if (empty($batch_data)) {
+            return TRUE;
+        }
+
+        return $this->db->insert_batch($this->table_skala, $batch_data);
     }
 
     /**

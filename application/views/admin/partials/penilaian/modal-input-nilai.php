@@ -31,13 +31,39 @@
                         <?php if (!empty($kriteria_list)): ?>
                             <?php foreach ($kriteria_list as $index => $kr): ?>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold text-dark fs-12">
-                                        <?= html_escape($kr['kode']); ?>: <?= html_escape($kr['nama_kriteria']); ?>
-                                        <span class="badge bg-light text-muted border fs-10 text-uppercase"><?= $kr['tipe_atribut']; ?></span>
-                                        <span class="text-danger">*</span>
+                                    <label class="form-label fw-semibold text-dark fs-12 d-flex align-items-center justify-content-between mb-1">
+                                        <span>
+                                            <span class="badge bg-primary text-white px-1.5 py-0.5 fs-11 me-1"><?= html_escape($kr['kode']); ?></span>
+                                            <?= html_escape($kr['nama_kriteria']); ?> <span class="text-danger">*</span>
+                                        </span>
+                                        <span class="d-flex align-items-center gap-1">
+                                            <span class="badge bg-light text-muted border fs-10 text-uppercase"><?= $kr['tipe_atribut']; ?></span>
+                                            <?php if ($kr['jenis_data'] === 'kualitatif'): ?>
+                                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle fs-10">Skala</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-info-subtle text-info border border-info-subtle fs-10">Angka Rill</span>
+                                            <?php endif; ?>
+                                        </span>
                                     </label>
-                                    <input type="number" step="0.01" class="form-control" name="c_<?= $kr['id_proses_kriteria']; ?>"
-                                           placeholder="Nilai angka kriteria <?= html_escape($kr['kode']); ?>" required>
+                                    
+                                    <?php if ($kr['jenis_data'] === 'kualitatif' && !empty($kr['skala_list'])): ?>
+                                        <select class="form-select" name="c_<?= $kr['id_proses_kriteria']; ?>" required>
+                                            <option value="" selected disabled>-- Pilih Sub Kriteria Penilaian --</option>
+                                            <?php foreach ($kr['skala_list'] as $sk): ?>
+                                                <?php 
+                                                    $subTitle = !empty($sk['sub_kriteria']) ? $sk['sub_kriteria'] : (!empty($sk['label']) ? $sk['label'] : 'Opsi Skala');
+                                                    $ketTitle = !empty($sk['keterangan']) ? $sk['keterangan'] : (!empty($sk['label']) ? $sk['label'] : '');
+                                                    $valNum   = (float)$sk['nilai'];
+                                                ?>
+                                                <option value="<?= $valNum; ?>">
+                                                    <?= html_escape($subTitle); ?> &nbsp;—&nbsp; (Bobot: <?= $valNum; ?><?= !empty($ketTitle) ? ' - ' . html_escape($ketTitle) : ''; ?>)
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    <?php else: ?>
+                                        <input type="number" step="0.01" class="form-control" name="c_<?= $kr['id_proses_kriteria']; ?>"
+                                               placeholder="Masukkan nilai angka rill (contoh: 95.50)" required>
+                                    <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>

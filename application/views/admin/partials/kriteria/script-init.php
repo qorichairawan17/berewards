@@ -59,6 +59,100 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Default Sub Kriteria / Skala Options Template
+    var defaultSkalaOptions = [
+        { sub_kriteria: 'Sangat Memenuhi Standar & Tanpa Pelanggaran', nilai: 5, keterangan: 'Sangat Baik' },
+        { sub_kriteria: 'Memenuhi Standar dengan Baik',               nilai: 4, keterangan: 'Baik' },
+        { sub_kriteria: 'Cukup Memenuhi Standar Operasional',         nilai: 3, keterangan: 'Cukup Baik' },
+        { sub_kriteria: 'Terdapat Beberapa Catatan Keterlambatan',    nilai: 2, keterangan: 'Kurang Baik' },
+        { sub_kriteria: 'Tidak Memenuhi Standar / Pelanggaran',       nilai: 1, keterangan: 'Buruk' }
+    ];
+
+    /**
+     * Render single row in Sub Kriteria table builder
+     */
+    function renderSkalaRow(tbodyId, sub, nilai, ket) {
+        var rowCount = $('#' + tbodyId + ' tr').length + 1;
+        var subVal   = sub ? $('<div>').text(sub).html() : '';
+        var ketVal   = ket ? $('<div>').text(ket).html() : '';
+        var numVal   = (nilai !== undefined && nilai !== null && nilai !== '') ? parseFloat(nilai) : (6 - rowCount > 0 ? (6 - rowCount) : 1);
+
+        var rowHtml = '<tr>' +
+            '<td class="text-center fw-semibold skala-no">' + rowCount + '</td>' +
+            '<td><input type="text" class="form-control form-control-sm" name="skala_sub_kriteria[]" value="' + subVal + '" placeholder="Deskripsi Sub Kriteria (contoh: Tidak Pernah Telat)" required></td>' +
+            '<td><input type="number" step="0.01" min="0" max="100" class="form-control form-control-sm text-center fw-bold" name="skala_nilai[]" value="' + numVal + '" placeholder="Nilai" required></td>' +
+            '<td><input type="text" class="form-control form-control-sm" name="skala_keterangan[]" value="' + ketVal + '" placeholder="Contoh: Sangat Baik"></td>' +
+            '<td class="text-center"><button type="button" class="btn btn-xs btn-outline-danger btn-remove-skala-row p-1 px-1.5" title="Hapus Baris"><i class="ti ti-trash fs-13"></i></button></td>' +
+            '</tr>';
+
+        $('#' + tbodyId).append(rowHtml);
+        renumberSkalaRows(tbodyId);
+    }
+
+    /**
+     * Renumber rows sequentially
+     */
+    function renumberSkalaRows(tbodyId) {
+        $('#' + tbodyId + ' tr').each(function(idx) {
+            $(this).find('.skala-no').text(idx + 1);
+        });
+    }
+
+    /**
+     * Populate default template rows into target tbody
+     */
+    function populateDefaultSkala(tbodyId) {
+        $('#' + tbodyId).empty();
+        $.each(defaultSkalaOptions, function(i, opt) {
+            renderSkalaRow(tbodyId, opt.sub_kriteria, opt.nilai, opt.keterangan);
+        });
+    }
+
+    // Initialize Add Modal Sub Kriteria rows
+    populateDefaultSkala('tbodyAddSkala');
+
+    // Toggle Sub Kriteria Builder on Modal Tambah
+    $('#formTambahKriteria select[name="jenis_data"]').on('change', function() {
+        if ($(this).val() === 'kualitatif') {
+            if ($('#tbodyAddSkala tr').length === 0) {
+                populateDefaultSkala('tbodyAddSkala');
+            }
+            $('#add_skala_container').slideDown(200);
+        } else {
+            $('#add_skala_container').slideUp(200);
+        }
+    });
+
+    // Toggle Sub Kriteria Builder on Modal Edit
+    $('#edit_jenis_data').on('change', function() {
+        if ($(this).val() === 'kualitatif') {
+            if ($('#tbodyEditSkala tr').length === 0) {
+                populateDefaultSkala('tbodyEditSkala');
+            }
+            $('#edit_skala_container').slideDown(200);
+        } else {
+            $('#edit_skala_container').slideUp(200);
+        }
+    });
+
+    // Button Add Row on Modal Tambah
+    $(document).on('click', '.btn-add-skala-row-add', function() {
+        renderSkalaRow('tbodyAddSkala', '', '', '');
+    });
+
+    // Button Add Row on Modal Edit
+    $(document).on('click', '.btn-add-skala-row-edit', function() {
+        renderSkalaRow('tbodyEditSkala', '', '', '');
+    });
+
+    // Button Remove Row (Both Add & Edit Modals)
+    $(document).on('click', '.btn-remove-skala-row', function() {
+        var tbody = $(this).closest('tbody');
+        var tbodyId = tbody.attr('id');
+        $(this).closest('tr').remove();
+        renumberSkalaRows(tbodyId);
+    });
+
     // 1. Initialize DataTables
     if ($.fn.DataTable) {
         $('#tableKriteria').DataTable({
@@ -98,10 +192,40 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#edit_bobot').val(bobot);
         $('#edit_jenis_data').val(jenis);
         $('#edit_tipe_atribut').val(tipe);
+
+        $('#tbodyEditSkala').empty();
+
+        if (jenis === 'kualitatif') {
+            $('#edit_skala_container').show();
+            // Fetch detailed skala items via AJAX
+            $.ajax({
+                url: baseUrl + 'kriteria/detail/' + id,
+                type: 'POST',
+                data: { id_kriteria: id, [csrfTokenName]: csrfHash },
+                dataType: 'json',
+                success: function(res) {
+                    updateCsrf(res);
+                    if (res.status && res.data && res.data.skala_list && res.data.skala_list.length > 0) {
+                        $('#tbodyEditSkala').empty();
+                        $.each(res.data.skala_list, function(i, item) {
+                            renderSkalaRow('tbodyEditSkala', item.sub_kriteria || item.label, item.nilai, item.keterangan || item.label);
+                        });
+                    } else {
+                        populateDefaultSkala('tbodyEditSkala');
+                    }
+                },
+                error: function() {
+                    populateDefaultSkala('tbodyEditSkala');
+                }
+            });
+        } else {
+            $('#edit_skala_container').hide();
+        }
     });
 
     // 3. Detail Button Handler
     $(document).on('click', '.btn-detail-kriteria', function() {
+        var id       = $(this).data('id');
         var kode     = $(this).data('kode');
         var nama     = $(this).data('nama');
         var kategori = $(this).data('kategori');
@@ -113,12 +237,49 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#detail_nama_kriteria').text(nama);
         $('#detail_kategori_pegawai').text('Kategori: ' + kategori);
         $('#detail_bobot').text(bobot + '%');
-        $('#detail_jenis_data').text(jenis);
+        $('#detail_jenis_data').text(jenis === 'kualitatif' ? 'Kualitatif (Skala 1-5)' : 'Kuantitatif (Angka Rill)');
 
         if (tipe === 'benefit') {
-            $('#detail_tipe_atribut_badge').html('<span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 fs-11">Benefit</span>');
+            $('#detail_tipe_atribut_badge').html('<span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-0.5 fs-11"><i class="ti ti-trending-up me-1"></i>Benefit</span>');
         } else {
-            $('#detail_tipe_atribut_badge').html('<span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1 fs-11">Cost</span>');
+            $('#detail_tipe_atribut_badge').html('<span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-0.5 fs-11"><i class="ti ti-trending-down me-1"></i>Cost</span>');
+        }
+
+        $('#tbodyDetailSkala').empty();
+
+        if (jenis === 'kualitatif') {
+            $('#detail_skala_container').show();
+            // Fetch detail via AJAX to populate Sub Kriteria table
+            $.ajax({
+                url: baseUrl + 'kriteria/detail/' + id,
+                type: 'POST',
+                data: { id_kriteria: id, [csrfTokenName]: csrfHash },
+                dataType: 'json',
+                success: function(res) {
+                    updateCsrf(res);
+                    if (res.status && res.data && res.data.skala_list && res.data.skala_list.length > 0) {
+                        var html = '';
+                        $.each(res.data.skala_list, function(idx, item) {
+                            var subTitle = item.sub_kriteria || item.label || '-';
+                            var ketBadge = item.keterangan || item.label || '-';
+                            html += '<tr>' +
+                                '<td class="text-center fw-semibold">' + (idx + 1) + '</td>' +
+                                '<td><strong class="text-dark fs-12">' + $('<div>').text(subTitle).html() + '</strong></td>' +
+                                '<td class="text-center fw-bold text-primary fs-13">' + parseFloat(item.nilai).toFixed(0) + '</td>' +
+                                '<td><span class="badge bg-light text-dark border px-2 py-1 fs-11">' + $('<div>').text(ketBadge).html() + '</span></td>' +
+                                '</tr>';
+                        });
+                        $('#tbodyDetailSkala').html(html);
+                    } else {
+                        $('#tbodyDetailSkala').html('<tr><td colspan="4" class="text-center text-muted py-3">Belum ada opsi skala kualitatif terdaftar</td></tr>');
+                    }
+                },
+                error: function() {
+                    $('#tbodyDetailSkala').html('<tr><td colspan="4" class="text-center text-danger py-3">Gagal memuat rincian skala kriteria</td></tr>');
+                }
+            });
+        } else {
+            $('#detail_skala_container').hide();
         }
     });
 
