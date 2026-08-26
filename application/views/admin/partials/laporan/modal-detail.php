@@ -62,7 +62,7 @@
                         <small class="d-block text-muted fs-11">Ketua Tim Penilai,</small>
                         <strong class="d-block text-dark fs-12">Reward Aparatur Pengadilan</strong>
                         <div style="height: 50px;"></div>
-                        <u class="fw-bold text-dark fs-12" id="preview_ketua">Bambang Wijaya, S.H., M.H.</u>
+                        <u class="fw-bold text-dark fs-12" id="preview_ketua">-</u>
                     </div>
                 </div>
             </div>

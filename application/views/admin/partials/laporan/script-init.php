@@ -79,11 +79,27 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 4. Handle SK Change in Modal Add
+    // 4. Handle SK Change in Modal Add & Modal Edit
     $('#add_id_sk').on('change', function() {
         var selected = $(this).find('option:selected');
         var ketua = selected.data('ketua');
         if (ketua) {
+            $('#add_ketua_panitia').val(ketua);
+        }
+    });
+
+    $('#edit_id_sk').on('change', function() {
+        var selected = $(this).find('option:selected');
+        var ketua = selected.data('ketua');
+        if (ketua) {
+            $('#edit_ketua_panitia').val(ketua);
+        }
+    });
+
+    $('#modalTambahLaporan').on('show.bs.modal', function() {
+        var selected = $('#add_id_sk').find('option:selected');
+        var ketua = selected.data('ketua');
+        if (ketua && !$('#add_ketua_panitia').val()) {
             $('#add_ketua_panitia').val(ketua);
         }
     });
@@ -135,16 +151,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 6. Edit Button Click Handler
     $(document).on('click', '.btn-edit-laporan', function() {
-        var id = $(this).data('id');
-        var noba = $(this).data('noba');
-        var status = $(this).data('status');
+        var id      = $(this).data('id');
+        var noba    = $(this).data('noba');
+        var status  = $(this).data('status');
         var tanggal = $(this).data('tanggal');
-        var ketua = $(this).data('ketua');
+        var id_sk   = $(this).data('id_sk');
+        var ketua   = $(this).data('ketua');
 
         $('#edit_id_laporan').val(id);
         $('#edit_no_ba').val(noba);
         $('#edit_status').val(status);
-        $('#edit_ketua_panitia').val(ketua);
+
+        if (id_sk) {
+            $('#edit_id_sk').val(id_sk);
+        } else {
+            $('#edit_id_sk').val('');
+        }
+
+        if (ketua) {
+            $('#edit_ketua_panitia').val(ketua);
+        } else if (id_sk) {
+            var optKetua = $('#edit_id_sk option[value="' + id_sk + '"]').data('ketua');
+            if (optKetua) {
+                $('#edit_ketua_panitia').val(optKetua);
+            }
+        }
 
         var dateInput = document.getElementById('edit_tanggal_terbit');
         if (dateInput && dateInput._flatpickr) {
@@ -320,12 +351,218 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = '<?= site_url("laporan/export/"); ?>' + id;
     });
 
-    // 11. Select Period for Showroom Preview
+    // 11. Showroom TOPSIS Modal Engine & Interactive Carousel
+    var showroomCurrentCandidates = [];
+    var showroomCurrentIndex = 0;
+    var baseUrl = '<?= base_url(); ?>';
+
+    function renderShowroomDetail(idx) {
+        if (!showroomCurrentCandidates || !showroomCurrentCandidates.length || !showroomCurrentCandidates[idx]) {
+            return;
+        }
+
+        showroomCurrentIndex = idx;
+        var cand = showroomCurrentCandidates[idx];
+
+        // Update Slide Indicator
+        $('#showroom_slide_indicator').text((idx + 1) + ' / ' + showroomCurrentCandidates.length);
+
+        // Update Active Card Styling
+        $('.showroom-card-item').each(function(i) {
+            if (i === idx) {
+                $(this).addClass('active-card bg-white shadow-lg').removeClass('bg-light opacity-75');
+            } else {
+                $(this).removeClass('active-card bg-white shadow-lg').addClass('bg-light opacity-75');
+            }
+        });
+
+        // Update Left Profile
+        var photoUrl = cand.foto ? (cand.foto.indexOf('http') === 0 ? cand.foto : baseUrl + cand.foto) : baseUrl + 'assets/images/users/user-1.jpg';
+        $('#showroom_detail_photo').attr('src', photoUrl);
+        $('#showroom_detail_nama').text(cand.nama || '-');
+        $('#showroom_detail_nip').text('NIP. ' + (cand.nip || '-'));
+        $('#showroom_detail_kategori').text(cand.kategori || '-');
+
+        // Update Scores & Distances
+        $('#showroom_detail_vi').text(parseFloat(cand.skor || 0).toFixed(4));
+        $('#showroom_detail_dplus').text(parseFloat(cand.dplus || 0).toFixed(4));
+        $('#showroom_detail_dminus').text(parseFloat(cand.dminus || 0).toFixed(4));
+
+        // Update Rank Badge Label
+        var rank = parseInt(cand.rank) || (idx + 1);
+        if (rank === 1) {
+            $('#showroom_detail_rank_label').text('Rank #1 (Penerima Reward Utama)').removeClass('text-info text-muted').addClass('text-success');
+        } else if (rank === 2) {
+            $('#showroom_detail_rank_label').text('Rank #2 (Runner Up 1)').removeClass('text-success text-muted').addClass('text-info');
+        } else {
+            $('#showroom_detail_rank_label').text('Rank #3 (Runner Up 2)').removeClass('text-success text-info').addClass('text-muted');
+        }
+
+        // Update Progress Bar & Criteria Labels
+        var progressHtml = '';
+        var labelsHtml = '';
+
+        if (cand.kriteria_scores && cand.kriteria_scores.length > 0) {
+            cand.kriteria_scores.forEach(function(k) {
+                var percent = k.percent || (100 / cand.kriteria_scores.length);
+                var colorClass = k.color || 'bg-primary';
+                var kode = k.kode || 'C';
+                var nama = k.nama || 'Kriteria';
+                var val = parseFloat(k.nilai || 0).toFixed(2);
+
+                progressHtml += '<div class="progress" role="progressbar" style="width: ' + percent + '%" aria-label="' + kode + '" aria-valuenow="' + percent + '" aria-valuemin="0" aria-valuemax="100">' +
+                    '<div class="progress-bar ' + colorClass + '" title="' + kode + ': ' + nama + ' (' + val + ')">' + kode + '</div>' +
+                    '</div>';
+
+                labelsHtml += '<span><i class="ti ti-circle-filled fs-9 me-1 ' + colorClass.replace('bg-', 'text-') + '"></i>' +
+                    '<strong>' + kode + '</strong> ' + nama + ': <strong class="text-dark">' + val + '</strong></span>';
+            });
+        } else {
+            progressHtml = '<div class="progress" role="progressbar" style="width: 100%"><div class="progress-bar bg-primary">Skor TOPSIS: ' + parseFloat(cand.skor || 0).toFixed(4) + '</div></div>';
+            labelsHtml = '<span class="text-muted">Rincian evaluasi kriteria diproses dari matriks keputusan ternormalisasi.</span>';
+        }
+
+        $('#showroom_progress_stacked').html(progressHtml);
+        $('#showroom_criteria_labels').html(labelsHtml);
+    }
+
+    function loadShowroomModal(targetId) {
+        if (!targetId) {
+            targetId = $('#select_showroom_periode').val();
+        }
+
+        if (!targetId) {
+            showToast('warning', 'Peringatan', 'Silakan pilih sesi penilaian TOPSIS terlebih dahulu.');
+            return;
+        }
+
+        showToast('info', 'Memuat Showroom', 'Sedang mengambil data kalkulasi SPK TOPSIS...');
+
+        $.ajax({
+            url: '<?= site_url("laporan/showroom_data/"); ?>' + encodeURIComponent(targetId),
+            type: 'GET',
+            dataType: 'json',
+            success: function(res) {
+                if (!res || !res.status) {
+                    showToast('danger', 'Gagal', (res && res.message) ? res.message : 'Gagal memuat data showroom TOPSIS.');
+                    return;
+                }
+
+                var data = res;
+                showroomCurrentCandidates = data.candidates || [];
+                showroomCurrentIndex = 0;
+
+                // Close Select Modal if open
+                var selectModalEl = document.getElementById('modalSelectPreviewPeriode');
+                if (selectModalEl) {
+                    var selectModal = bootstrap.Modal.getInstance(selectModalEl);
+                    if (selectModal) selectModal.hide();
+                }
+
+                // Update Header Titles
+                $('#showroom_periode_title').text(data.nama_periode + ' — Kategori ' + data.kategori);
+                $('#showroom_main_title').text('Pratinjau Kandidat Reward Kategori ' + data.kategori);
+                $('#btnShowroomFullPage').attr('href', '<?= site_url("laporan/preview/"); ?>' + (data.id_laporan ? data.id_laporan : 'proses_' + data.id_proses));
+
+                // Render Top Candidate Cards
+                var cardsHtml = '';
+                if (showroomCurrentCandidates.length > 0) {
+                    showroomCurrentCandidates.forEach(function(cand, idx) {
+                        var rank = parseInt(cand.rank) || (idx + 1);
+                        var isFirst = (idx === 0);
+                        var trophyIcon = (rank === 1) 
+                            ? '<i class="ti ti-trophy text-warning fs-28 rank-trophy-badge"></i>' 
+                            : ((rank === 2) ? '<i class="ti ti-medal text-secondary fs-28"></i>' : '<i class="ti ti-award text-amber fs-28"></i>');
+
+                        var cardPhoto = cand.foto ? (cand.foto.indexOf('http') === 0 ? cand.foto : baseUrl + cand.foto) : baseUrl + 'assets/images/users/user-1.jpg';
+                        var activeClass = isFirst ? 'active-card bg-white shadow-lg' : 'bg-light opacity-75';
+
+                        cardsHtml += '<div class="col-md-4">' +
+                            '<div class="card showroom-card-item h-100 rounded-3 p-4 ' + activeClass + '" data-index="' + idx + '">' +
+                            '<div class="d-flex align-items-center justify-content-between mb-3">' +
+                            '<span class="badge bg-dark text-white px-2 py-1 fs-11">PERINGKAT #' + rank + '</span>' +
+                            trophyIcon +
+                            '</div>' +
+                            '<div class="text-center mb-3">' +
+                            '<img src="' + cardPhoto + '" alt="' + (cand.nama || 'Foto') + '" class="rounded-circle border border-3 border-primary mb-2 shadow-sm" style="width: 80px; height: 80px; object-fit: cover;">' +
+                            '<h5 class="fw-bold text-dark mb-1 fs-14">' + (cand.nama || '-') + '</h5>' +
+                            '<small class="text-muted fs-11 d-block">NIP. ' + (cand.nip || '-') + '</small>' +
+                            '<span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fs-11 mt-2">' + (cand.kategori || data.kategori) + '</span>' +
+                            '</div>' +
+                            '<div class="p-3 bg-light rounded text-center border">' +
+                            '<small class="text-muted fs-11 d-block mb-1">Skor Preferensi Akhir ($V_i$)</small>' +
+                            '<h4 class="fw-bold text-primary mb-0">' + parseFloat(cand.skor || 0).toFixed(4) + '</h4>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+                    });
+                } else {
+                    cardsHtml = '<div class="col-12 text-center py-4 text-muted"><i class="ti ti-alert-circle fs-32 mb-2 d-block"></i>Tidak ada kandidat hasil perankingan pada sesi ini.</div>';
+                }
+
+                $('#showroom_cards_container').html(cardsHtml);
+
+                // Initialize first candidate detail
+                if (showroomCurrentCandidates.length > 0) {
+                    renderShowroomDetail(0);
+                }
+
+                // Show Showroom Modal
+                var showroomModalEl = document.getElementById('modalShowroomKandidat');
+                if (showroomModalEl) {
+                    var showroomModal = bootstrap.Modal.getOrCreateInstance(showroomModalEl);
+                    showroomModal.show();
+                }
+            },
+            error: function() {
+                showToast('danger', 'Error', 'Gagal menghubungi server untuk memuat data showroom.');
+            }
+        });
+    }
+
+    // Card Click Event Handler
+    $(document).on('click', '.showroom-card-item', function() {
+        var idx = parseInt($(this).data('index'));
+        if (!isNaN(idx)) {
+            renderShowroomDetail(idx);
+        }
+    });
+
+    // Prev / Next Navigation Buttons
+    $('#btnPrevShowroomCard').on('click', function() {
+        if (showroomCurrentCandidates.length > 0) {
+            var newIdx = (showroomCurrentIndex - 1 + showroomCurrentCandidates.length) % showroomCurrentCandidates.length;
+            renderShowroomDetail(newIdx);
+        }
+    });
+
+    $('#btnNextShowroomCard').on('click', function() {
+        if (showroomCurrentCandidates.length > 0) {
+            var newIdx = (showroomCurrentIndex + 1) % showroomCurrentCandidates.length;
+            renderShowroomDetail(newIdx);
+        }
+    });
+
+    // Launch Modal Showroom from Select Modal
+    $('#btnLaunchModalShowroom').on('click', function() {
+        var selectedVal = $('#select_showroom_periode').val();
+        loadShowroomModal(selectedVal);
+    });
+
+    // Launch Modal Showroom from Table Action Button
+    $(document).on('click', '.btn-trigger-showroom', function() {
+        var target = $(this).data('target');
+        if (target) {
+            loadShowroomModal(target);
+        }
+    });
+
+    // Form Submit (Full Page Showroom)
     $('#formPilihPeriodeShowroom').on('submit', function(e) {
         e.preventDefault();
         var id = $('#select_showroom_periode').val();
         if (id) {
-            window.location.href = '<?= site_url("laporan/preview/"); ?>' + id;
+            window.location.href = '<?= site_url("laporan/preview/"); ?>' + encodeURIComponent(id);
         }
     });
 });

@@ -89,9 +89,15 @@
                                             data-pemenang="<?= html_escape($row['pemenang_nama']); ?>" data-nip="<?= html_escape($row['pemenang_nip']); ?>"
                                             data-kategori="<?= html_escape($row['kategori']); ?>" data-skor="<?= number_format($row['skor_topsis'], 4); ?>"
                                             data-tanggal="<?= date('d F Y', strtotime($row['tanggal_terbit'])); ?>"
+                                            data-id_sk="<?= !empty($row['id_sk']) ? $row['id_sk'] : ''; ?>"
                                             data-ketua="<?= html_escape($row['ketua_panitia']); ?>"
                                             data-top3='<?= json_encode($row['top_3']); ?>'>
                                             <i class="ti ti-eye fs-15"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm bg-warning-subtle text-warning btn-trigger-showroom p-1 px-2"
+                                            title="Pratinjau Showroom 3D TOPSIS"
+                                            data-target="laporan_<?= $row['id_laporan']; ?>">
+                                            <i class="ti ti-sparkles fs-15"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm bg-primary-subtle text-primary btn-export-word p-1 px-2"
                                             title="Ekspor Word (.docx)"
@@ -102,6 +108,7 @@
                                             data-bs-toggle="modal" data-bs-target="#modalEditLaporan" data-id="<?= $row['id_laporan']; ?>"
                                             data-noba="<?= html_escape($row['no_ba']); ?>" data-status="<?= html_escape($row['status']); ?>"
                                             data-tanggal="<?= html_escape($row['tanggal_terbit']); ?>"
+                                            data-id_sk="<?= !empty($row['id_sk']) ? $row['id_sk'] : ''; ?>"
                                             data-ketua="<?= html_escape($row['ketua_panitia']); ?>">
                                             <i class="ti ti-edit fs-15"></i>
                                         </button>

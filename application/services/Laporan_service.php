@@ -88,7 +88,10 @@ class Laporan_service
 
         // Ambil info SK Tim Penilai jika ada
         if (!empty($laporan['id_sk'])) {
-            $laporan['tim_penilai'] = $this->CI->Tim_penilai_model->get_sk_by_id((int)$laporan['id_sk']);
+            $sk_res = $this->CI->tim_penilai_service->get_sk_detail((int)$laporan['id_sk']);
+            if ($sk_res && !empty($sk_res['status'])) {
+                $laporan['tim_penilai'] = $sk_res['data'];
+            }
         }
 
         return $laporan;
@@ -97,7 +100,8 @@ class Laporan_service
     /**
      * Mengambil opsi-opsi untuk form tambah Berita Acara:
      * - Sesi TOPSIS yang berstatus 'final'
-     * - SK Tim Penilai yang berstatus 'Aktif'
+     * - SK Tim Penilai yang berstatus 'Aktif' dari Tim_penilai_service
+     * - Daftar Ketua Tim Penilai dari Tim_penilai_service
      * - Auto-generated Nomor Berita Acara
      * 
      * @return array
@@ -109,20 +113,11 @@ class Laporan_service
         $app          = $settings['app'];
 
         $proses_list  = $this->CI->Laporan_model->get_available_topsis_proses();
-        $sk_list      = $this->CI->Tim_penilai_model->get_all_sk();
+        $sk_list      = $this->CI->tim_penilai_service->get_all_sk();
+        $active_sk    = $this->CI->tim_penilai_service->get_active_sk();
+        $ketua_list   = $this->CI->tim_penilai_service->get_ketua_list();
+        $active_ketua = $this->CI->tim_penilai_service->get_active_ketua();
         $periode_list = $this->CI->Periode_model->get_all_periode();
-
-        // Cari SK Aktif secara default
-        $active_sk = NULL;
-        foreach ($sk_list as $sk) {
-            if (strtolower($sk['status']) === 'aktif') {
-                $active_sk = $sk;
-                break;
-            }
-        }
-        if (!$active_sk && !empty($sk_list)) {
-            $active_sk = $sk_list[0];
-        }
 
         // Hitung nomor BA rekomendasi
         $bulan_romawi = $this->_get_bulan_romawi((int)date('n'));
@@ -133,13 +128,17 @@ class Laporan_service
             date('Y')
         );
 
+        $default_ketua = !empty($active_ketua['nama']) ? $active_ketua['nama'] : (!empty($satker['nama_ketua']) ? $satker['nama_ketua'] : '');
+
         return array(
             'available_proses' => $proses_list,
             'sk_list'          => $sk_list,
             'active_sk'        => $active_sk,
+            'ketua_list'       => $ketua_list,
+            'active_ketua'     => $active_ketua,
             'periode_list'     => $periode_list,
             'nomor_ba_auto'    => $nomor_ba_auto,
-            'default_ketua'    => $active_sk && !empty($active_sk['ketua']) ? $active_sk['ketua']['nama'] : (!empty($satker['nama_ketua']) ? $satker['nama_ketua'] : '')
+            'default_ketua'    => $default_ketua
         );
     }
 
@@ -188,19 +187,27 @@ class Laporan_service
 
         $id_sk = !empty($input['id_sk']) ? (int)$input['id_sk'] : NULL;
         if (!$id_sk) {
-            // Cari SK Aktif otomatis
-            $sk_aktif = $this->CI->db->get_where('tim_penilai_sk', array('status' => 'Aktif'))->row_array();
+            // Cari SK Aktif otomatis via Tim_penilai_service
+            $sk_aktif = $this->CI->tim_penilai_service->get_active_sk();
             if ($sk_aktif) {
                 $id_sk = (int)$sk_aktif['id_sk'];
             }
         }
 
-        $ketua_panitia = !empty($input['ketua_panitia']) ? trim($input['ketua_panitia']) : '';
-        if (empty($ketua_panitia) && $id_sk) {
-            $sk_detail = $this->CI->Tim_penilai_model->get_sk_by_id($id_sk);
-            if ($sk_detail && !empty($sk_detail['ketua'])) {
-                $ketua_panitia = $sk_detail['ketua']['nama'];
+        // Ambil nama Ketua Penilai dari Tim_penilai_service
+        $ketua_panitia = '';
+        if ($id_sk) {
+            $ketua_info = $this->CI->tim_penilai_service->get_ketua_by_sk($id_sk);
+            if ($ketua_info && !empty($ketua_info['nama'])) {
+                $ketua_panitia = $ketua_info['nama'];
             }
+        }
+        if (empty($ketua_panitia) && !empty($input['ketua_panitia'])) {
+            $ketua_panitia = trim($input['ketua_panitia']);
+        }
+        if (empty($ketua_panitia)) {
+            $active_ketua = $this->CI->tim_penilai_service->get_active_ketua();
+            $ketua_panitia = !empty($active_ketua['nama']) ? $active_ketua['nama'] : '';
         }
 
         $tanggal_terbit = !empty($input['tanggal_terbit']) ? trim($input['tanggal_terbit']) : date('Y-m-d');
@@ -264,15 +271,31 @@ class Laporan_service
             }
         }
 
+        $id_sk = !empty($input['id_sk']) ? (int)$input['id_sk'] : (!empty($existing['id_sk']) ? (int)$existing['id_sk'] : NULL);
+        $ketua_panitia = !empty($input['ketua_panitia']) ? trim($input['ketua_panitia']) : '';
+
+        // Sinkronisasi Ketua dari Tim_penilai_service
+        if ($id_sk) {
+            $ketua_info = $this->CI->tim_penilai_service->get_ketua_by_sk($id_sk);
+            if ($ketua_info && !empty($ketua_info['nama'])) {
+                if (empty($ketua_panitia) || (isset($input['id_sk']) && (int)$input['id_sk'] !== (int)$existing['id_sk'])) {
+                    $ketua_panitia = $ketua_info['nama'];
+                }
+            }
+        }
+        if (empty($ketua_panitia)) {
+            $ketua_panitia = $existing['ketua_panitia'];
+        }
+
         $data_update = array(
             'no_ba'          => $no_ba,
             'status'         => !empty($input['status']) ? trim($input['status']) : $existing['status'],
             'tanggal_terbit' => !empty($input['tanggal_terbit']) ? trim($input['tanggal_terbit']) : $existing['tanggal_terbit'],
-            'ketua_panitia'  => !empty($input['ketua_panitia']) ? trim($input['ketua_panitia']) : $existing['ketua_panitia']
+            'ketua_panitia'  => $ketua_panitia
         );
 
-        if (!empty($input['id_sk'])) {
-            $data_update['id_sk'] = (int)$input['id_sk'];
+        if ($id_sk) {
+            $data_update['id_sk'] = $id_sk;
         }
 
         $res = $this->CI->Laporan_model->update_laporan($id, $data_update);
@@ -372,9 +395,9 @@ class Laporan_service
         $satker   = $settings['satker'];
         $app      = $settings['app'];
 
-        $sk_aktif = $this->CI->db->get_where('tim_penilai_sk', array('status' => 'Aktif'))->row_array();
+        $sk_aktif = $this->CI->tim_penilai_service->get_active_sk();
         $id_sk    = $sk_aktif ? (int)$sk_aktif['id_sk'] : NULL;
-        $tim_p    = $id_sk ? $this->CI->Tim_penilai_model->get_sk_by_id($id_sk) : array();
+        $tim_p    = $sk_aktif ? $sk_aktif : array();
 
         $bulan_romawi = $this->_get_bulan_romawi((int)date('n'));
         $no_ba = $this->CI->Laporan_model->generate_nomor_ba(
@@ -404,6 +427,117 @@ class Laporan_service
         );
 
         $this->CI->export_word_service->export_berita_acara($laporan_data, $satker, $settings['pimpinan'], $tim_p);
+    }
+
+    /**
+     * Mengambil data lengkap Showroom Pratinjau TOPSIS (Kandidat Teratas, Nilai Preferensi,
+     * Jarak Solusi Positif/Negatif, dan Rincian Evaluasi Kriteria) untuk Modal & Page Showroom.
+     * 
+     * @param mixed $id_target ID Laporan (laporan_X) atau ID Proses TOPSIS (proses_X / integer)
+     * @return array
+     */
+    public function get_showroom_data($id_target = 0)
+    {
+        $id_str = (string)$id_target;
+        $id_clean = (int)preg_replace('/[^0-9]/', '', $id_str);
+
+        $id_proses  = 0;
+        $id_laporan = 0;
+        $laporan    = NULL;
+        $proses     = NULL;
+
+        if (strpos($id_str, 'laporan_') !== false || ($id_clean > 0 && strpos($id_str, 'proses_') === false)) {
+            $laporan = $this->CI->Laporan_model->get_laporan_by_id($id_clean);
+            if ($laporan) {
+                $id_laporan = (int)$laporan['id_laporan'];
+                $id_proses  = (int)$laporan['id_proses'];
+            }
+        }
+
+        if (!$id_proses && (strpos($id_str, 'proses_') !== false || $id_clean > 0)) {
+            $proses = $this->CI->Topsis_model->get_proses_by_id($id_clean);
+            if ($proses) {
+                $id_proses = (int)$proses['id_proses'];
+            }
+        }
+
+        if (!$id_proses) {
+            // Fallback: cari sesi proses TOPSIS final teranyar
+            $avail = $this->CI->Laporan_model->get_available_topsis_proses();
+            if (!empty($avail)) {
+                $id_proses = (int)$avail[0]['id_proses'];
+            }
+        }
+
+        if (!$id_proses) {
+            return array(
+                'status'  => FALSE,
+                'message' => 'Belum ada sesi penilaian TOPSIS dengan hasil perankingan final yang tersedia.'
+            );
+        }
+
+        if (!$proses) {
+            $proses = $this->CI->Topsis_model->get_proses_by_id($id_proses);
+        }
+
+        $candidates    = $this->CI->Laporan_model->get_all_ranked_candidates($id_proses);
+        $kriteria_list = $this->CI->Topsis_model->get_kriteria_by_proses($id_proses);
+        $matrix        = $this->CI->Topsis_model->get_penilaian_matrix($id_proses);
+
+        // Ambil top 3 kandidat
+        $top_3 = array_slice($candidates, 0, 3);
+
+        // Palet warna progress bar kriteria dinamis
+        $progress_colors = array('bg-primary', 'bg-info', 'bg-success', 'bg-warning', 'bg-danger', 'bg-secondary', 'bg-dark');
+
+        // Lengkapi setiap kandidat dengan nilai kriteria
+        foreach ($top_3 as &$cand) {
+            $alt_id = isset($cand['id_proses_alternatif']) ? (int)$cand['id_proses_alternatif'] : 0;
+            if (!$alt_id) {
+                $alt_row = $this->CI->db->get_where('topsis_proses_alternatif', array(
+                    'id_proses'     => $id_proses,
+                    'nama_snapshot' => $cand['nama']
+                ))->row_array();
+                $alt_id = $alt_row ? (int)$alt_row['id_proses_alternatif'] : 0;
+            }
+
+            $cand_kriteria = array();
+            $total_score_sum = 0;
+            foreach ($kriteria_list as $k_idx => $kr) {
+                $kr_id = (int)$kr['id_proses_kriteria'];
+                $val   = isset($matrix[$alt_id][$kr_id]) ? (float)$matrix[$alt_id][$kr_id] : 0.0;
+                $color = isset($progress_colors[$k_idx % count($progress_colors)]) ? $progress_colors[$k_idx % count($progress_colors)] : 'bg-primary';
+
+                $cand_kriteria[] = array(
+                    'id_proses_kriteria' => $kr_id,
+                    'kode'               => $kr['kode'],
+                    'nama'               => $kr['nama_kriteria'],
+                    'bobot'              => (float)$kr['bobot'],
+                    'tipe_atribut'       => $kr['tipe_atribut'],
+                    'nilai'              => $val,
+                    'color'              => $color
+                );
+                $total_score_sum += $val;
+            }
+
+            // Hitung persentase untuk progress bar stacked
+            foreach ($cand_kriteria as &$ck) {
+                $ck['percent'] = ($total_score_sum > 0) ? round(($ck['nilai'] / $total_score_sum) * 100, 1) : round(100 / max(1, count($cand_kriteria)), 1);
+            }
+
+            $cand['kriteria_scores'] = $cand_kriteria;
+        }
+
+        return array(
+            'status'       => TRUE,
+            'id_proses'    => $id_proses,
+            'id_laporan'   => $id_laporan,
+            'nama_periode' => !empty($proses['nama_periode']) ? $proses['nama_periode'] : 'Periode Penilaian',
+            'kategori'     => !empty($proses['kategori']) ? $proses['kategori'] : 'Semua',
+            'tahun'        => !empty($proses['tahun']) ? $proses['tahun'] : date('Y'),
+            'kriteria'     => $kriteria_list,
+            'candidates'   => $top_3
+        );
     }
 
     /**

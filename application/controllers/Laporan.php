@@ -170,18 +170,50 @@ class Laporan extends CI_Controller
     }
 
     /**
+     * Endpoint AJAX JSON: Mengambil data showroom TOPSIS secara real-time.
+     * 
+     * @param mixed $id_target
+     */
+    public function showroom_data($id_target = 0)
+    {
+        if (empty($id_target)) {
+            $id_target = $this->input->get_post('id');
+        }
+
+        $result = $this->laporan_service->get_showroom_data($id_target);
+        $this->json_response($result);
+    }
+
+    /**
      * Halaman Showroom Pratinjau Kandidat Reward.
      * 
-     * @param int $id_laporan
+     * @param mixed $id_target
      */
-    public function preview($id_laporan = 0)
+    public function preview($id_target = 0)
     {
         $laporan_list = $this->laporan_service->get_laporan_list();
         $selected     = NULL;
 
-        $id = (int)$id_laporan;
-        if ($id > 0) {
-            $selected = $this->laporan_service->get_laporan_detail($id);
+        $id_str = (string)$id_target;
+        $id_clean = (int)preg_replace('/[^0-9]/', '', $id_str);
+
+        if ($id_clean > 0 && strpos($id_str, 'proses_') === false) {
+            $selected = $this->laporan_service->get_laporan_detail($id_clean);
+        }
+
+        if (!$selected && $id_clean > 0) {
+            $showroom_res = $this->laporan_service->get_showroom_data($id_target);
+            if ($showroom_res['status']) {
+                $selected = array(
+                    'id_laporan'     => !empty($showroom_res['id_laporan']) ? $showroom_res['id_laporan'] : 0,
+                    'id_proses'      => $showroom_res['id_proses'],
+                    'nama_periode'   => $showroom_res['nama_periode'],
+                    'kategori'       => $showroom_res['kategori'],
+                    'tahun'          => $showroom_res['tahun'],
+                    'top_3'          => $showroom_res['candidates'],
+                    'all_candidates' => $showroom_res['candidates']
+                );
+            }
         }
 
         if (!$selected && !empty($laporan_list)) {

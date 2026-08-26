@@ -70,7 +70,8 @@
 
                         <div class="col-12">
                             <label class="form-label fw-semibold text-dark fs-12">Nama Ketua Tim Penilai <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="add_ketua_panitia" name="ketua_panitia" value="<?= html_escape(!empty($form_options['default_ketua']) ? $form_options['default_ketua'] : "Bambang Wijaya, S.H., M.H."); ?>" required>
+                            <input type="text" class="form-control" id="add_ketua_panitia" name="ketua_panitia" value="<?= html_escape(!empty($form_options['default_ketua']) ? $form_options['default_ketua'] : ''); ?>" required placeholder="Nama Ketua Tim Penilai">
+                            <small class="text-muted fs-11 mt-1 d-block"><i class="ti ti-user-check me-1 text-primary"></i>Otomatis diambil dari data Ketua Tim Penilai pada SK yang dipilih.</small>
                         </div>
                     </div>
                 </div>

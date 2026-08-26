@@ -42,6 +42,78 @@ class Tim_penilai_service
     }
 
     /**
+     * Fetch the active SK Tim Penilai record (status 'Aktif') along with members.
+     *
+     * @return array|null
+     */
+    public function get_active_sk()
+    {
+        $sk_list = $this->get_all_sk();
+        foreach ($sk_list as $sk) {
+            if (isset($sk['status']) && strtolower($sk['status']) === 'aktif') {
+                return $sk;
+            }
+        }
+        return !empty($sk_list) ? $sk_list[0] : NULL;
+    }
+
+    /**
+     * Fetch list of all Ketua Tim Penilai from existing SK records.
+     *
+     * @return array
+     */
+    public function get_ketua_list()
+    {
+        $sk_list = $this->get_all_sk();
+        $ketua_list = array();
+
+        foreach ($sk_list as $sk) {
+            if (!empty($sk['ketua'])) {
+                $ketua_list[] = array(
+                    'id_sk'            => $sk['id_sk'],
+                    'no_sk'            => $sk['no_sk'],
+                    'tahun'            => $sk['tahun'],
+                    'status_sk'        => $sk['status'],
+                    'id_pegawai'       => isset($sk['ketua']['id_pegawai']) ? $sk['ketua']['id_pegawai'] : NULL,
+                    'nama'             => isset($sk['ketua']['nama']) ? $sk['ketua']['nama'] : '',
+                    'nip'              => isset($sk['ketua']['nip']) ? $sk['ketua']['nip'] : '',
+                    'jabatan'          => isset($sk['ketua']['jabatan']) ? $sk['ketua']['jabatan'] : '',
+                    'jabatan_instansi' => isset($sk['ketua']['jabatan_instansi']) ? $sk['ketua']['jabatan_instansi'] : ''
+                );
+            }
+        }
+
+        return $ketua_list;
+    }
+
+    /**
+     * Fetch Ketua Tim Penilai record for a specific SK by ID.
+     *
+     * @param int $id_sk
+     * @return array|null
+     */
+    public function get_ketua_by_sk($id_sk)
+    {
+        $id_sk = (int)$id_sk;
+        if ($id_sk <= 0) {
+            return NULL;
+        }
+
+        return $this->CI->Tim_penilai_model->get_personel_by_peran($id_sk, 'Ketua');
+    }
+
+    /**
+     * Fetch Ketua Tim Penilai from the currently active SK.
+     *
+     * @return array|null
+     */
+    public function get_active_ketua()
+    {
+        $active_sk = $this->get_active_sk();
+        return (!empty($active_sk) && !empty($active_sk['ketua'])) ? $active_sk['ketua'] : NULL;
+    }
+
+    /**
      * Fetch KPI card summary statistics for Tim Penilai.
      *
      * @return array

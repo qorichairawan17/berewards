@@ -18,11 +18,17 @@
                             <input type="text" class="form-control" id="edit_no_ba" name="no_ba" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold text-dark fs-12">Status Dokumen <span class="text-danger">*</span></label>
-                            <select class="form-select" id="edit_status" name="status" required>
-                                <option value="Disahkan">Disahkan</option>
-                                <option value="Draft">Draft</option>
-                                <option value="Arsip">Arsip</option>
+                            <label class="form-label fw-semibold text-dark fs-12">SK Tim Penilai Terkait</label>
+                            <select class="form-select" id="edit_id_sk" name="id_sk">
+                                <option value="">-- Pilih SK Tim Penilai --</option>
+                                <?php if (!empty($form_options['sk_list'])): ?>
+                                    <?php foreach ($form_options['sk_list'] as $sk): ?>
+                                        <option value="<?= $sk['id_sk']; ?>"
+                                                data-ketua="<?= !empty($sk['ketua']) ? html_escape($sk['ketua']['nama']) : ''; ?>">
+                                            <?= html_escape($sk['no_sk']); ?> (<?= html_escape($sk['status']); ?> - <?= html_escape($sk['tahun']); ?>)
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -33,8 +39,17 @@
                             </div>
                         </div>
                         <div class="col-md-6">
+                            <label class="form-label fw-semibold text-dark fs-12">Status Dokumen <span class="text-danger">*</span></label>
+                            <select class="form-select" id="edit_status" name="status" required>
+                                <option value="Disahkan">Disahkan</option>
+                                <option value="Draft">Draft</option>
+                                <option value="Arsip">Arsip</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
                             <label class="form-label fw-semibold text-dark fs-12">Nama Ketua Tim Penilai <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="edit_ketua_panitia" name="ketua_panitia" required>
+                            <input type="text" class="form-control" id="edit_ketua_panitia" name="ketua_panitia" required placeholder="Nama Ketua Tim Penilai">
+                            <small class="text-muted fs-11 mt-1 d-block"><i class="ti ti-user-check me-1 text-primary"></i>Otomatis disinkronkan dari data Ketua Tim Penilai pada SK yang dipilih.</small>
                         </div>
                     </div>
                 </div>
