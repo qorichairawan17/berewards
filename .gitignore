@@ -27,8 +27,10 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.tmPreferences.cache
 *.stTheme.cache
 *.sublime-workspace
-*.sublime-project
-/tests/tests/
-/tests/results/
-
 assets/templates/*
+
+# Agents & Internal Guidelines
+/.agents/
+/guide/
+/AGENTS.md
+
