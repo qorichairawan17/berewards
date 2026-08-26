@@ -76,7 +76,8 @@
                             <div class="text-center mb-3">
                                 <img src="<?= $candPhoto; ?>" alt="<?= html_escape($cand['nama']); ?>"
                                     class="rounded-circle border border-3 border-primary mb-2 shadow-sm"
-                                    style="width: 84px; height: 84px; object-fit: cover;">
+                                    style="width: 84px; height: 84px; object-fit: cover;"
+                                    onerror="this.onerror=null;this.src='<?= base_url('assets/icons/logo.png'); ?>';">
                                 <h5 class="fw-bold text-dark mb-1 fs-14"><?= html_escape($cand['nama']); ?></h5>
                                 <small class="text-muted fs-11 d-block">NIP. <?= html_escape($cand['nip']); ?></small>
                                 <span
@@ -104,9 +105,10 @@
                 <div class="card-body p-4 bg-white">
                     <div class="row align-items-center g-4">
                         <div class="col-md-3 text-center border-end">
-                            <img src="<?= !empty($laporan_info['top_3'][0]['foto']) ? (strpos($laporan_info['top_3'][0]['foto'], 'http') === 0 ? $laporan_info['top_3'][0]['foto'] : base_url($laporan_info['top_3'][0]['foto'])) : base_url('assets/images/users/user-1.jpg'); ?>" id="detail_photo" alt="Candidate Photo"
+                            <img src="<?= !empty($laporan_info['top_3'][0]['foto']) ? (strpos($laporan_info['top_3'][0]['foto'], 'http') === 0 ? $laporan_info['top_3'][0]['foto'] : base_url($laporan_info['top_3'][0]['foto'])) : base_url('assets/icons/logo.png'); ?>" id="detail_photo" alt="Candidate Photo"
                                 class="rounded-circle border border-3 border-primary shadow-sm mb-2"
-                                style="width: 90px; height: 90px; object-fit: cover;">
+                                style="width: 90px; height: 90px; object-fit: cover;"
+                                onerror="this.onerror=null;this.src='<?= base_url('assets/icons/logo.png'); ?>';">
                             <h5 class="fw-bold text-dark mb-0" id="detail_nama"><?= html_escape($laporan_info['top_3'][0]['nama']); ?></h5>
                             <small class="text-muted fs-12 d-block" id="detail_nip">NIP. <?= html_escape($laporan_info['top_3'][0]['nip']); ?></small>
                             <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fs-11 mt-2"

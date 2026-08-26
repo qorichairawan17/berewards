@@ -18,6 +18,9 @@ class MY_Controller extends CI_Controller
     {
         parent::__construct();
 
+        // Enforce Indonesian Western Timezone (WIB)
+        date_default_timezone_set('Asia/Jakarta');
+
         // Ensure database and session are initialized
         $this->load->database();
         $this->load->library('session');

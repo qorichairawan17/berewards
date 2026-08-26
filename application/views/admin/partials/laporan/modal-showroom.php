@@ -49,9 +49,10 @@
                     <div class="card-body p-4 bg-white">
                         <div class="row align-items-center g-4">
                             <div class="col-md-3 text-center border-end">
-                                <img src="" id="showroom_detail_photo" alt="Candidate Photo"
+                                <img src="<?= base_url('assets/icons/logo.png'); ?>" id="showroom_detail_photo" alt="Candidate Photo"
                                     class="rounded-circle border border-3 border-primary shadow-sm mb-2"
-                                    style="width: 84px; height: 84px; object-fit: cover;">
+                                    style="width: 84px; height: 84px; object-fit: cover;"
+                                    onerror="this.onerror=null;this.src='<?= base_url('assets/icons/logo.png'); ?>';">
                                 <h6 class="fw-bold text-dark mb-0 fs-14" id="showroom_detail_nama">-</h6>
                                 <small class="text-muted fs-11 d-block" id="showroom_detail_nip">-</small>
                                 <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fs-11 mt-2"

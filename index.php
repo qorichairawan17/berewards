@@ -36,6 +36,9 @@
  * @filesource
  */
 
+// Set Default Timezone to Indonesian Western Time (WIB / Asia/Jakarta, UTC+7)
+date_default_timezone_set('Asia/Jakarta');
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

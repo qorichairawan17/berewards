@@ -377,8 +377,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Update Left Profile
-        var photoUrl = cand.foto ? (cand.foto.indexOf('http') === 0 ? cand.foto : baseUrl + cand.foto) : baseUrl + 'assets/images/users/user-1.jpg';
-        $('#showroom_detail_photo').attr('src', photoUrl);
+        var defaultLogo = baseUrl + 'assets/icons/logo.png';
+        var photoUrl = cand.foto ? (cand.foto.indexOf('http') === 0 ? cand.foto : baseUrl + cand.foto) : defaultLogo;
+        $('#showroom_detail_photo').attr('src', photoUrl).attr('onerror', "this.onerror=null;this.src='" + defaultLogo + "';");
         $('#showroom_detail_nama').text(cand.nama || '-');
         $('#showroom_detail_nip').text('NIP. ' + (cand.nip || '-'));
         $('#showroom_detail_kategori').text(cand.kategori || '-');
@@ -465,6 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 $('#btnShowroomFullPage').attr('href', '<?= site_url("laporan/preview/"); ?>' + (data.id_laporan ? data.id_laporan : 'proses_' + data.id_proses));
 
                 // Render Top Candidate Cards
+                var defaultLogo = baseUrl + 'assets/icons/logo.png';
                 var cardsHtml = '';
                 if (showroomCurrentCandidates.length > 0) {
                     showroomCurrentCandidates.forEach(function(cand, idx) {
@@ -474,7 +476,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             ? '<i class="ti ti-trophy text-warning fs-28 rank-trophy-badge"></i>' 
                             : ((rank === 2) ? '<i class="ti ti-medal text-secondary fs-28"></i>' : '<i class="ti ti-award text-amber fs-28"></i>');
 
-                        var cardPhoto = cand.foto ? (cand.foto.indexOf('http') === 0 ? cand.foto : baseUrl + cand.foto) : baseUrl + 'assets/images/users/user-1.jpg';
+                        var cardPhoto = cand.foto ? (cand.foto.indexOf('http') === 0 ? cand.foto : baseUrl + cand.foto) : defaultLogo;
                         var activeClass = isFirst ? 'active-card bg-white shadow-lg' : 'bg-light opacity-75';
 
                         cardsHtml += '<div class="col-md-4">' +
@@ -484,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             trophyIcon +
                             '</div>' +
                             '<div class="text-center mb-3">' +
-                            '<img src="' + cardPhoto + '" alt="' + (cand.nama || 'Foto') + '" class="rounded-circle border border-3 border-primary mb-2 shadow-sm" style="width: 80px; height: 80px; object-fit: cover;">' +
+                            '<img src="' + cardPhoto + '" alt="' + (cand.nama || 'Foto') + '" class="rounded-circle border border-3 border-primary mb-2 shadow-sm" style="width: 80px; height: 80px; object-fit: cover;" onerror="this.onerror=null;this.src=\'' + defaultLogo + '\';">' +
                             '<h5 class="fw-bold text-dark mb-1 fs-14">' + (cand.nama || '-') + '</h5>' +
                             '<small class="text-muted fs-11 d-block">NIP. ' + (cand.nip || '-') + '</small>' +
                             '<span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fs-11 mt-2">' + (cand.kategori || data.kategori) + '</span>' +

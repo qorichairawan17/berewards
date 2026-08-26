@@ -7,7 +7,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Implements Clean Architecture and transparency for all user and system operations.
  * PHP 5.6+ and CodeIgniter 3 Compatible.
  */
-class Audit_service {
+class Audit_service
+{
 
     /**
      * CodeIgniter Super Object Instance
@@ -83,13 +84,13 @@ class Audit_service {
         $sebelum_json = NULL;
         if (!empty($data_sebelum)) {
             $clean_sebelum = is_array($data_sebelum) ? $this->sanitize_sensitive_data($data_sebelum) : $data_sebelum;
-            $sebelum_json  = is_string($clean_sebelum) ? $clean_sebelum : json_encode($clean_sebelum, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            $sebelum_json = is_string($clean_sebelum) ? $clean_sebelum : json_encode($clean_sebelum, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         }
 
         $sesudah_json = NULL;
         if (!empty($data_sesudah)) {
             $clean_sesudah = is_array($data_sesudah) ? $this->sanitize_sensitive_data($data_sesudah) : $data_sesudah;
-            $sesudah_json  = is_string($clean_sesudah) ? $clean_sesudah : json_encode($clean_sesudah, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            $sesudah_json = is_string($clean_sesudah) ? $clean_sesudah : json_encode($clean_sesudah, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         }
 
         $ip_address = $this->CI->input->ip_address();
@@ -103,22 +104,22 @@ class Audit_service {
         }
 
         $data = array(
-            'timestamp'     => date('Y-m-d H:i:s'),
-            'id_user'       => !empty($id_user) ? (int) $id_user : NULL,
-            'username'      => substr($username, 0, 50),
-            'nama_user'     => substr($nama_user, 0, 150),
-            'role'          => substr($role, 0, 50),
-            'modul'         => substr($modul, 0, 100),
-            'tipe_aksi'     => strtoupper(substr($tipe_aksi, 0, 50)),
+            'timestamp' => date('Y-m-d H:i:s'),
+            'id_user' => !empty($id_user) ? (int) $id_user : NULL,
+            'username' => substr($username, 0, 50),
+            'nama_user' => substr($nama_user, 0, 150),
+            'role' => substr($role, 0, 50),
+            'modul' => substr($modul, 0, 100),
+            'tipe_aksi' => strtoupper(substr($tipe_aksi, 0, 50)),
             'tabel_terkait' => !empty($tabel_terkait) ? substr($tabel_terkait, 0, 100) : NULL,
-            'id_record'     => !empty($id_record) ? (string) $id_record : NULL,
-            'data_sebelum'  => $sebelum_json,
-            'data_sesudah'  => $sesudah_json,
-            'aktivitas'     => $aktivitas,
-            'ip_address'    => substr($ip_address, 0, 45),
-            'user_agent'    => substr($user_agent, 0, 255),
-            'status'        => in_array($status, array('Sukses', 'Gagal', 'Peringatan')) ? $status : 'Sukses',
-            'created_at'    => date('Y-m-d H:i:s')
+            'id_record' => !empty($id_record) ? (string) $id_record : NULL,
+            'data_sebelum' => $sebelum_json,
+            'data_sesudah' => $sesudah_json,
+            'aktivitas' => $aktivitas,
+            'ip_address' => substr($ip_address, 0, 45),
+            'user_agent' => substr($user_agent, 0, 255),
+            'status' => in_array($status, array('Sukses', 'Gagal', 'Peringatan')) ? $status : 'Sukses',
+            'created_at' => date('Y-m-d H:i:s')
         );
 
         return $this->CI->Audit_model->insert_audit($data);
@@ -140,8 +141,8 @@ class Audit_service {
             $modul = 'Manajemen ' . ucwords(str_replace('_', ' ', $table_name));
         }
 
-        $description = !empty($custom_desc) 
-            ? $custom_desc 
+        $description = !empty($custom_desc)
+            ? $custom_desc
             : 'Menambahkan data baru pada tabel [' . $table_name . '] (ID: ' . $record_id . ')';
 
         $summary = $this->format_array_summary($new_data);
@@ -153,7 +154,10 @@ class Audit_service {
             $modul,
             $description,
             'Sukses',
-            NULL, NULL, NULL, NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
             'INSERT',
             $table_name,
             $record_id,
@@ -201,7 +205,10 @@ class Audit_service {
             $modul,
             $description,
             'Sukses',
-            NULL, NULL, NULL, NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
             'UPDATE',
             $table_name,
             $record_id,
@@ -226,8 +233,8 @@ class Audit_service {
             $modul = 'Manajemen ' . ucwords(str_replace('_', ' ', $table_name));
         }
 
-        $description = !empty($custom_desc) 
-            ? $custom_desc 
+        $description = !empty($custom_desc)
+            ? $custom_desc
             : 'Menghapus data dari tabel [' . $table_name . '] (ID: ' . $record_id . ')';
 
         $summary = $this->format_array_summary($old_data);
@@ -239,7 +246,10 @@ class Audit_service {
             $modul,
             $description,
             'Sukses',
-            NULL, NULL, NULL, NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
             'DELETE',
             $table_name,
             $record_id,
@@ -313,7 +323,7 @@ class Audit_service {
      */
     public function get_audit_detail($id_audit)
     {
-        $id_audit = (int)$id_audit;
+        $id_audit = (int) $id_audit;
         if ($id_audit <= 0) {
             return array('status' => FALSE, 'message' => 'ID Audit tidak valid.');
         }
@@ -335,39 +345,39 @@ class Audit_service {
         $comparison_matrix = $this->generate_comparison_matrix($data_sebelum, $data_sesudah);
 
         $response_data = array(
-            'id_audit'          => (int) $row['id_audit'],
-            'timestamp'         => $row['timestamp'],
-            'formatted_time'    => date('d M Y, H:i:s', strtotime($row['timestamp'])),
-            'id_user'           => $row['id_user'],
-            'username'          => $row['username'],
-            'nama_user'         => !empty($row['nama_user']) ? $row['nama_user'] : $row['username'],
-            'role'              => !empty($row['role']) ? ucfirst(str_replace('_', ' ', $row['role'])) : 'Tamu',
-            'modul'             => $row['modul'],
-            'tipe_aksi'         => $row['tipe_aksi'],
-            'tabel_terkait'     => $row['tabel_terkait'],
-            'id_record'         => $row['id_record'],
-            'aktivitas'         => $row['aktivitas'],
-            'ip_address'        => $row['ip_address'],
-            'user_agent'        => $row['user_agent'],
-            'status'            => $row['status'],
-            'has_changes'       => !empty($comparison_matrix),
+            'id_audit' => (int) $row['id_audit'],
+            'timestamp' => $row['timestamp'],
+            'formatted_time' => date('d M Y, H:i:s', strtotime($row['timestamp'])),
+            'id_user' => $row['id_user'],
+            'username' => $row['username'],
+            'nama_user' => !empty($row['nama_user']) ? $row['nama_user'] : $row['username'],
+            'role' => !empty($row['role']) ? ucfirst(str_replace('_', ' ', $row['role'])) : 'Tamu',
+            'modul' => $row['modul'],
+            'tipe_aksi' => $row['tipe_aksi'],
+            'tabel_terkait' => $row['tabel_terkait'],
+            'id_record' => $row['id_record'],
+            'aktivitas' => $row['aktivitas'],
+            'ip_address' => $row['ip_address'],
+            'user_agent' => $row['user_agent'],
+            'status' => $row['status'],
+            'has_changes' => !empty($comparison_matrix),
             'comparison_matrix' => $comparison_matrix,
-            'data_sebelum'      => $data_sebelum,
-            'data_sesudah'      => $data_sesudah,
-            'raw_metadata'      => array(
-                'system'         => 'SPK BeRewards PN Lubuk Pakam',
-                'environment'    => ENVIRONMENT,
-                'log_id'         => (int) $row['id_audit'],
-                'recorded_at'    => $row['created_at'] ?: $row['timestamp'],
-                'client_ip'      => $row['ip_address'],
-                'user_agent'     => $row['user_agent'],
-                'audit_version'  => '2.0.0-PROD'
+            'data_sebelum' => $data_sebelum,
+            'data_sesudah' => $data_sesudah,
+            'raw_metadata' => array(
+                'system' => 'SPK BeRewards PN Lubuk Pakam',
+                'environment' => ENVIRONMENT,
+                'log_id' => (int) $row['id_audit'],
+                'recorded_at' => $row['created_at'] ?: $row['timestamp'],
+                'client_ip' => $row['ip_address'],
+                'user_agent' => $row['user_agent'],
+                'audit_version' => '2.0.0-PROD'
             )
         );
 
         return array(
             'status' => TRUE,
-            'data'   => $response_data
+            'data' => $response_data
         );
     }
 
@@ -384,11 +394,13 @@ class Audit_service {
             return array();
         }
 
-        if (!is_array($old_data)) $old_data = array();
-        if (!is_array($new_data)) $new_data = array();
+        if (!is_array($old_data))
+            $old_data = array();
+        if (!is_array($new_data))
+            $new_data = array();
 
         $all_keys = array_unique(array_merge(array_keys($old_data), array_keys($new_data)));
-        $matrix   = array();
+        $matrix = array();
 
         $ignore_keys = array('created_at', 'updated_at', 'last_login');
 
@@ -404,32 +416,32 @@ class Audit_service {
             $old_display = $this->format_field_value($old_val, $key);
             $new_display = $this->format_field_value($new_val, $key);
 
-            $is_changed = ((string)$old_val !== (string)$new_val);
+            $is_changed = ((string) $old_val !== (string) $new_val);
 
             $status_label = 'Tetap';
-            $badge_class  = 'bg-secondary';
+            $badge_class = 'bg-secondary';
 
             if (!isset($old_data[$key]) && isset($new_data[$key])) {
                 $status_label = 'Ditambahkan';
-                $badge_class  = 'bg-success';
-                $is_changed   = TRUE;
+                $badge_class = 'bg-success';
+                $is_changed = TRUE;
             } elseif (isset($old_data[$key]) && !isset($new_data[$key])) {
                 $status_label = 'Dihapus';
-                $badge_class  = 'bg-danger';
-                $is_changed   = TRUE;
+                $badge_class = 'bg-danger';
+                $is_changed = TRUE;
             } elseif ($is_changed) {
                 $status_label = 'Diubah';
-                $badge_class  = 'bg-warning text-dark';
+                $badge_class = 'bg-warning text-dark';
             }
 
             $matrix[] = array(
-                'field_key'    => $key,
-                'field_label'  => ucwords(str_replace('_', ' ', $key)),
-                'old_value'    => $old_display,
-                'new_value'    => $new_display,
-                'is_changed'   => $is_changed,
+                'field_key' => $key,
+                'field_label' => ucwords(str_replace('_', ' ', $key)),
+                'old_value' => $old_display,
+                'new_value' => $new_display,
+                'is_changed' => $is_changed,
                 'status_label' => $status_label,
-                'badge_class'  => $badge_class
+                'badge_class' => $badge_class
             );
         }
 

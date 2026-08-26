@@ -10,7 +10,7 @@
             </div>
             <div class="modal-body p-4 text-center">
                 <div class="position-relative d-inline-block mb-3">
-                    <img src="" id="detail_foto_img" alt="Foto Pegawai" class="rounded-circle border border-2 border-primary shadow-sm" style="width: 84px; height: 84px; object-fit: cover;">
+                    <img src="<?= base_url('assets/icons/logo.png'); ?>" id="detail_foto_img" alt="Foto Pegawai" class="rounded-circle border border-2 border-primary shadow-sm" style="width: 84px; height: 84px; object-fit: cover;" onerror="this.onerror=null;this.src='<?= base_url('assets/icons/logo.png'); ?>';">
                 </div>
                 <h5 class="fw-bold text-dark mb-1" id="detail_nama">-</h5>
                 <p class="text-muted fs-12 mb-3" id="detail_nip">-</p>

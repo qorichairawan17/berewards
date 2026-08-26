@@ -79,7 +79,7 @@ $this->load->view('templates/header', get_defined_vars());
                                 <div class="input-with-icon position-relative">
                                     <i class="ti ti-user"></i>
                                     <input class="form-control" id="username" name="username" type="text" placeholder="Masukkan nama pengguna"
-                                        autocomplete="username" value="superadmin" required>
+                                        autocomplete="username" required>
                                 </div>
                                 <div class="invalid-feedback id-error-username fs-11"></div>
                             </div>
@@ -88,7 +88,7 @@ $this->load->view('templates/header', get_defined_vars());
                                 <div class="input-with-icon position-relative">
                                     <i class="ti ti-key"></i>
                                     <input class="form-control" id="password" name="password" type="password" placeholder="Masukkan kata sandi"
-                                        autocomplete="current-password" value="password123" required>
+                                        autocomplete="current-password" required>
                                 </div>
                                 <div class="invalid-feedback id-error-password fs-11"></div>
                             </div>
@@ -98,8 +98,9 @@ $this->load->view('templates/header', get_defined_vars());
                                     <span>Ingat saya</span>
                                 </label>
                                 <a class="muted-link" href="javascript:void(0);"
-                                    onclick="showToast('info', 'Bantuan Akses', 'Silakan hubungi Administrator Subbag Kepegawaian untuk mereset kata sandi Anda.');">Lupa
-                                    kata sandi?</a>
+                                    onclick="showToast('info', 'Bantuan Akses', 'Silakan hubungi Administrator untuk mereset kata sandi Anda.');">Lupa
+                                    kata sandi?
+                                </a>
                             </div>
                             <button id="btnSubmitSignin" class="btn btn-brand w-100 py-2.5 shadow-sm" type="submit">
                                 <span class="btn-text">Masuk ke Sistem <i class="ti ti-arrow-right ms-1"></i></span>
@@ -158,13 +159,13 @@ $this->load->view('templates/header', get_defined_vars());
 
     document.addEventListener('DOMContentLoaded', function () {
         <?php if ($this->session->flashdata('toast_message')): ?>
-        showToast(
-            '<?= $this->session->flashdata('toast_type') ?: 'info'; ?>',
-            '<?= $this->session->flashdata('toast_title') ?: 'Informasi'; ?>',
-            '<?= addslashes($this->session->flashdata('toast_message')); ?>'
-        );
+            showToast(
+                '<?= $this->session->flashdata('toast_type') ?: 'info'; ?>',
+                '<?= $this->session->flashdata('toast_title') ?: 'Informasi'; ?>',
+                '<?= addslashes($this->session->flashdata('toast_message')); ?>'
+            );
         <?php elseif ($this->session->flashdata('success')): ?>
-        showToast('success', 'Berhasil', '<?= addslashes($this->session->flashdata('success')); ?>');
+            showToast('success', 'Berhasil', '<?= addslashes($this->session->flashdata('success')); ?>');
         <?php endif; ?>
 
         // Ajax Signin Handler
