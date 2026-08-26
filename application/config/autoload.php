@@ -53,6 +53,7 @@ $autoload['libraries'] = array(
     'session',
     'form_validation',
     'auth_service',
+    'auth_middleware',
     'audit_service',
     'setting_service'
 );

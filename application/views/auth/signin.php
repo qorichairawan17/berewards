@@ -157,6 +157,16 @@ $this->load->view('templates/header', get_defined_vars());
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+        <?php if ($this->session->flashdata('toast_message')): ?>
+        showToast(
+            '<?= $this->session->flashdata('toast_type') ?: 'info'; ?>',
+            '<?= $this->session->flashdata('toast_title') ?: 'Informasi'; ?>',
+            '<?= addslashes($this->session->flashdata('toast_message')); ?>'
+        );
+        <?php elseif ($this->session->flashdata('success')): ?>
+        showToast('success', 'Berhasil', '<?= addslashes($this->session->flashdata('success')); ?>');
+        <?php endif; ?>
+
         // Ajax Signin Handler
         $('#formSignin').on('submit', function (e) {
             e.preventDefault();

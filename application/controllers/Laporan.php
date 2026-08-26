@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author BeRewards Core Engine
  * @version 1.0.0
  */
-class Laporan extends CI_Controller
+class Laporan extends Auth_Controller
 {
     public function __construct()
     {
@@ -232,22 +232,5 @@ class Laporan extends CI_Controller
                 'laporan_info' => $selected
             )
         ));
-    }
-
-    /**
-     * Private helper pengiriman respon JSON dengan CSRF token injection.
-     * 
-     * @param array $data
-     * @param int   $http_status
-     */
-    private function json_response(array $data, $http_status = 200)
-    {
-        $data['csrf_token_name'] = $this->security->get_csrf_token_name();
-        $data['csrf_hash']       = $this->security->get_csrf_hash();
-
-        $this->output
-             ->set_status_header($http_status)
-             ->set_content_type('application/json', 'utf-8')
-             ->set_output(json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
     }
 }

@@ -1,3 +1,11 @@
+<?php
+$initials = 'SA';
+if (!empty($user['nama_lengkap'])) {
+    $parts = explode(' ', trim($user['nama_lengkap']));
+    $initials = strtoupper(substr($parts[0], 0, 1) . (isset($parts[1]) ? substr($parts[1], 0, 1) : ''));
+}
+$avatar_src = !empty($user['foto']) ? (strpos($user['foto'], 'http') === 0 ? $user['foto'] : base_url($user['foto'])) : NULL;
+?>
 <!-- Profile Hero Header Banner -->
 <div class="card border-0 shadow-lg rounded-3 mb-4 overflow-hidden position-relative">
     <!-- Header Cover Background Gradient -->
@@ -10,10 +18,13 @@
                 <div class="position-relative">
                     <div class="avatar-xxl rounded-circle bg-white p-1 shadow-sm d-flex align-items-center justify-content-center"
                         style="width: 96px; height: 96px;">
-                        <div
-                            class="w-100 h-100 rounded-circle bg-primary bg-opacity-10 text-primary fw-bold display-6 d-flex align-items-center justify-content-center border border-primary border-opacity-25">
-                            SA
-                        </div>
+                        <?php if ($avatar_src && file_exists(FCPATH . $user['foto'])): ?>
+                            <img src="<?= $avatar_src; ?>" alt="<?= html_escape($user['nama_lengkap']); ?>" class="w-100 h-100 rounded-circle object-fit-cover">
+                        <?php else: ?>
+                            <div class="w-100 h-100 rounded-circle bg-primary bg-opacity-10 text-primary fw-bold display-6 d-flex align-items-center justify-content-center border border-primary border-opacity-25" id="header_user_initials">
+                                <?= $initials; ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                     <span class="position-absolute bottom-0 end-0 bg-success border border-2 border-white rounded-circle p-2"
                         title="Status Akun Aktif"></span>
@@ -21,7 +32,7 @@
             </div>
             <div class="col">
                 <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
-                    <h3 class="fw-bold text-white mb-0 fs-20"><?= html_escape($user['nama_lengkap']); ?></h3>
+                    <h3 class="fw-bold text-white mb-0 fs-20" id="header_nama_lengkap"><?= html_escape($user['nama_lengkap']); ?></h3>
                     <span class="badge bg-primary bg-opacity-20 text-white border border-white border-opacity-25 px-2 py-1 fs-11">
                         <i class="ti ti-shield-check me-1"></i><?= html_escape($user['role']); ?>
                     </span>
@@ -30,11 +41,11 @@
                     </span>
                 </div>
                 <p class="text-white text-opacity-85 mb-1 fs-13">
-                    <i class="ti ti-id me-1"></i>NIP. <?= html_escape($user['nip']); ?> &bull;
-                    <i class="ti ti-briefcase me-1"></i><?= html_escape($user['jabatan']); ?>
+                    <i class="ti ti-id me-1"></i>NIP. <span id="header_nip"><?= html_escape($user['nip']); ?></span> &bull;
+                    <i class="ti ti-briefcase me-1"></i><span id="header_jabatan"><?= html_escape($user['jabatan']); ?></span>
                 </p>
                 <small class="text-white text-opacity-75 fs-12">
-                    <i class="ti ti-building-bank me-1"></i><?= html_escape($user['unit_kerja']); ?>
+                    <i class="ti ti-building-bank me-1"></i><span id="header_unit_kerja"><?= html_escape($user['unit_kerja']); ?></span>
                 </small>
             </div>
             <div class="col-md-auto ms-auto d-flex gap-2">
@@ -52,9 +63,9 @@
     <div class="card-body bg-white py-3 px-4 border-top border-light">
         <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 text-muted fs-12">
             <div class="d-flex align-items-center gap-3">
-                <span><i class="ti ti-mail text-primary me-1"></i> <?= html_escape($user['email']); ?></span>
+                <span><i class="ti ti-mail text-primary me-1"></i> <span id="header_email"><?= html_escape($user['email']); ?></span></span>
                 <span class="d-none d-sm-inline">&bull;</span>
-                <span><i class="ti ti-phone text-primary me-1"></i> <?= html_escape($user['no_hp']); ?></span>
+                <span><i class="ti ti-phone text-primary me-1"></i> <span id="header_no_hp"><?= html_escape($user['no_hp']); ?></span></span>
             </div>
             <div>
                 <i class="ti ti-clock text-primary me-1"></i> Login Terakhir: <strong

@@ -7,16 +7,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Following Clean Architecture: strictly thin controller that delegates all business logic,
  * validation, and DB operations to Periode_service.
  */
-class Periode extends CI_Controller
+class Periode extends Auth_Controller
 {
     public function __construct()
     {
         parent::__construct();
-        
-        // Ensure user session is authenticated if session is set up
-        if ($this->session->userdata('logged_in') !== TRUE && $this->uri->segment(1) === 'admin') {
-            redirect('signin');
-        }
 
         // Load Service Layers
         $this->load->service('Periode_service');
@@ -110,22 +105,5 @@ class Periode extends CI_Controller
 
         $result = $this->periode_service->hapus_periode($id);
         $this->json_response($result);
-    }
-
-    /**
-     * Private helper to output JSON response with updated CSRF token.
-     *
-     * @param array $data
-     */
-    private function json_response($data)
-    {
-        if (is_array($data)) {
-            $data['csrf_token_name'] = $this->security->get_csrf_token_name();
-            $data['csrf_hash']       = $this->security->get_csrf_hash();
-        }
-
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($data));
     }
 }

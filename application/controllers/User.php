@@ -8,14 +8,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * validation, and DB operations to User_service and Auth_service.
  * PHP 5.6+ and CodeIgniter 3 Compatible.
  */
-class User extends CI_Controller
+class User extends MY_Controller
 {
     public function __construct()
     {
         parent::__construct();
-        $this->load->database();
-        $this->load->library('session');
-        $this->load->library('auth_service');
+
+        // Enforce Authentication and RBAC on management actions
+        $action = $this->router->fetch_method();
+        if (!in_array($action, array('authenticate', 'logout'), TRUE)) {
+            $this->auth_middleware->guard(array('superadmin', 'administrator'));
+        }
 
         // Load Service Layers
         $this->load->service('User_service');
@@ -27,11 +30,6 @@ class User extends CI_Controller
      */
     public function index()
     {
-        // Require login for user management administration
-        if ($this->session->userdata('logged_in') !== TRUE) {
-            redirect('signin');
-        }
-
         $user_list    = $this->user_service->get_all_users();
         $pegawai_list = $this->user_service->get_pegawai_options();
         $stats        = $this->user_service->get_stats();
@@ -174,11 +172,18 @@ class User extends CI_Controller
         $result = $this->auth_service->authenticate($username, $password, $remember);
 
         if ($result['status'] === TRUE) {
+            $redirect_url = $this->session->userdata('intended_url');
+            if (!empty($redirect_url)) {
+                $this->session->unset_userdata('intended_url');
+            } else {
+                $redirect_url = site_url('dashboard');
+            }
+
             $response = array(
                 'status'     => 'success',
                 'code'       => 'SUCCESS',
                 'message'    => $result['message'],
-                'redirect'   => site_url('dashboard'),
+                'redirect'   => $redirect_url,
                 'csrf_token' => $this->security->get_csrf_hash(),
                 'toast'      => array(
                     'type'    => 'success',
@@ -226,22 +231,5 @@ class User extends CI_Controller
         $this->auth_service->logout();
         $this->session->set_flashdata('success', 'Anda telah berhasil keluar dari sistem BeRewards.');
         redirect('signin');
-    }
-
-    /**
-     * Private helper to output JSON response with updated CSRF token.
-     *
-     * @param array $data
-     */
-    private function json_response($data)
-    {
-        if (is_array($data)) {
-            $data['csrf_token_name'] = $this->security->get_csrf_token_name();
-            $data['csrf_hash']       = $this->security->get_csrf_hash();
-        }
-
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($data));
     }
 }

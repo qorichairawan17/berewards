@@ -1,3 +1,11 @@
+<?php
+$initials_side = 'SA';
+if (!empty($user['nama_lengkap'])) {
+    $parts = explode(' ', trim($user['nama_lengkap']));
+    $initials_side = strtoupper(substr($parts[0], 0, 1) . (isset($parts[1]) ? substr($parts[1], 0, 1) : ''));
+}
+$avatar_side = !empty($user['foto']) ? (strpos($user['foto'], 'http') === 0 ? $user['foto'] : base_url($user['foto'])) : NULL;
+?>
 <!-- Sidebar Right: ID Card Mockup & Activity Security Feed -->
 <aside class="col-lg-4">
     <!-- Card ID Pegawai Mockup -->
@@ -13,13 +21,17 @@
 
             <div class="text-center py-2">
                 <div class="avatar-xl rounded-circle bg-white p-1 shadow mx-auto mb-2 d-flex align-items-center justify-content-center" style="width: 72px; height: 72px;">
-                    <div class="w-100 h-100 rounded-circle bg-primary bg-opacity-10 text-primary fw-bold fs-20 d-flex align-items-center justify-content-center">
-                        SA
-                    </div>
+                    <?php if ($avatar_side && file_exists(FCPATH . $user['foto'])): ?>
+                        <img src="<?= $avatar_side; ?>" alt="<?= html_escape($user['nama_lengkap']); ?>" class="w-100 h-100 rounded-circle object-fit-cover">
+                    <?php else: ?>
+                        <div class="w-100 h-100 rounded-circle bg-primary bg-opacity-10 text-primary fw-bold fs-20 d-flex align-items-center justify-content-center">
+                            <?= $initials_side; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
-                <h5 class="fw-bold text-white mb-0 fs-16"><?= html_escape($user['nama_lengkap']); ?></h5>
-                <small class="text-white text-opacity-75 fs-11 d-block mb-2">NIP. <?= html_escape($user['nip']); ?></small>
-                <span class="badge bg-primary text-white border border-primary-subtle px-3 py-1 fs-11">
+                <h5 class="fw-bold text-white mb-0 fs-16" id="sidebar_nama_lengkap"><?= html_escape($user['nama_lengkap']); ?></h5>
+                <small class="text-white text-opacity-75 fs-11 d-block mb-2">NIP. <span id="sidebar_nip"><?= html_escape($user['nip']); ?></span></small>
+                <span class="badge bg-primary text-white border border-primary-subtle px-3 py-1 fs-11" id="sidebar_role">
                     <?= html_escape($user['role']); ?>
                 </span>
             </div>
@@ -27,15 +39,15 @@
             <div class="mt-3 pt-3 border-top border-white border-opacity-15 fs-11 text-white text-opacity-80">
                 <div class="d-flex justify-content-between mb-1">
                     <span>Satker:</span>
-                    <strong class="text-white">PN Lubuk Pakam Kelas I-A</strong>
+                    <strong class="text-white" id="sidebar_unit_kerja"><?= html_escape($user['unit_kerja']); ?></strong>
                 </div>
                 <div class="d-flex justify-content-between mb-1">
                     <span>Status:</span>
-                    <strong class="text-success"><i class="ti ti-circle-check me-1"></i>Pegawai Aktif</strong>
+                    <strong class="text-success"><i class="ti ti-circle-check me-1"></i>Pegawai <?= html_escape($user['status_akun']); ?></strong>
                 </div>
                 <div class="d-flex justify-content-between">
                     <span>System ID:</span>
-                    <strong class="text-white font-monospace">SPK-USER-001</strong>
+                    <strong class="text-white font-monospace">SPK-USER-<?= str_pad($user['id_user'], 3, '0', STR_PAD_LEFT); ?></strong>
                 </div>
             </div>
         </div>

@@ -7,16 +7,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Strictly thin controller delegating business logic and diff analysis to Audit_service.
  * PHP 5.6+ and CodeIgniter 3 Compatible.
  */
-class Audit extends CI_Controller
+class Audit extends Auth_Controller
 {
     public function __construct()
     {
         parent::__construct();
-
-        // Ensure user session is authenticated if accessing under protected dashboard
-        if ($this->session->userdata('logged_in') !== TRUE && $this->uri->segment(1) === 'admin') {
-            redirect('signin');
-        }
 
         // Load Service Layer
         $this->load->service('Audit_service');
@@ -96,22 +91,5 @@ class Audit extends CI_Controller
         );
 
         $this->json_response($response);
-    }
-
-    /**
-     * Private helper to output JSON response with updated CSRF token.
-     *
-     * @param array $data
-     */
-    private function json_response($data)
-    {
-        if (is_array($data)) {
-            $data['csrf_token_name'] = $this->security->get_csrf_token_name();
-            $data['csrf_hash']       = $this->security->get_csrf_hash();
-        }
-
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($data));
     }
 }

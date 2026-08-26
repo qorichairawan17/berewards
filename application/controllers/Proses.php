@@ -11,13 +11,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author BeRewards Core Engine
  * @version 1.0.0
  */
-class Proses extends CI_Controller
+class Proses extends Auth_Controller
 {
     public function __construct()
     {
         parent::__construct();
-        $this->load->database();
-        $this->load->library('session');
 
         // Load Service Layers
         $this->load->service('Topsis_service');
@@ -158,22 +156,5 @@ class Proses extends CI_Controller
     {
         $detail_data = $this->topsis_service->get_detail_sesi($id_proses);
         $this->json_response($detail_data);
-    }
-
-    /**
-     * Private Helper: Mengirim response JSON dengan sinkronisasi CSRF Token.
-     * 
-     * @param array $data
-     */
-    private function json_response($data)
-    {
-        if (is_array($data)) {
-            $data['csrf_token_name'] = $this->security->get_csrf_token_name();
-            $data['csrf_hash']       = $this->security->get_csrf_hash();
-        }
-
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($data));
     }
 }

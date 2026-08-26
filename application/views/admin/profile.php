@@ -10,3 +10,5 @@
     <!-- Right Column: ID Card & Security Log Sidebar -->
     <?php $this->load->view('admin/partials/profile/activity-sidebar'); ?>
 </div>
+
+<?php $this->load->view('admin/partials/profile/script-init'); ?>
