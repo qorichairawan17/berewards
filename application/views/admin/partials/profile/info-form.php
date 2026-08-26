@@ -26,7 +26,7 @@
             <div class="tab-pane fade show active" id="profile-tab-info" role="tabpanel" aria-labelledby="profile-tabs-tab-info">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <span class="text-primary fw-bold fs-11 text-uppercase tracking-wider">Identitas Pengguna</span>
+                        <span class="text-primary fw-bold fs-11 text-uppercase tracking-wider">Identitas Pengguna & Kepegawaian</span>
                         <h5 class="fw-bold text-dark mb-0">Rincian Data Profil Sistem</h5>
                     </div>
                     <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 fs-11">
@@ -47,6 +47,42 @@
                             <span class="fw-bold text-primary fs-14" id="overview_username">@<?= html_escape($user['username']); ?></span>
                         </div>
                     </div>
+
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <small class="text-muted d-block fs-11 text-uppercase fw-semibold">Pegawai Terhubung (Data Sumber SPK)</small>
+                            <?php if (!empty($user['id_pegawai'])): ?>
+                                <div class="d-flex align-items-center gap-2 mt-1">
+                                    <strong class="text-dark fs-13" id="overview_nama_pegawai"><?= html_escape($user['nama_pegawai']); ?></strong>
+                                    <span class="badge bg-light text-muted border px-2 py-0.5 fs-10 font-monospace">ID #<?= $user['id_pegawai']; ?></span>
+                                </div>
+                            <?php else: ?>
+                                <span class="badge bg-secondary-subtle text-secondary border px-2 py-1 fs-11 mt-1">Akun Administrator Mandiri (Non-Pegawai Terhubung)</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <small class="text-muted d-block fs-11 text-uppercase fw-semibold">Kategori Pegawai (Klaster TOPSIS)</small>
+                            <div class="mt-1" id="overview_kategori_container">
+                                <?php 
+                                    $kat = !empty($user['kategori']) ? $user['kategori'] : 'Non-Pegawai';
+                                    if ($kat === 'Hakim'): ?>
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1 fs-11" id="overview_kategori">Hakim</span>
+                                    <?php elseif ($kat === 'Panitera Pengganti'): ?>
+                                        <span class="badge bg-info-subtle text-info border border-info-subtle px-2.5 py-1 fs-11" id="overview_kategori">Panitera Pengganti</span>
+                                    <?php elseif ($kat === 'Jurusita'): ?>
+                                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2.5 py-1 fs-11" id="overview_kategori">Jurusita</span>
+                                    <?php elseif ($kat === 'Staf'): ?>
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1 fs-11" id="overview_kategori">Staf</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2.5 py-1 fs-11" id="overview_kategori">Non-Pegawai</span>
+                                    <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded-3 border">
                             <small class="text-muted d-block fs-11 text-uppercase fw-semibold">Nomor Induk Pegawai (NIP)</small>
@@ -59,12 +95,22 @@
                             <span class="fw-semibold text-dark fs-13" id="overview_nik"><?= html_escape($user['nik']); ?></span>
                         </div>
                     </div>
+
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <small class="text-muted d-block fs-11 text-uppercase fw-semibold">Pangkat & Golongan Ruang</small>
+                            <span class="fw-semibold text-dark fs-13" id="overview_pangkat_gol">
+                                <?= html_escape($user['pangkat']); ?> <?= ($user['golongan'] !== '-') ? '(Gol. ' . html_escape($user['golongan']) . ')' : ''; ?>
+                            </span>
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded-3 border">
                             <small class="text-muted d-block fs-11 text-uppercase fw-semibold">Jabatan Kedinasan</small>
                             <span class="fw-semibold text-dark fs-13" id="overview_jabatan"><?= html_escape($user['jabatan']); ?></span>
                         </div>
                     </div>
+
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded-3 border">
                             <small class="text-muted d-block fs-11 text-uppercase fw-semibold">Unit Kerja / Satuan Kerja</small>
@@ -77,6 +123,7 @@
                             <span class="fw-semibold text-dark fs-13" id="overview_email"><?= html_escape($user['email']); ?></span>
                         </div>
                     </div>
+
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded-3 border">
                             <small class="text-muted d-block fs-11 text-uppercase fw-semibold">Nomor Telepon / WhatsApp</small>
@@ -86,15 +133,46 @@
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded-3 border">
                             <small class="text-muted d-block fs-11 text-uppercase fw-semibold">Hak Akses Role</small>
-                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 fs-11 mt-1" id="overview_role">
-                                <i class="ti ti-shield me-1"></i><?= html_escape($user['role']); ?>
-                            </span>
+                            <?php 
+                                $r = strtolower(trim($user['role_raw'])); 
+                                if ($r === 'superadmin'): ?>
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2.5 py-1 fs-11 mt-1" id="overview_role">
+                                        <i class="ti ti-shield me-1"></i>Superadmin
+                                    </span>
+                                <?php elseif ($r === 'pimpinan'): ?>
+                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2.5 py-1 fs-11 mt-1" id="overview_role">
+                                        <i class="ti ti-crown me-1"></i>Pimpinan
+                                    </span>
+                                <?php elseif ($r === 'tim_penilai'): ?>
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1 fs-11 mt-1" id="overview_role">
+                                        <i class="ti ti-award me-1"></i>Tim Penilai
+                                    </span>
+                                <?php else: ?>
+                                    <span class="badge bg-info-subtle text-info border border-info-subtle px-2.5 py-1 fs-11 mt-1" id="overview_role">
+                                        <i class="ti ti-shield-check me-1"></i>Administrator
+                                    </span>
+                                <?php endif; ?>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="p-3 bg-light rounded-3 border">
-                            <small class="text-muted d-block fs-11 text-uppercase fw-semibold">Tanggal Bergabung</small>
-                            <span class="fw-semibold text-dark fs-13" id="overview_tgl_bergabung"><?= date('d F Y', strtotime($user['tgl_bergabung'])); ?></span>
+
+                    <div class="col-md-12">
+                        <div class="p-3 bg-light rounded-3 border d-flex flex-wrap align-items-center justify-content-between gap-2">
+                            <div>
+                                <small class="text-muted d-block fs-11 text-uppercase fw-semibold">Status Akun</small>
+                                <?php if ($user['status_akun'] === 'Aktif'): ?>
+                                    <span class="badge bg-success rounded-pill px-2.5 py-1 fs-11"><i class="ti ti-circle-check me-1"></i>Aktif</span>
+                                <?php else: ?>
+                                    <span class="badge bg-secondary rounded-pill px-2.5 py-1 fs-11"><i class="ti ti-circle-x me-1"></i>Nonaktif</span>
+                                <?php endif; ?>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block fs-11 text-uppercase fw-semibold">Tanggal Terdaftar</small>
+                                <span class="fw-semibold text-dark fs-12" id="overview_tgl_bergabung"><?= date('d F Y', strtotime($user['tgl_bergabung'])); ?></span>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block fs-11 text-uppercase fw-semibold">Waktu Terakhir Login</small>
+                                <span class="fw-semibold text-primary fs-12" id="overview_last_login"><?= date('d M Y, H:i', strtotime($user['last_login'])); ?> WIB</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -109,6 +187,7 @@
                 </div>
 
                 <form id="formEditProfile" action="<?= site_url('profile/update'); ?>" method="POST">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-semibold text-dark fs-12 mb-1" for="prof_nama_lengkap">Nama Lengkap & Gelar <span class="text-danger">*</span></label>
@@ -144,6 +223,44 @@
                         </div>
 
                         <div class="col-md-6">
+                            <label class="form-label fw-semibold text-dark fs-12 mb-1" for="prof_pangkat">Pangkat Pegawai</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="ti ti-award text-muted"></i></span>
+                                <input type="text" class="form-control border-start-0" id="prof_pangkat" name="pangkat" value="<?= ($user['pangkat'] !== '-') ? html_escape($user['pangkat']) : ''; ?>" placeholder="Contoh: Pembina Utama Muda / Penata Tk. I">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-dark fs-12 mb-1" for="prof_golongan">Golongan Ruang</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="ti ti-stairs text-muted"></i></span>
+                                <input type="text" class="form-control border-start-0" id="prof_golongan" name="golongan" value="<?= ($user['golongan'] !== '-') ? html_escape($user['golongan']) : ''; ?>" placeholder="Contoh: IV/c, III/d, III/a">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-dark fs-12 mb-1" for="prof_jabatan">Jabatan Kedinasan</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="ti ti-briefcase text-muted"></i></span>
+                                <input type="text" class="form-control border-start-0" id="prof_jabatan" name="jabatan" value="<?= html_escape($user['jabatan']); ?>" placeholder="Masukkan jabatan kedinasan">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold text-dark fs-12 mb-1" for="prof_kategori">Kategori Pegawai (Klaster TOPSIS)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="ti ti-category text-muted"></i></span>
+                                <select class="form-select border-start-0" id="prof_kategori" name="kategori">
+                                    <option value="Hakim" <?= ($user['kategori'] === 'Hakim') ? 'selected' : ''; ?>>Hakim</option>
+                                    <option value="Panitera Pengganti" <?= ($user['kategori'] === 'Panitera Pengganti') ? 'selected' : ''; ?>>Panitera Pengganti</option>
+                                    <option value="Jurusita" <?= ($user['kategori'] === 'Jurusita') ? 'selected' : ''; ?>>Jurusita</option>
+                                    <option value="Staf" <?= ($user['kategori'] === 'Staf') ? 'selected' : ''; ?>>Staf</option>
+                                    <option value="Non-Pegawai" <?= ($user['kategori'] === 'Non-Pegawai' || empty($user['kategori'])) ? 'selected' : ''; ?>>Non-Pegawai / Administrator</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
                             <label class="form-label fw-semibold text-dark fs-12 mb-1" for="prof_email">Email Instansi Kedinasan <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0"><i class="ti ti-mail text-muted"></i></span>
@@ -159,15 +276,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold text-dark fs-12 mb-1" for="prof_jabatan">Jabatan Kedinasan</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0"><i class="ti ti-briefcase text-muted"></i></span>
-                                <input type="text" class="form-control border-start-0" id="prof_jabatan" name="jabatan" value="<?= html_escape($user['jabatan']); ?>" placeholder="Masukkan jabatan kedinasan">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label class="form-label fw-semibold text-dark fs-12 mb-1" for="prof_unit_kerja">Unit Kerja / Satuan Kerja</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-end-0"><i class="ti ti-building-bank text-muted"></i></span>
@@ -194,6 +303,7 @@
                 </div>
 
                 <form id="formChangePassword" action="<?= site_url('profile/update_password'); ?>" method="POST">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                     <div class="row g-3">
                         <div class="col-md-12">
                             <label class="form-label fw-semibold text-dark fs-12 mb-1" for="prof_current_password">Password Saat Ini <span class="text-danger">*</span></label>

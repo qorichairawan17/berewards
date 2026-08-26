@@ -494,7 +494,10 @@ $config['csrf_exclude_uris'] = array(
     'proses/hapus',
     'proses/detail',
     'proses/data',
-    'proses/data_detail'
+    'proses/data_detail',
+    'profile/update',
+    'profile/update_password',
+    'profile/data'
 );
 
 /*

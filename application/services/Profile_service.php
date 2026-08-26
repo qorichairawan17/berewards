@@ -73,6 +73,9 @@ class Profile_service
     {
         $user_id = (int)$this->CI->session->userdata('user_id');
         if ($user_id <= 0) {
+            $user_id = (int)$this->CI->session->userdata('id_user');
+        }
+        if ($user_id <= 0) {
             // Fallback for development/initial default administrator
             $user_id = 1;
         }
@@ -132,25 +135,34 @@ class Profile_service
         $jabatan      = !empty($user['jabatan_custom']) ? $user['jabatan_custom'] : (!empty($user['jabatan']) ? $user['jabatan'] : 'Pengelola Sistem SPK');
         $foto         = !empty($user['avatar']) ? $user['avatar'] : (!empty($user['foto_pegawai']) ? $user['foto_pegawai'] : 'assets/images/users/user-1.jpg');
 
+        $pangkat  = !empty($user['pangkat']) ? $user['pangkat'] : '-';
+        $golongan = !empty($user['golongan']) ? $user['golongan'] : '-';
+        $kategori = !empty($user['kategori']) ? $user['kategori'] : 'Non-Pegawai';
+
         $user_profile = array(
-            'id_user'       => (int)$user['id_user'],
-            'id_pegawai'    => !empty($user['id_pegawai']) ? (int)$user['id_pegawai'] : NULL,
-            'username'      => $user['username'],
-            'nama_lengkap'  => $nama_lengkap,
-            'nip'           => !empty($user['nip']) ? $user['nip'] : '-',
-            'nik'           => !empty($user['nik']) ? $user['nik'] : '-',
-            'email'         => !empty($user['email']) ? $user['email'] : '-',
-            'no_hp'         => !empty($user['no_hp']) ? $user['no_hp'] : '-',
-            'jabatan'       => $jabatan,
-            'unit_kerja'    => $satker_name,
-            'role'          => $this->CI->User_model->format_role_label($user['role']),
-            'role_raw'      => $user['role'],
-            'status_akun'   => ($user['aktif'] == 1) ? 'Aktif' : 'Nonaktif',
-            'tgl_bergabung' => !empty($user['created_at']) ? $user['created_at'] : '2020-01-15',
-            'last_login'    => !empty($user['last_login']) ? $user['last_login'] : date('Y-m-d H:i:s'),
-            'ip_address'    => $this->CI->input->ip_address(),
-            'browser'       => $this->_get_browser_info(),
-            'foto'          => $foto
+            'id_user'           => (int)$user['id_user'],
+            'id_pegawai'        => !empty($user['id_pegawai']) ? (int)$user['id_pegawai'] : NULL,
+            'username'          => $user['username'],
+            'nama_lengkap'      => $nama_lengkap,
+            'nama_pegawai'      => !empty($user['nama_pegawai']) ? $user['nama_pegawai'] : '-',
+            'nip'               => !empty($user['nip']) ? $user['nip'] : '-',
+            'nik'               => !empty($user['nik']) ? $user['nik'] : '-',
+            'email'             => !empty($user['email']) ? $user['email'] : '-',
+            'no_hp'             => !empty($user['no_hp']) ? $user['no_hp'] : '-',
+            'jabatan'           => $jabatan,
+            'pangkat'           => $pangkat,
+            'golongan'          => $golongan,
+            'kategori'          => $kategori,
+            'unit_kerja'        => $satker_name,
+            'role'              => $this->CI->User_model->format_role_label($user['role']),
+            'role_raw'          => $user['role'],
+            'status_akun'       => ($user['aktif'] == 1) ? 'Aktif' : 'Nonaktif',
+            'tgl_bergabung'     => !empty($user['created_at']) ? $user['created_at'] : '2020-01-15',
+            'last_login'        => !empty($user['last_login']) ? $user['last_login'] : date('Y-m-d H:i:s'),
+            'ip_address'        => $this->CI->input->ip_address(),
+            'browser'           => $this->_get_browser_info(),
+            'foto'              => $foto,
+            'is_linked_pegawai' => !empty($user['id_pegawai'])
         );
 
         // Fetch KPI Statistics
@@ -255,7 +267,10 @@ class Profile_service
         $this->CI->form_validation->set_rules('no_hp', 'Nomor Telepon / WhatsApp', 'trim|max_length[30]');
         $this->CI->form_validation->set_rules('nik', 'Nomor Induk Kependudukan (NIK)', 'trim|max_length[30]');
         $this->CI->form_validation->set_rules('nip', 'Nomor Induk Pegawai (NIP)', 'trim|max_length[30]');
+        $this->CI->form_validation->set_rules('pangkat', 'Pangkat', 'trim|max_length[100]');
+        $this->CI->form_validation->set_rules('golongan', 'Golongan Ruang', 'trim|max_length[20]');
         $this->CI->form_validation->set_rules('jabatan', 'Jabatan Kedinasan', 'trim|max_length[150]');
+        $this->CI->form_validation->set_rules('kategori', 'Kategori Pegawai', 'trim|max_length[50]');
 
         if (!$this->CI->form_validation->run()) {
             return array(
@@ -269,7 +284,10 @@ class Profile_service
         $no_hp        = !empty($input['no_hp']) ? trim($input['no_hp']) : NULL;
         $nik          = !empty($input['nik']) ? trim($input['nik']) : NULL;
         $nip          = !empty($input['nip']) ? trim($input['nip']) : NULL;
+        $pangkat      = !empty($input['pangkat']) ? trim($input['pangkat']) : NULL;
+        $golongan     = !empty($input['golongan']) ? trim($input['golongan']) : NULL;
         $jabatan      = !empty($input['jabatan']) ? trim($input['jabatan']) : NULL;
+        $kategori     = !empty($input['kategori']) ? trim($input['kategori']) : NULL;
 
         // Check Email Uniqueness
         if ($this->CI->User_model->check_email_exists($email, $id_user)) {
@@ -311,6 +329,15 @@ class Profile_service
             if (!empty($jabatan)) {
                 $pegawai_update['jabatan'] = $jabatan;
             }
+            if (!empty($pangkat)) {
+                $pegawai_update['pangkat'] = $pangkat;
+            }
+            if (!empty($golongan)) {
+                $pegawai_update['golongan'] = $golongan;
+            }
+            if (!empty($kategori)) {
+                $pegawai_update['kategori'] = $kategori;
+            }
             $this->CI->db->where('id_pegawai', (int)$old_user['id_pegawai'])->update('referensi_pegawai', $pegawai_update);
         }
 
@@ -347,7 +374,10 @@ class Profile_service
                 'no_hp'        => $no_hp,
                 'nik'          => $nik,
                 'nip'          => $nip,
-                'jabatan'      => $jabatan
+                'pangkat'      => $pangkat,
+                'golongan'     => $golongan,
+                'jabatan'      => $jabatan,
+                'kategori'     => $kategori
             )
         );
     }

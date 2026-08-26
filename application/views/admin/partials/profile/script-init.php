@@ -40,6 +40,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (u.nama_lengkap) $('#header_nama_lengkap').text(u.nama_lengkap);
                         if (u.nip) $('#header_nip').text(u.nip);
                         if (u.jabatan) $('#header_jabatan').text(u.jabatan);
+                        if (u.pangkat) {
+                            var pangkatGol = u.pangkat + (u.golongan && u.golongan !== '-' ? ' (Gol. ' + u.golongan + ')' : '');
+                            $('#header_pangkat_gol').text(pangkatGol);
+                        }
+                        if (u.kategori && u.kategori !== 'Non-Pegawai' && u.kategori !== '-') {
+                            $('#header_kategori_badge').text(u.kategori).show();
+                        }
                         if (u.email) $('#header_email').text(u.email);
                         if (u.no_hp) $('#header_no_hp').text(u.no_hp);
 
@@ -47,6 +54,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (u.nama_lengkap) $('#overview_nama_lengkap').text(u.nama_lengkap);
                         if (u.nip) $('#overview_nip').text(u.nip);
                         if (u.nik) $('#overview_nik').text(u.nik);
+                        if (u.pangkat) {
+                            var pangkatGol = u.pangkat + (u.golongan && u.golongan !== '-' ? ' (Gol. ' + u.golongan + ')' : '');
+                            $('#overview_pangkat_gol').text(pangkatGol);
+                        }
+                        if (u.kategori) {
+                            var kat = u.kategori;
+                            var katClass = 'bg-secondary-subtle text-secondary border-secondary-subtle';
+                            if (kat === 'Hakim') katClass = 'bg-primary-subtle text-primary border-primary-subtle';
+                            else if (kat === 'Panitera Pengganti') katClass = 'bg-info-subtle text-info border-info-subtle';
+                            else if (kat === 'Jurusita') katClass = 'bg-warning-subtle text-warning border-warning-subtle';
+                            else if (kat === 'Staf') katClass = 'bg-success-subtle text-success border-success-subtle';
+                            $('#overview_kategori_container').html('<span class="badge ' + katClass + ' border px-2.5 py-1 fs-11" id="overview_kategori">' + kat + '</span>');
+                        }
                         if (u.jabatan) $('#overview_jabatan').text(u.jabatan);
                         if (u.email) $('#overview_email').text(u.email);
                         if (u.no_hp) $('#overview_no_hp').text(u.no_hp);
@@ -54,6 +74,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Update Sidebar ID Card
                         if (u.nama_lengkap) $('#sidebar_nama_lengkap').text(u.nama_lengkap);
                         if (u.nip) $('#sidebar_nip').text(u.nip);
+                        if (u.jabatan) $('#sidebar_jabatan').text(u.jabatan);
+                        if (u.pangkat) {
+                            var pangkatGol = u.pangkat + (u.golongan && u.golongan !== '-' ? ' (' + u.golongan + ')' : '');
+                            $('#sidebar_pangkat_gol').text(pangkatGol);
+                        }
+                        if (u.kategori && u.kategori !== 'Non-Pegawai' && u.kategori !== '-') {
+                            $('#sidebar_kategori').text(u.kategori).show();
+                        }
 
                         // Update Initials
                         if (u.nama_lengkap) {

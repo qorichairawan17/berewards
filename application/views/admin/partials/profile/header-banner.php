@@ -19,7 +19,7 @@ $avatar_src = !empty($user['foto']) ? (strpos($user['foto'], 'http') === 0 ? $us
                     <div class="avatar-xxl rounded-circle bg-white p-1 shadow-sm d-flex align-items-center justify-content-center"
                         style="width: 96px; height: 96px;">
                         <?php if ($avatar_src && file_exists(FCPATH . $user['foto'])): ?>
-                            <img src="<?= $avatar_src; ?>" alt="<?= html_escape($user['nama_lengkap']); ?>" class="w-100 h-100 rounded-circle object-fit-cover">
+                            <img src="<?= $avatar_src; ?>" alt="<?= html_escape($user['nama_lengkap']); ?>" class="w-100 h-100 rounded-circle object-fit-cover" onerror="this.onerror=null;this.src='<?= base_url('assets/icons/logo.png'); ?>';">
                         <?php else: ?>
                             <div class="w-100 h-100 rounded-circle bg-primary bg-opacity-10 text-primary fw-bold display-6 d-flex align-items-center justify-content-center border border-primary border-opacity-25" id="header_user_initials">
                                 <?= $initials; ?>
@@ -36,13 +36,21 @@ $avatar_src = !empty($user['foto']) ? (strpos($user['foto'], 'http') === 0 ? $us
                     <span class="badge bg-primary bg-opacity-20 text-white border border-white border-opacity-25 px-2 py-1 fs-11">
                         <i class="ti ti-shield-check me-1"></i><?= html_escape($user['role']); ?>
                     </span>
+                    <?php if (!empty($user['kategori']) && $user['kategori'] !== 'Non-Pegawai' && $user['kategori'] !== '-'): ?>
+                        <span class="badge bg-light bg-opacity-20 text-white border border-white border-opacity-25 px-2 py-1 fs-11" id="header_kategori_badge">
+                            <i class="ti ti-badge me-1"></i><?= html_escape($user['kategori']); ?>
+                        </span>
+                    <?php endif; ?>
                     <span class="badge bg-success bg-opacity-20 text-white border border-white border-opacity-25 px-2 py-1 fs-11">
                         <i class="ti ti-circle-check me-1"></i><?= html_escape($user['status_akun']); ?>
                     </span>
                 </div>
                 <p class="text-white text-opacity-85 mb-1 fs-13">
-                    <i class="ti ti-id me-1"></i>NIP. <span id="header_nip"><?= html_escape($user['nip']); ?></span> &bull;
-                    <i class="ti ti-briefcase me-1"></i><span id="header_jabatan"><?= html_escape($user['jabatan']); ?></span>
+                    <i class="ti ti-id me-1"></i>NIP. <span id="header_nip"><?= html_escape($user['nip']); ?></span>
+                    <?php if (!empty($user['pangkat']) && $user['pangkat'] !== '-'): ?>
+                        &bull; <i class="ti ti-award me-1"></i><span id="header_pangkat_gol"><?= html_escape($user['pangkat']); ?> (Gol. <?= html_escape($user['golongan']); ?>)</span>
+                    <?php endif; ?>
+                    &bull; <i class="ti ti-briefcase me-1"></i><span id="header_jabatan"><?= html_escape($user['jabatan']); ?></span>
                 </p>
                 <small class="text-white text-opacity-75 fs-12">
                     <i class="ti ti-building-bank me-1"></i><span id="header_unit_kerja"><?= html_escape($user['unit_kerja']); ?></span>
