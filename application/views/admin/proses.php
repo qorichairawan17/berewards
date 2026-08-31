@@ -66,7 +66,7 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex align-items-center justify-content-center gap-1">
-                                        <a href="<?= site_url('proses/detail/' . $row['id_proses']); ?>" class="btn btn-sm btn-brand p-1 px-2"
+                                        <a href="<?= site_url('proses/detail/' . encrypt_id($row['id_proses'])); ?>" class="btn btn-sm btn-brand p-1 px-2"
                                             title="Input Nilai Alternative & Proses TOPSIS">
                                             <i class="ti ti-eye fs-15 me-1"></i> Detail
                                         </a>

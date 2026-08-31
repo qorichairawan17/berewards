@@ -19,7 +19,7 @@
                 </p>
             </div>
             <div class="d-flex flex-column flex-sm-row gap-2">
-                <a href="<?= site_url('laporan/preview/' . (!empty($latest_proses_id) ? $latest_proses_id : '1')); ?>"
+                <a href="<?= site_url('laporan/preview/' . encrypt_id(!empty($latest_proses_id) ? 'proses_' . $latest_proses_id : '1')); ?>"
                     class="btn btn-warning font-bold shadow-sm px-3 py-2">
                     <i class="ti ti-sparkles me-1"></i> Showroom Candidates 3D
                 </a>
@@ -119,7 +119,7 @@
                 <a href="<?= site_url('proses'); ?>" class="btn btn-sm btn-outline-secondary">
                     <i class="ti ti-list-details me-1"></i> Data Penilaian
                 </a>
-                <a href="<?= site_url('laporan/preview/' . (!empty($latest_proses_id) ? $latest_proses_id : '1')); ?>" class="btn btn-sm btn-brand">
+                <a href="<?= site_url('laporan/preview/' . encrypt_id(!empty($latest_proses_id) ? 'proses_' . $latest_proses_id : '1')); ?>" class="btn btn-sm btn-brand">
                     <i class="ti ti-sparkles me-1"></i> Buka Showroom 3D
                 </a>
             </div>
@@ -173,7 +173,7 @@
                                     <div class="d-flex align-items-center justify-content-center gap-2">
                                         <strong class="text-primary fs-14">V = <?= number_format((float) $winner['skor'], 4); ?></strong>
                                         <?php if (!empty($winner['id_proses'])): ?>
-                                            <a href="<?= site_url('proses/detail/' . $winner['id_proses']); ?>"
+                                            <a href="<?= site_url('proses/detail/' . encrypt_id($winner['id_proses'])); ?>"
                                                 class="badge bg-primary text-white text-decoration-none p-1" title="Lihat Matriks Perhitungan Sesi Ini">
                                                 <i class="ti ti-arrow-right fs-10"></i>
                                             </a>

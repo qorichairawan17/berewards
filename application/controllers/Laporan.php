@@ -180,12 +180,18 @@ class Laporan extends Auth_Controller
             $id_target = $this->input->get_post('id');
         }
 
+        $decrypted = decrypt_id($id_target);
+        if ($decrypted !== false) {
+            $id_target = $decrypted;
+        }
+
         $result = $this->laporan_service->get_showroom_data($id_target);
         $this->json_response($result);
     }
 
     /**
      * Halaman Showroom Pratinjau Kandidat Reward.
+     * Menerima parameter target terenkripsi atau mentah (auto-redirect ke format terenkripsi).
      * 
      * @param mixed $id_target
      */
@@ -194,7 +200,26 @@ class Laporan extends Auth_Controller
         $laporan_list = $this->laporan_service->get_laporan_list();
         $selected     = NULL;
 
-        $id_str = (string)$id_target;
+        $target_key = $id_target;
+        $decrypted = decrypt_id($id_target);
+        if ($decrypted !== false) {
+            $target_key = $decrypted;
+        } else {
+            // Jika ID mentah diberikan di URL (seperti '1', 'proses_1', atau 'laporan_1'),
+            // lakukan auto-redirect ke format URL terenkripsi
+            if (!empty($id_target) && $id_target !== '0' && $id_target !== 0) {
+                redirect('laporan/preview/' . encrypt_id($id_target));
+                return;
+            }
+        }
+
+        // Jika tidak ada ID spesifik yang dipilih dan ada daftar laporan, arahkan ke laporan pertama terenkripsi
+        if ((empty($target_key) || $target_key === '0' || $target_key === 0) && !empty($laporan_list)) {
+            redirect('laporan/preview/' . encrypt_id($laporan_list[0]['id_laporan']));
+            return;
+        }
+
+        $id_str = (string)$target_key;
         $id_clean = (int)preg_replace('/[^0-9]/', '', $id_str);
 
         if ($id_clean > 0 && strpos($id_str, 'proses_') === false) {
@@ -202,7 +227,7 @@ class Laporan extends Auth_Controller
         }
 
         if (!$selected && $id_clean > 0) {
-            $showroom_res = $this->laporan_service->get_showroom_data($id_target);
+            $showroom_res = $this->laporan_service->get_showroom_data($target_key);
             if ($showroom_res['status']) {
                 $selected = array(
                     'id_laporan'     => !empty($showroom_res['id_laporan']) ? $showroom_res['id_laporan'] : 0,

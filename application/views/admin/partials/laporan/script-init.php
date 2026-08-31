@@ -159,8 +159,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var ketua   = $(this).data('ketua');
 
         $('#edit_id_laporan').val(id);
-        $('#edit_no_ba').val(noba);
-        $('#edit_status').val(status);
+        $('#edit_no_ba').val(noba || '');
+        $('#edit_status').val(status || 'Disahkan');
 
         if (id_sk) {
             $('#edit_id_sk').val(id_sk);
@@ -179,9 +179,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var dateInput = document.getElementById('edit_tanggal_terbit');
         if (dateInput && dateInput._flatpickr) {
-            dateInput._flatpickr.setDate(tanggal, true);
+            try {
+                if (tanggal) {
+                    dateInput._flatpickr.setDate(tanggal, false);
+                } else {
+                    dateInput._flatpickr.clear();
+                }
+            } catch (err) {
+                $('#edit_tanggal_terbit').val(tanggal || '');
+            }
         } else {
-            $('#edit_tanggal_terbit').val(tanggal);
+            $('#edit_tanggal_terbit').val(tanggal || '');
         }
     });
 
@@ -287,10 +295,10 @@ document.addEventListener('DOMContentLoaded', function() {
         var ketua    = $(this).data('ketua');
         var top3Data = $(this).data('top3');
 
-        $('#preview_no_ba').text('Nomor: ' + noba);
-        $('#preview_periode').text(periode);
-        $('#preview_kategori').text('Kategori ' + kategori);
-        $('#preview_tanggal_terbit').text(tanggal);
+        $('#preview_no_ba').text('Nomor: ' + (noba || '-'));
+        $('#preview_periode').text(periode || '-');
+        $('#preview_kategori').text('Kategori ' + (kategori || '-'));
+        $('#preview_tanggal_terbit').text(tanggal || '-');
         $('#preview_ketua').text(ketua || 'Ketua Tim Penilai');
 
         $('#btnDownloadWordDetail').data('id', id);
@@ -318,9 +326,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 tbodyHtml += '<tr>' +
                     '<td class="text-center">' + rankBadge + '</td>' +
-                    '<td><strong class="d-block text-dark">' + item.nama + '</strong><small class="text-muted fs-11">NIP. ' + (item.nip || '-') + '</small></td>' +
-                    '<td><span class="badge bg-light text-dark border px-2 py-1">' + (item.kategori || kategori) + '</span></td>' +
-                    '<td class="text-center"><strong class="text-primary fs-13">' + parseFloat(item.skor).toFixed(4) + '</strong></td>' +
+                    '<td><strong class="d-block text-dark">' + (item.nama || '-') + '</strong><small class="text-muted fs-11">NIP. ' + (item.nip || '-') + '</small></td>' +
+                    '<td><span class="badge bg-light text-dark border px-2 py-1">' + (item.kategori || kategori || '-') + '</span></td>' +
+                    '<td class="text-center"><strong class="text-primary fs-13">' + parseFloat(item.skor || 0).toFixed(4) + '</strong></td>' +
                     '<td class="text-center">' + ketBadge + '</td>' +
                     '</tr>';
             });
@@ -462,8 +470,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Update Header Titles
                 $('#showroom_periode_title').text(data.nama_periode + ' — Kategori ' + data.kategori);
-                $('#showroom_main_title').text('Pratinjau Kandidat Reward Kategori ' + data.kategori);
-                $('#btnShowroomFullPage').attr('href', '<?= site_url("laporan/preview/"); ?>' + (data.id_laporan ? data.id_laporan : 'proses_' + data.id_proses));
+                var fullPageTarget = data.encrypted_id ? data.encrypted_id : (data.id_laporan ? data.id_laporan : 'proses_' + data.id_proses);
+                $('#btnShowroomFullPage').attr('href', '<?= site_url("laporan/preview/"); ?>' + fullPageTarget);
 
                 // Render Top Candidate Cards
                 var defaultLogo = baseUrl + 'assets/icons/logo.png';
@@ -562,9 +570,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Form Submit (Full Page Showroom)
     $('#formPilihPeriodeShowroom').on('submit', function(e) {
         e.preventDefault();
-        var id = $('#select_showroom_periode').val();
-        if (id) {
-            window.location.href = '<?= site_url("laporan/preview/"); ?>' + encodeURIComponent(id);
+        var selectedOpt = $('#select_showroom_periode option:selected');
+        var encId = selectedOpt.data('encrypted') || selectedOpt.val();
+        if (encId) {
+            window.location.href = '<?= site_url("laporan/preview/"); ?>' + encodeURIComponent(encId);
         }
     });
 });

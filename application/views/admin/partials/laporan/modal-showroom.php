@@ -106,6 +106,7 @@
             </div>
         </div>
     </div>
+</div>
 
     <style>
         /* Custom Futuristic 3D Card Stack Styles */

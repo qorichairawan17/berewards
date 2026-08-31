@@ -25,7 +25,7 @@
                 <label class="form-label text-white fs-11 fw-semibold mb-1">Ganti Periode & Kategori:</label>
                 <select class="form-select form-select-sm bg-white text-dark fw-semibold" id="select_preview_laporan_id">
                     <?php foreach ($laporan_list as $item): ?>
-                        <option value="<?= $item['id_laporan']; ?>" <?= ($item['id_laporan'] == $laporan_info['id_laporan']) ? 'selected' : ''; ?>>
+                        <option value="<?= encrypt_id($item['id_laporan']); ?>" <?= ($item['id_laporan'] == $laporan_info['id_laporan']) ? 'selected' : ''; ?>>
                             <?= html_escape($item['nama_periode']); ?> — <?= html_escape($item['kategori']); ?>
                         </option>
                     <?php endforeach; ?>

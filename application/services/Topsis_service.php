@@ -146,9 +146,10 @@ class Topsis_service
         $this->log_audit('Penilaian & TOPSIS', 'Membuat sesi penilaian baru untuk ' . $periode['nama_periode'] . ' (Status: Draft)');
 
         return array(
-            'status'    => TRUE,
-            'id_proses' => $id_proses,
-            'message'   => 'Sesi penilaian untuk ' . $periode['nama_periode'] . ' berhasil dibuat (Status: Draft).'
+            'status'       => TRUE,
+            'id_proses'    => $id_proses,
+            'encrypted_id' => encrypt_id($id_proses),
+            'message'      => 'Sesi penilaian untuk ' . $periode['nama_periode'] . ' berhasil dibuat (Status: Draft).'
         );
     }
 
@@ -244,6 +245,7 @@ class Topsis_service
             'status'               => TRUE,
             'periode_info'         => $proses,
             'id_proses'            => $id_proses,
+            'encrypted_id'         => encrypt_id($id_proses),
             'kriteria_list'        => $kriteria_list,
             'alternatif_list'      => $alternatif_list,
             'penilaian_matrix'     => $penilaian_matrix,

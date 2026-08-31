@@ -18,6 +18,7 @@
                                 <optgroup label="Sesi Penilaian TOPSIS (Hasil Final)">
                                     <?php foreach ($form_options['available_proses'] as $idx => $p): ?>
                                         <option value="proses_<?= $p['id_proses']; ?>" <?= ($idx === 0) ? 'selected' : ''; ?> data-id="<?= $p['id_proses']; ?>"
+                                            data-encrypted="<?= encrypt_id('proses_' . $p['id_proses']); ?>"
                                             data-type="proses" data-periode="<?= html_escape($p['nama_periode']); ?>"
                                             data-kategori="<?= html_escape($p['kategori']); ?>">
                                             <?= html_escape($p['nama_periode']); ?> — Kategori <?= html_escape($p['kategori']); ?> (Pemenang:
@@ -31,6 +32,7 @@
                                 <optgroup label="Arsip Dokumen Berita Acara">
                                     <?php foreach ($laporan_list as $l): ?>
                                         <option value="laporan_<?= $l['id_laporan']; ?>" data-id="<?= $l['id_laporan']; ?>" data-type="laporan"
+                                            data-encrypted="<?= encrypt_id($l['id_laporan']); ?>"
                                             data-idproses="<?= $l['id_proses']; ?>" data-periode="<?= html_escape($l['nama_periode']); ?>"
                                             data-kategori="<?= html_escape($l['kategori']); ?>">
                                             <?= html_escape($l['no_ba']); ?> — <?= html_escape($l['nama_periode']); ?> (Kategori

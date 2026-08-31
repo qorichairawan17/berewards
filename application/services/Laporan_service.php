@@ -532,6 +532,7 @@ class Laporan_service
             'status'       => TRUE,
             'id_proses'    => $id_proses,
             'id_laporan'   => $id_laporan,
+            'encrypted_id' => encrypt_id($id_laporan ? $id_laporan : 'proses_' . $id_proses),
             'nama_periode' => !empty($proses['nama_periode']) ? $proses['nama_periode'] : 'Periode Penilaian',
             'kategori'     => !empty($proses['kategori']) ? $proses['kategori'] : 'Semua',
             'tahun'        => !empty($proses['tahun']) ? $proses['tahun'] : date('Y'),

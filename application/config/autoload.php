@@ -79,7 +79,8 @@ $autoload['helper'] = array(
     'text',
     'html',
     'cookie',
-    'file'
+    'file',
+    'encryption'
 );
 
 /*

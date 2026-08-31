@@ -215,7 +215,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (modal) modal.hide();
                     showToast('success', 'Sesi Berhasil Dibuat', res.message, false);
                     setTimeout(function() {
-                        window.location.href = baseUrl + 'proses/detail/' + res.id_proses;
+                        var targetId = res.encrypted_id ? res.encrypted_id : res.id_proses;
+                        window.location.href = baseUrl + 'proses/detail/' + targetId;
                     }, 1000);
                 } else {
                     showToast('danger', 'Gagal Membuat Sesi', res.message, false);
